@@ -15,10 +15,10 @@ This is a component model module. It should define init, update and view model.
 -}
 
 import Base exposing (GlobalData, Msg(..))
-import Canvas exposing (Renderable, group, rect, shapes)
+import Canvas exposing (Renderable, empty, group, rect, shapes)
 import Canvas.Settings.Advanced exposing (alpha)
 import Dict
-import Lib.Component.Base exposing (ComponentTMsg(..), ComponentTMsgType(..), ComponentTarget(..), Data, DefinedTypes(..))
+import Lib.Component.Base exposing (ComponentTMsg(..), ComponentTarget(..), Data, DefinedTypes(..))
 import Lib.Coordinate.Coordinates exposing (heightToReal, posToReal, widthToReal)
 import Lib.DefinedTypes.Parser exposing (dBoolGet, dBoolSet, dComponentTargetGet, dIntGet, dStringGet, dStringSet)
 import Lib.Render.Render exposing (renderText)
@@ -34,8 +34,8 @@ initModel _ id tmsg =
     let
         typer =
             case tmsg of
-                ComponentUnnamedMsg (ComponentComponentTargetMsg x) ->
-                    x
+                ComponentIntMsg i ->
+                    ComponentByID i
 
                 _ ->
                     ComponentParentLayer
@@ -66,7 +66,7 @@ updateModel msg gd tmsg ( d, _ ) =
         KeyDown 13 ->
             -- Enter
             ( d |> dStringSet "text" "" |> dBoolSet "state" False
-            , [ ( ComponentParentLayer, ComponentUnnamedMsg (ComponentStringMsg (dStringGet d "text")) )
+            , [ ( ComponentParentLayer, ComponentStringMsg (dStringGet d "text") )
               , ( typer, ComponentNamedMsg self (ComponentBoolMsg False) )
               , ( typer, ComponentNamedMsg self (ComponentStringMsg "") )
               ]
@@ -102,19 +102,17 @@ Change this to your own component view function.
 If there is no view function, remove this and change the view function in export module to nothing.
 
 -}
-viewModel : ( Data, Int ) -> GlobalData -> Maybe Renderable
+viewModel : ( Data, Int ) -> GlobalData -> Renderable
 viewModel ( d, _ ) gd =
     let
         command =
             dStringGet d "text"
     in
     if dBoolGet d "state" then
-        Just
-            (group []
-                [ shapes [ alpha 0.1 ] [ rect (posToReal gd ( 20, 970 )) (widthToReal gd 1850) (heightToReal gd 40) ]
-                , renderText gd 30 ("> " ++ command ++ "_") "sans-seif" ( 30, 975 )
-                ]
-            )
+        group []
+            [ shapes [ alpha 0.1 ] [ rect (posToReal gd ( 20, 970 )) (widthToReal gd 1850) (heightToReal gd 40) ]
+            , renderText gd 30 ("> " ++ command ++ "_") "sans-seif" ( 30, 975 )
+            ]
 
     else
-        Nothing
+        empty

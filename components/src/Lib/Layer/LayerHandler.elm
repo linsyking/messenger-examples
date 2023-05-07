@@ -103,14 +103,7 @@ updateLayer msg gd t cd xs =
 Get the view of the layer.
 
 -}
-viewLayer : GlobalData -> Int -> a -> List ( String, Layer a b ) -> Maybe Renderable
+viewLayer : GlobalData -> Int -> a -> List ( String, Layer a b ) -> Renderable
 viewLayer vp t cd xs =
-    let
-        children =
-            List.filterMap (\( _, l ) -> l.view ( l.data, t ) cd vp) xs
-    in
-    if List.isEmpty children then
-        Nothing
-
-    else
-        Just (Canvas.group [] children)
+    Canvas.group []
+        (List.map (\( _, l ) -> l.view ( l.data, t ) cd vp) xs)

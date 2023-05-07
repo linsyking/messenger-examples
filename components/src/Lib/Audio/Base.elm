@@ -9,7 +9,6 @@ module Lib.Audio.Base exposing
 # Audio Base
 
 @docs AudioOption
-
 @docs AudioRepo
 
 -}

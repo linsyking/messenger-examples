@@ -82,4 +82,5 @@ Examples:
 -}
 allTexture : List ( String, String )
 allTexture =
-    [ ( "bg", getResourcePath "img/helloworld.jpg" ) ]
+    [ ( "bg", getResourcePath "img/helloworld.jpg" )
+    ]

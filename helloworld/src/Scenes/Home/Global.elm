@@ -59,7 +59,7 @@ sceneToST sd =
             in
             ( dataToSDT sdt, som, newgd )
 
-        view : ( SceneDataTypes, Int ) -> GlobalData -> Maybe Renderable
+        view : ( SceneDataTypes, Int ) -> GlobalData -> Renderable
         view ( dt, t ) vp =
             sd.view ( sdtToData dt, t ) vp
     in

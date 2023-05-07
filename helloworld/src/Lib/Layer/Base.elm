@@ -34,7 +34,7 @@ type alias Layer a b =
     { data : b
     , init : Int -> LayerMsg -> a -> b
     , update : Msg -> GlobalData -> LayerMsg -> ( b, Int ) -> a -> ( ( b, a, List ( LayerTarget, LayerMsg ) ), GlobalData )
-    , view : ( b, Int ) -> a -> GlobalData -> Maybe Renderable
+    , view : ( b, Int ) -> a -> GlobalData -> Renderable
     }
 
 

@@ -14,10 +14,10 @@ module Scenes.Home.GameLayer.Model exposing
 
 import Array
 import Base exposing (GlobalData, Msg)
-import Canvas exposing (Renderable, group)
+import Canvas exposing (Renderable)
 import Components.Console.Export as Console
 import Components.Typer.Export as Typer
-import Lib.Component.Base exposing (ComponentTMsg(..), ComponentTMsgType(..), ComponentTarget(..))
+import Lib.Component.Base exposing (ComponentTMsg(..), ComponentTarget(..))
 import Lib.Component.ComponentHandler exposing (updateComponents, viewComponent)
 import Lib.Layer.Base exposing (LayerMsg(..), LayerTarget(..))
 import Scenes.Home.GameLayer.Common exposing (Model)
@@ -31,8 +31,8 @@ initModel : Int -> LayerMsg -> CommonData -> Model
 initModel t _ _ =
     { components =
         Array.fromList
-            [ Typer.initComponent t 0 (ComponentUnnamedMsg (ComponentComponentTargetMsg (ComponentByID 1)))
-            , Console.initComponent t 1 (ComponentUnnamedMsg (ComponentComponentTargetMsg (ComponentByID 0)))
+            [ Typer.initComponent t 0 (ComponentIntMsg 1)
+            , Console.initComponent t 1 (ComponentIntMsg 0)
             ]
     }
 
@@ -42,7 +42,7 @@ initModel t _ _ =
 handleComponentMsg : GlobalData -> ComponentTMsg -> ( Model, Int ) -> CommonData -> ( ( Model, CommonData, List ( LayerTarget, LayerMsg ) ), GlobalData )
 handleComponentMsg gd tmsg ( model, _ ) cd =
     case tmsg of
-        ComponentUnnamedMsg (ComponentStringMsg x) ->
+        ComponentStringMsg x ->
             ( ( model, cd, [ ( LayerParentScene, LayerStringMsg x ) ] ), gd )
 
         _ ->
@@ -87,10 +87,6 @@ If you don't have components, remove viewComponent.
 If you have other elements than components, add them after viewComponent.
 
 -}
-viewModel : ( Model, Int ) -> CommonData -> GlobalData -> Maybe Renderable
+viewModel : ( Model, Int ) -> CommonData -> GlobalData -> Renderable
 viewModel ( model, t ) _ gd =
-    Just
-        (group []
-            [ Maybe.withDefault (group [] []) (viewComponent gd t model.components)
-            ]
-        )
+    viewComponent gd t model.components

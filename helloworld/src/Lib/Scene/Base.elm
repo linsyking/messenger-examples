@@ -27,9 +27,8 @@ You have to transmit data to next scene if you don't store the data in globaldat
 -}
 
 import Base exposing (GlobalData, Msg)
-import Canvas exposing (Renderable)
+import Canvas exposing (Renderable, empty)
 import Lib.Audio.Base exposing (AudioOption)
-import Lib.Tools.Maybe exposing (nothing2)
 
 
 {-| Scene
@@ -37,7 +36,7 @@ import Lib.Tools.Maybe exposing (nothing2)
 type alias Scene a =
     { init : Int -> SceneMsg -> a
     , update : Msg -> GlobalData -> ( a, Int ) -> ( a, List SceneOutputMsg, GlobalData )
-    , view : ( a, Int ) -> GlobalData -> Maybe Renderable
+    , view : ( a, Int ) -> GlobalData -> Renderable
     }
 
 
@@ -47,7 +46,7 @@ nullScene : Scene Bool
 nullScene =
     { init = \_ _ -> True
     , update = \_ gd ( x, _ ) -> ( x, [], gd )
-    , view = nothing2
+    , view = \_ _ -> empty
     }
 
 
@@ -75,6 +74,7 @@ Add your own messages here if you want to do more things.
 type SceneOutputMsg
     = SOMChangeScene ( SceneMsg, String )
     | SOMPlayAudio String String AudioOption
+    | SOMAlert String
     | SOMStopAudio String
     | SOMSetVolume Float
 

@@ -15,10 +15,10 @@ This is a component model module. It should define init, update and view model.
 -}
 
 import Base exposing (GlobalData, Msg(..))
-import Canvas exposing (Renderable)
+import Canvas exposing (Renderable, empty)
 import Char
 import Dict
-import Lib.Component.Base exposing (ComponentTMsg(..), ComponentTMsgType(..), ComponentTarget(..), Data, DefinedTypes(..))
+import Lib.Component.Base exposing (ComponentTMsg(..), ComponentTarget(..), Data, DefinedTypes(..))
 import Lib.DefinedTypes.Parser exposing (dBoolGet, dBoolSet, dComponentTargetGet, dIntGet, dStringGet, dStringSet)
 
 
@@ -32,8 +32,8 @@ initModel _ id msg =
     let
         updater =
             case msg of
-                ComponentUnnamedMsg (ComponentComponentTargetMsg x) ->
-                    x
+                ComponentIntMsg i ->
+                    ComponentByID i
 
                 _ ->
                     ComponentParentLayer
@@ -183,6 +183,6 @@ transformInt d c =
 Change this to your own component view function.
 
 -}
-viewModel : ( Data, Int ) -> GlobalData -> Maybe Renderable
+viewModel : ( Data, Int ) -> GlobalData -> Renderable
 viewModel _ _ =
-    Nothing
+    empty

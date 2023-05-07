@@ -80,6 +80,6 @@ updateModel msg gd ( model, t ) =
 
 {-| Default view function
 -}
-viewModel : ( Model, Int ) -> GlobalData -> Maybe Renderable
+viewModel : ( Model, Int ) -> GlobalData -> Renderable
 viewModel ( model, t ) gd =
     viewLayer gd t model.commonData model.layers

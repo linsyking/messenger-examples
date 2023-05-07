@@ -18,7 +18,7 @@ import Canvas exposing (Renderable, group)
 import Canvas.Settings.Advanced
 import Color
 import Lib.Component.Base exposing (ComponentTMsg(..))
-import Lib.Component.ComponentHandler exposing (updateComponents, viewComponent)
+import Lib.Component.ComponentHandler exposing (updateComponents)
 import Lib.Layer.Base exposing (LayerMsg(..), LayerTarget(..))
 import Lib.Render.Render exposing (renderSprite, renderTextWithColor)
 import Scenes.Home.GameLayer.Common exposing (Model)
@@ -79,11 +79,9 @@ If you don't have components, remove viewComponent.
 If you have other elements than components, add them after viewComponent.
 
 -}
-viewModel : ( Model, Int ) -> CommonData -> GlobalData -> Maybe Renderable
+viewModel : ( Model, Int ) -> CommonData -> GlobalData -> Renderable
 viewModel ( model, t ) _ gd =
-    Just
-        (group []
-            [ renderSprite gd [ Canvas.Settings.Advanced.filter "blur(5px)" ] ( 0, 0 ) ( 1920, 0 ) "bg"
-            , renderTextWithColor gd 100 "Hello World!" "Times New Roman" Color.blue ( 700, 100 )
-            ]
-        )
+    group []
+        [ renderSprite gd [ Canvas.Settings.Advanced.filter "blur(5px)" ] ( 0, 0 ) ( 1920, 0 ) "bg"
+        , renderTextWithColor gd 100 "Hello World!" "Times New Roman" Color.blue ( 700, 100 )
+        ]

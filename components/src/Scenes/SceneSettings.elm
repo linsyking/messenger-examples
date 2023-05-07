@@ -12,8 +12,8 @@ module Scenes.SceneSettings exposing
 
 -}
 
+import Canvas exposing (empty)
 import Lib.Scene.Base exposing (Scene)
-import Lib.Tools.Maybe exposing (nothing2)
 import Scenes.Home.Export as Home
 
 
@@ -46,5 +46,5 @@ nullSceneT : SceneT
 nullSceneT =
     { init = \_ _ -> NullSceneData
     , update = \_ g ( _, _ ) -> ( NullSceneData, [], g )
-    , view = nothing2
+    , view = \_ _ -> empty
     }

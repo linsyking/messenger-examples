@@ -1,6 +1,5 @@
 module Lib.Component.Base exposing
     ( ComponentTMsg(..)
-    , ComponentTMsgType(..)
     , DefinedTypes(..)
     , Component
     , Data
@@ -24,7 +23,6 @@ It is **not** fast to communicate between many components.
 Gamecomponents have better speed when communicating with each other. (their message types are built-in)
 
 @docs ComponentTMsg
-@docs ComponentTMsgType
 @docs DefinedTypes
 @docs Component
 @docs Data
@@ -33,9 +31,8 @@ Gamecomponents have better speed when communicating with each other. (their mess
 -}
 
 import Base exposing (GlobalData, Msg)
-import Canvas exposing (Renderable)
+import Canvas exposing (Renderable, empty)
 import Dict exposing (Dict)
-import Lib.Tools.Maybe exposing (nothing2)
 
 
 
@@ -58,7 +55,7 @@ type alias Component =
     , data : Data
     , init : Int -> Int -> ComponentTMsg -> Data
     , update : Msg -> GlobalData -> ComponentTMsg -> ( Data, Int ) -> ( Data, List ( ComponentTarget, ComponentTMsg ), GlobalData )
-    , view : ( Data, Int ) -> GlobalData -> Maybe Renderable
+    , view : ( Data, Int ) -> GlobalData -> Renderable
     }
 
 
@@ -75,7 +72,7 @@ nullComponent =
             , []
             , gd
             )
-    , view = nothing2
+    , view = \_ _ -> empty
     }
 
 
@@ -87,28 +84,21 @@ Those entries are some basic data types we need.
 
 You may add your own data types here.
 
-However, if your data types are too complicated, you might want to create your own component type (like game component) to acheive better performance.
+However, if your data types are too complicated, you might want to create your own component type (like game component) to achieve better performance.
 
 -}
 type ComponentTMsg
-    = ComponentUnnamedMsg ComponentTMsgType
-    | ComponentNamedMsg ComponentTarget ComponentTMsgType
-    | NullComponentMsg
-
-
-{-| Data types for message sending
--}
-type ComponentTMsgType
     = ComponentStringMsg String
-    | ComponentStringDataMsg String ComponentTMsgType
     | ComponentIntMsg Int
     | ComponentFloatMsg Float
     | ComponentBoolMsg Bool
-    | ComponentListMsg (List ComponentTMsgType)
-    | ComponentDictMsg Data
+    | ComponentStringDataMsg String ComponentTMsg
+    | ComponentListMsg (List ComponentTMsg)
     | ComponentComponentMsg Component
     | ComponentComponentTargetMsg ComponentTarget
+    | ComponentNamedMsg ComponentTarget ComponentTMsg
     | ComponentDTMsg DefinedTypes
+    | NullComponentMsg
 
 
 {-| ComponentTarget is the target you want to send the message to.

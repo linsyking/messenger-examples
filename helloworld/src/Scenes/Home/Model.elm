@@ -67,14 +67,14 @@ updateModel msg gd ( model, t ) =
         nmodel =
             { model | commonData = newcd, layers = newdata }
 
-        ( newmodel, newso, newwgd ) =
+        ( newmodel, newsow, newgd2 ) =
             List.foldl (\x ( y, _, cgd ) -> handleLayerMsg cgd x ( y, t )) ( nmodel, [], newgd ) msgs
     in
-    ( newmodel, newso, newwgd )
+    ( newmodel, newsow, newgd2 )
 
 
 {-| Default view function
 -}
-viewModel : ( Model, Int ) -> GlobalData -> Maybe Renderable
+viewModel : ( Model, Int ) -> GlobalData -> Renderable
 viewModel ( model, t ) gd =
     viewLayer gd t model.commonData model.layers

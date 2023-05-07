@@ -142,6 +142,9 @@ gameUpdate msg model =
 
                                 SOMStopAudio name ->
                                     ( { lastModel | audiorepo = stopAudio lastModel.audiorepo name }, lastCmds, lastAudioCmds )
+
+                                SOMAlert text ->
+                                    ( lastModel, lastCmds ++ [ alert text ], lastAudioCmds )
                         )
                         ( newModel, [], [] )
                         som
@@ -257,19 +260,9 @@ view _ model =
                 , style "top" (String.fromFloat model.currentGlobalData.startTop)
                 , style "position" "fixed"
                 ]
-                (MainConfig.background model.currentGlobalData
-                    :: (let
-                            sceneView =
-                                (getCurrentScene model).view ( model.currentData, model.time ) model.currentGlobalData
-                        in
-                        case sceneView of
-                            Just x ->
-                                [ x ]
-
-                            Nothing ->
-                                []
-                       )
-                )
+                [ MainConfig.background model.currentGlobalData
+                , (getCurrentScene model).view ( model.currentData, model.time ) model.currentGlobalData
+                ]
     in
     Html.div []
         (case model.currentGlobalData.extraHTML of

@@ -56,7 +56,7 @@ getLayerT layer =
             in
             ( ( dataToLDT rldt, rcd, ltm ), newgd )
 
-        view : ( LayerDataType, Int ) -> CommonData -> GlobalData -> Maybe Renderable
+        view : ( LayerDataType, Int ) -> CommonData -> GlobalData -> Renderable
         view ( ldt, t ) cd gd =
             layer.view ( ldtToData ldt, t ) cd gd
     in
