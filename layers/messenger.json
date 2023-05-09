@@ -1,0 +1,8 @@
+{
+    "scenes": {
+        "Home": [
+            "GameLayer",
+            "GameLayer2"
+        ]
+    }
+}
