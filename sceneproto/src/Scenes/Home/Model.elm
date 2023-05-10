@@ -32,11 +32,7 @@ initModel : Env -> SceneInitData -> Model
 initModel env _ =
     { commonData = nullCommonData
     , layers =
-        [ let
-            x =
-                GameLayer.layer
-          in
-          GameLayerG.getLayerT { x | data = GameLayer.layer.init (addCommonData nullCommonData env) NullLayerInitData }
+        [ GameLayerG.getLayerT (GameLayer.initLayer (addCommonData nullCommonData env) NullLayerInitData)
         ]
     }
 

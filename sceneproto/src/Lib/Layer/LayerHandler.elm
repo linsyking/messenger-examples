@@ -25,7 +25,7 @@ import Messenger.RecursionList exposing (updateObjects)
 
 {-| Updater
 -}
-update : Layer a b c -> EnvC b -> LayerMsg -> ( Layer a b c, List ( LayerTarget, LayerMsg ), EnvC b )
+update : Layer a b -> EnvC b -> LayerMsg -> ( Layer a b, List ( LayerTarget, LayerMsg ), EnvC b )
 update layer env lm =
     let
         ( newData, newMsgs, newEnv ) =
@@ -36,7 +36,7 @@ update layer env lm =
 
 {-| Matcher
 -}
-match : Layer a b c -> LayerTarget -> Bool
+match : Layer a b -> LayerTarget -> Bool
 match l t =
     case t of
         LayerParentScene ->
@@ -60,7 +60,7 @@ super t =
 
 {-| Recbody
 -}
-recBody : RecBody (Layer a b c) LayerMsg (EnvC b) LayerTarget
+recBody : RecBody (Layer a b) LayerMsg (EnvC b) LayerTarget
 recBody =
     { update = update, match = match, super = super }
 
@@ -70,7 +70,7 @@ recBody =
 Update all the layers.
 
 -}
-updateLayer : EnvC b -> LayerMsg -> List (Layer a b c) -> ( List (Layer a b c), List LayerMsg, EnvC b )
+updateLayer : EnvC b -> LayerMsg -> List (Layer a b) -> ( List (Layer a b), List LayerMsg, EnvC b )
 updateLayer =
     updateObjects recBody
 
@@ -80,6 +80,6 @@ updateLayer =
 Get the view of the layer.
 
 -}
-viewLayer : EnvC b -> List (Layer a b c) -> Renderable
+viewLayer : EnvC b -> List (Layer a b) -> Renderable
 viewLayer env models =
     group [] <| viewModelList env models

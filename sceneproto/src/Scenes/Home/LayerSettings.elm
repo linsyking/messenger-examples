@@ -13,7 +13,7 @@ module Scenes.Home.LayerSettings exposing
 
 import Lib.Layer.Base exposing (Layer)
 import Scenes.Home.GameLayer.Export as GameLayer
-import Scenes.Home.LayerBase exposing (CommonData, LayerInitData)
+import Scenes.Home.LayerBase exposing (CommonData)
 
 
 {-| LayerDataType
@@ -26,4 +26,4 @@ type LayerDataType
 {-| LayerT
 -}
 type alias LayerT =
-    Layer LayerDataType CommonData LayerInitData
+    Layer LayerDataType CommonData

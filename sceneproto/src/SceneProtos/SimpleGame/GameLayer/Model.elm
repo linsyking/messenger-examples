@@ -13,10 +13,8 @@ module SceneProtos.SimpleGame.GameLayer.Model exposing
 -}
 
 import Array
-import Canvas exposing (Renderable)
+import Canvas exposing (Renderable, empty)
 import Lib.Component.Base exposing (ComponentMsg(..))
-import Lib.Component.ComponentHandler exposing (updateComponents, viewComponent)
-import Lib.Env.Env exposing (addCommonData, noCommonData)
 import Lib.Layer.Base exposing (LayerMsg(..), LayerTarget(..))
 import SceneProtos.SimpleGame.GameLayer.Common exposing (EnvC, Model)
 import SceneProtos.SimpleGame.LayerBase exposing (LayerInitData)
@@ -27,15 +25,7 @@ Add components here
 -}
 initModel : EnvC -> LayerInitData -> Model
 initModel _ _ =
-    { components = Array.empty
-    }
-
-
-{-| Handle component messages (that are sent to this layer).
--}
-handleComponentMsg : EnvC -> ComponentMsg -> Model -> ( Model, List ( LayerTarget, LayerMsg ), EnvC )
-handleComponentMsg env _ model =
-    ( model, [], env )
+    { balls = Array.empty }
 
 
 {-| updateModel
@@ -46,26 +36,7 @@ Add your logic to handle msg and LayerMsg here
 -}
 updateModel : EnvC -> LayerMsg -> Model -> ( Model, List ( LayerTarget, LayerMsg ), EnvC )
 updateModel env _ model =
-    let
-        components =
-            model.components
-
-        ( newComponents, newMsg, newEnv ) =
-            updateComponents (noCommonData env) NullComponentMsg components
-
-        ( newModel, newMsg2, newEnv2 ) =
-            List.foldl
-                (\cTMsg ( m, cmsg, cenv ) ->
-                    let
-                        ( nm, nmsg, nenv ) =
-                            handleComponentMsg cenv cTMsg m
-                    in
-                    ( nm, nmsg ++ cmsg, nenv )
-                )
-                ( { model | components = newComponents }, [], addCommonData env.commonData newEnv )
-                newMsg
-    in
-    ( newModel, newMsg2, newEnv2 )
+    ( model, [], env )
 
 
 {-| viewModel
@@ -77,5 +48,5 @@ If you have other elements than components, add them after viewComponent.
 
 -}
 viewModel : EnvC -> Model -> Renderable
-viewModel env model =
-    viewComponent (noCommonData env) model.components
+viewModel _ _ =
+    empty

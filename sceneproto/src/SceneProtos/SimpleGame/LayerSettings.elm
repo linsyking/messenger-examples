@@ -13,7 +13,7 @@ module SceneProtos.SimpleGame.LayerSettings exposing
 
 import Lib.Layer.Base exposing (Layer)
 import SceneProtos.SimpleGame.GameLayer.Export as GameLayer
-import SceneProtos.SimpleGame.LayerBase exposing (CommonData, LayerInitData)
+import SceneProtos.SimpleGame.LayerBase exposing (CommonData)
 
 
 {-| LayerDataType
@@ -26,4 +26,4 @@ type LayerDataType
 {-| LayerT
 -}
 type alias LayerT =
-    Layer LayerDataType CommonData LayerInitData
+    Layer LayerDataType CommonData

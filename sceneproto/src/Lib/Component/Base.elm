@@ -51,7 +51,7 @@ Examples are [GameComponent](https://github.com/linsyking/Reweave/blob/master/sr
 
 -}
 type alias Component =
-    GeneralModel Data Env ComponentInitData ComponentMsg ComponentTarget Renderable
+    GeneralModel Data Env ComponentMsg ComponentTarget Renderable
 
 
 {-| Data type used to initialize a component.
@@ -68,7 +68,6 @@ nullComponent : Component
 nullComponent =
     { name = "NULL"
     , data = Dict.empty
-    , init = \_ _ -> Dict.empty
     , update =
         \env _ _ ->
             ( Dict.empty

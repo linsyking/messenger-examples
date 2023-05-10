@@ -7,15 +7,15 @@ module SceneProtos.SimpleGame.GameLayer.Common exposing (Model, EnvC)
 -}
 
 import Array exposing (Array)
-import Lib.Component.Base exposing (Component)
 import Lib.Env.Env as Env
+import SceneProtos.SimpleGame.GameComponent.Base exposing (GameComponent)
 import SceneProtos.SimpleGame.LayerBase exposing (CommonData)
 
 
 {-| Model
 -}
 type alias Model =
-    { components : Array Component
+    { balls : Array GameComponent
     }
 
 

@@ -31,8 +31,8 @@ Layer data type.
 a is the layer data, b is the common data that shares between layers, c is the init data
 
 -}
-type alias Layer a b c =
-    GeneralModel a (EnvC b) c LayerMsg LayerTarget Renderable
+type alias Layer a b =
+    GeneralModel a (EnvC b) LayerMsg LayerTarget Renderable
 
 
 {-| LayerMsg

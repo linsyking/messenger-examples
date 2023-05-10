@@ -8,7 +8,7 @@ import SceneProtos.SimpleGame.LayerBase exposing (CommonData)
 
 
 type alias GameComponent =
-    GeneralModel Data (EnvC CommonData) GameComponentInitData GameComponentMsg GameComponentTarget Renderable
+    GeneralModel Data (EnvC CommonData) GameComponentMsg GameComponentTarget Renderable
 
 
 type GameComponentTarget
@@ -24,20 +24,21 @@ type GameComponentMsg
 type alias Data =
     { uid : Int
     , position : ( Int, Int )
-    , velocity : ( Float, Float )
-    , radius : Float
+    , velocity : ( Int, Int )
+    , radius : Int
     , color : Color
     }
 
 
 type GameComponentInitData
-    = GCBallInitData BallInitData
+    = GCIdData Int GameComponentInitData
+    | GCBallInitData BallInitData
     | NullGCInitData
 
 
 type alias BallInitData =
     { position : ( Int, Int )
-    , velocity : ( Float, Float )
-    , radius : Float
+    , velocity : ( Int, Int )
+    , radius : Int
     , color : Color
     }
