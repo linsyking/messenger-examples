@@ -1,4 +1,4 @@
-module Scenes.Home.Model exposing
+module SceneProtos.SimpleGame.Model exposing
     ( initModel
     , handleLayerMsg
     , updateModel
@@ -20,10 +20,10 @@ import Lib.Env.Env exposing (Env, EnvC, addCommonData, noCommonData)
 import Lib.Layer.Base exposing (LayerMsg(..))
 import Lib.Layer.LayerHandler exposing (updateLayer, viewLayer)
 import Lib.Scene.Base exposing (SceneInitData(..), SceneMsg(..), SceneOutputMsg(..))
-import Scenes.Home.Common exposing (Model)
-import Scenes.Home.GameLayer.Export as GameLayer
-import Scenes.Home.GameLayer.Global as GameLayerG
-import Scenes.Home.LayerBase exposing (CommonData, LayerInitData(..), nullCommonData)
+import SceneProtos.SimpleGame.Common exposing (Model)
+import SceneProtos.SimpleGame.GameLayer.Export as GameLayer
+import SceneProtos.SimpleGame.GameLayer.Global as GameLayerG
+import SceneProtos.SimpleGame.LayerBase exposing (CommonData, LayerInitData(..), nullCommonData)
 
 
 {-| Initialize the model

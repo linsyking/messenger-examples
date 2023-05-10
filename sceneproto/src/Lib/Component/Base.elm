@@ -1,10 +1,9 @@
 module Lib.Component.Base exposing
-    ( ComponentTMsg(..)
-    , DefinedTypes(..)
+    ( DefinedTypes(..)
     , Component
     , Data
     , nullComponent
-    , ComponentInitData(..), ComponentTarget(..), Env
+    , ComponentInitData(..), ComponentMsg(..), ComponentTarget(..)
     )
 
 {-|
@@ -30,9 +29,9 @@ Gamecomponents have better speed when communicating with each other. (their mess
 
 -}
 
-import Base exposing (GlobalData, Msg)
 import Canvas exposing (Renderable, empty)
 import Dict exposing (Dict)
+import Lib.Env.Env exposing (Env)
 import Messenger.GeneralModel exposing (GeneralModel)
 
 
@@ -52,23 +51,14 @@ Examples are [GameComponent](https://github.com/linsyking/Reweave/blob/master/sr
 
 -}
 type alias Component =
-    GeneralModel Data Env ComponentInitData ComponentTMsg ComponentTarget Renderable
-
-
-{-| Environment data
--}
-type alias Env =
-    { msg : Msg
-    , t : Int
-    , globalData : GlobalData
-    }
+    GeneralModel Data Env ComponentInitData ComponentMsg ComponentTarget Renderable
 
 
 {-| Data type used to initialize a component.
 -}
 type ComponentInitData
     = ComponentID Int ComponentInitData
-    | ComponentMsg ComponentTMsg
+    | ComponentMsg ComponentMsg
     | NullComponentInitData
 
 
@@ -100,16 +90,16 @@ You may add your own data types here.
 However, if your data types are too complicated, you might want to create your own component type (like game component) to achieve better performance.
 
 -}
-type ComponentTMsg
+type ComponentMsg
     = ComponentStringMsg String
     | ComponentIntMsg Int
     | ComponentFloatMsg Float
     | ComponentBoolMsg Bool
-    | ComponentStringDataMsg String ComponentTMsg
-    | ComponentListMsg (List ComponentTMsg)
+    | ComponentStringDataMsg String ComponentMsg
+    | ComponentListMsg (List ComponentMsg)
     | ComponentComponentMsg Component
     | ComponentComponentTargetMsg ComponentTarget
-    | ComponentNamedMsg ComponentTarget ComponentTMsg
+    | ComponentNamedMsg ComponentTarget ComponentMsg
     | ComponentDTMsg DefinedTypes
     | NullComponentMsg
 

@@ -1,5 +1,6 @@
 module Lib.Layer.LayerHandler exposing
-    ( updateLayer
+    ( update, match, super, recBody
+    , updateLayer
     , viewLayer
     )
 
@@ -8,25 +9,23 @@ module Lib.Layer.LayerHandler exposing
 
 # Layer Handler
 
-Compare this to Lib.Layer.LayerHandlerRaw.elm.
-
-If you want to implement custom layer handler, please use the raw version.
-
-For example, you can implement a "stopper" that stops the layer updating if some confitions are satisfied.
-
+@docs update, match, super, recBody
 @docs updateLayer
-
 @docs viewLayer
 
 -}
 
-import Canvas exposing (Renderable)
-import Lib.Layer.Base exposing (Env, Layer, LayerMsg(..), LayerTarget(..))
+import Canvas exposing (Renderable, group)
+import Lib.Env.Env exposing (EnvC)
+import Lib.Layer.Base exposing (Layer, LayerMsg(..), LayerTarget(..))
+import Messenger.GeneralModel exposing (viewModelList)
 import Messenger.Recursion exposing (RecBody)
 import Messenger.RecursionList exposing (updateObjects)
 
 
-update : Layer a b c -> Env b -> LayerMsg -> ( Layer a b c, List ( LayerTarget, LayerMsg ), Env b )
+{-| Updater
+-}
+update : Layer a b c -> EnvC b -> LayerMsg -> ( Layer a b c, List ( LayerTarget, LayerMsg ), EnvC b )
 update layer env lm =
     let
         ( newData, newMsgs, newEnv ) =
@@ -35,6 +34,8 @@ update layer env lm =
     ( { layer | data = newData }, newMsgs, newEnv )
 
 
+{-| Matcher
+-}
 match : Layer a b c -> LayerTarget -> Bool
 match l t =
     case t of
@@ -45,6 +46,8 @@ match l t =
             n == l.name
 
 
+{-| Super
+-}
 super : LayerTarget -> Bool
 super t =
     case t of
@@ -55,7 +58,9 @@ super t =
             False
 
 
-recBody : RecBody (Layer a b c) LayerMsg (Env b) LayerTarget
+{-| Recbody
+-}
+recBody : RecBody (Layer a b c) LayerMsg (EnvC b) LayerTarget
 recBody =
     { update = update, match = match, super = super }
 
@@ -65,7 +70,7 @@ recBody =
 Update all the layers.
 
 -}
-updateLayer : Env b -> LayerMsg -> List (Layer a b c) -> ( List (Layer a b c), List LayerMsg, Env b )
+updateLayer : EnvC b -> LayerMsg -> List (Layer a b c) -> ( List (Layer a b c), List LayerMsg, EnvC b )
 updateLayer =
     updateObjects recBody
 
@@ -75,7 +80,6 @@ updateLayer =
 Get the view of the layer.
 
 -}
-viewLayer : Env b -> List (Layer a b c) -> Renderable
-viewLayer env xs =
-    Canvas.group []
-        (List.map (\l -> l.view env l.data) xs)
+viewLayer : EnvC b -> List (Layer a b c) -> Renderable
+viewLayer env models =
+    group [] <| viewModelList env models

@@ -1,7 +1,7 @@
 module Lib.Scene.Base exposing
     ( SceneMsg(..)
     , SceneOutputMsg(..)
-    , Scene, Env, SceneInitData(..)
+    , Scene, SceneInitData(..)
     , LayerPacker
     )
 
@@ -20,13 +20,13 @@ You have to transmit data to next scene if you don't store the data in globaldat
 
 @docs SceneMsg
 @docs SceneOutputMsg
-@docs Scene, Env, SceneInitData
+@docs Scene, SceneInitData
 
 -}
 
-import Base exposing (GlobalData, Msg)
 import Canvas exposing (Renderable)
 import Lib.Audio.Base exposing (AudioOption)
+import Lib.Env.Env exposing (Env)
 
 
 {-| Scene
@@ -35,15 +35,6 @@ type alias Scene a =
     { init : Env -> SceneInitData -> a
     , update : Env -> a -> ( a, List SceneOutputMsg, Env )
     , view : Env -> a -> Renderable
-    }
-
-
-{-| Environment data
--}
-type alias Env =
-    { msg : Msg
-    , t : Int
-    , globalData : GlobalData
     }
 
 

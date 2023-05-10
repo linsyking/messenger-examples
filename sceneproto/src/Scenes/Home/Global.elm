@@ -17,7 +17,8 @@ Don't modify this file.
 -}
 
 import Canvas exposing (Renderable)
-import Lib.Scene.Base exposing (Env, Scene, SceneInitData, SceneOutputMsg)
+import Lib.Env.Env exposing (Env)
+import Lib.Scene.Base exposing (Scene, SceneInitData, SceneOutputMsg)
 import Scenes.Home.Export exposing (Data, nullData)
 import Scenes.SceneSettings exposing (SceneDataTypes(..), SceneT)
 

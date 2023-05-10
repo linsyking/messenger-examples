@@ -16,7 +16,8 @@ This is a component model module. It should define init, update and view model.
 
 import Canvas exposing (Renderable, empty)
 import Dict
-import Lib.Component.Base exposing (ComponentInitData(..), ComponentTMsg(..), ComponentTarget(..), Data, DefinedTypes(..), Env)
+import Lib.Component.Base exposing (ComponentInitData(..), ComponentMsg(..), ComponentTarget(..), Data, DefinedTypes(..))
+import Lib.Env.Env exposing (Env)
 
 
 {-| initModel
@@ -41,7 +42,7 @@ initModel _ i =
 Add your component logic here.
 
 -}
-updateModel : Env -> ComponentTMsg -> Data -> ( Data, List ( ComponentTarget, ComponentTMsg ), Env )
+updateModel : Env -> ComponentMsg -> Data -> ( Data, List ( ComponentTarget, ComponentMsg ), Env )
 updateModel env ctmsg d =
     case ctmsg of
         ComponentIntMsg x ->

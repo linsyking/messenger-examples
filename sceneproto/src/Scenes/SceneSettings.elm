@@ -14,6 +14,7 @@ module Scenes.SceneSettings exposing
 
 import Canvas exposing (empty)
 import Lib.Scene.Base exposing (Scene)
+import SceneProtos.SimpleGame.Export as SimpleGame
 import Scenes.Home.Export as Home
 
 
@@ -28,6 +29,7 @@ All the scene data types should be listed here.
 -}
 type SceneDataTypes
     = HomeDataT Home.Data
+    | SimpleGameDataT SimpleGame.Data
     | NullSceneData
 
 

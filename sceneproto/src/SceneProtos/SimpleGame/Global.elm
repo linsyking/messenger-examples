@@ -1,4 +1,4 @@
-module Scenes.Home.Global exposing
+module SceneProtos.SimpleGame.Global exposing
     ( dataToSDT
     , sdtToData
     , sceneToST
@@ -19,7 +19,7 @@ Don't modify this file.
 import Canvas exposing (Renderable)
 import Lib.Env.Env exposing (Env)
 import Lib.Scene.Base exposing (Scene, SceneInitData, SceneOutputMsg)
-import Scenes.Home.Export exposing (Data, nullData)
+import SceneProtos.SimpleGame.Export exposing (Data, nullData)
 import Scenes.SceneSettings exposing (SceneDataTypes(..), SceneT)
 
 
@@ -27,7 +27,7 @@ import Scenes.SceneSettings exposing (SceneDataTypes(..), SceneT)
 -}
 dataToSDT : Data -> SceneDataTypes
 dataToSDT d =
-    HomeDataT d
+    SimpleGameDataT d
 
 
 {-| sdtToData
@@ -35,7 +35,7 @@ dataToSDT d =
 sdtToData : SceneDataTypes -> Data
 sdtToData dt =
     case dt of
-        HomeDataT x ->
+        SimpleGameDataT x ->
             x
 
         _ ->

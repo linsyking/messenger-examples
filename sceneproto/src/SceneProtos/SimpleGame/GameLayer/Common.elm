@@ -1,4 +1,4 @@
-module Scenes.Home.GameLayer.Common exposing (Model, EnvC)
+module SceneProtos.SimpleGame.GameLayer.Common exposing (Model, EnvC)
 
 {-| This is the doc for this module
 
@@ -9,7 +9,7 @@ module Scenes.Home.GameLayer.Common exposing (Model, EnvC)
 import Array exposing (Array)
 import Lib.Component.Base exposing (Component)
 import Lib.Env.Env as Env
-import Scenes.Home.LayerBase exposing (CommonData)
+import SceneProtos.SimpleGame.LayerBase exposing (CommonData)
 
 
 {-| Model

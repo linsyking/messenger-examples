@@ -1,4 +1,4 @@
-module Scenes.Home.GameLayer.Model exposing
+module SceneProtos.SimpleGame.GameLayer.Model exposing
     ( initModel
     , updateModel
     , viewModel
@@ -18,8 +18,8 @@ import Lib.Component.Base exposing (ComponentMsg(..))
 import Lib.Component.ComponentHandler exposing (updateComponents, viewComponent)
 import Lib.Env.Env exposing (addCommonData, noCommonData)
 import Lib.Layer.Base exposing (LayerMsg(..), LayerTarget(..))
-import Scenes.Home.GameLayer.Common exposing (EnvC, Model)
-import Scenes.Home.LayerBase exposing (LayerInitData)
+import SceneProtos.SimpleGame.GameLayer.Common exposing (EnvC, Model)
+import SceneProtos.SimpleGame.LayerBase exposing (LayerInitData)
 
 
 {-| initModel
@@ -52,17 +52,20 @@ updateModel env _ model =
 
         ( newComponents, newMsg, newEnv ) =
             updateComponents (noCommonData env) NullComponentMsg components
+
+        ( newModel, newMsg2, newEnv2 ) =
+            List.foldl
+                (\cTMsg ( m, cmsg, cenv ) ->
+                    let
+                        ( nm, nmsg, nenv ) =
+                            handleComponentMsg cenv cTMsg m
+                    in
+                    ( nm, nmsg ++ cmsg, nenv )
+                )
+                ( { model | components = newComponents }, [], addCommonData env.commonData newEnv )
+                newMsg
     in
-    List.foldl
-        (\cTMsg ( m, cmsg, cenv ) ->
-            let
-                ( nm, nmsg, nenv ) =
-                    handleComponentMsg cenv cTMsg m
-            in
-            ( nm, nmsg ++ cmsg, nenv )
-        )
-        ( { model | components = newComponents }, [], addCommonData env.commonData newEnv )
-        newMsg
+    ( newModel, newMsg2, newEnv2 )
 
 
 {-| viewModel

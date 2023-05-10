@@ -16,9 +16,10 @@ module Scenes.Home.Model exposing
 
 import Canvas exposing (Renderable)
 import Lib.Audio.Base exposing (AudioOption(..))
-import Lib.Layer.Base as L exposing (LayerMsg(..), addCommonData, noCommonData)
+import Lib.Env.Env exposing (Env, EnvC, addCommonData, noCommonData)
+import Lib.Layer.Base exposing (LayerMsg(..))
 import Lib.Layer.LayerHandler exposing (updateLayer, viewLayer)
-import Lib.Scene.Base exposing (Env, SceneInitData(..), SceneMsg(..), SceneOutputMsg(..))
+import Lib.Scene.Base exposing (SceneInitData(..), SceneMsg(..), SceneOutputMsg(..))
 import Scenes.Home.Common exposing (Model)
 import Scenes.Home.GameLayer.Export as GameLayer
 import Scenes.Home.GameLayer.Global as GameLayerG
@@ -45,7 +46,7 @@ initModel env _ =
 Usually you are adding logic here.
 
 -}
-handleLayerMsg : L.Env CommonData -> LayerMsg -> Model -> ( Model, List SceneOutputMsg, L.Env CommonData )
+handleLayerMsg : EnvC CommonData -> LayerMsg -> Model -> ( Model, List SceneOutputMsg, EnvC CommonData )
 handleLayerMsg env _ model =
     ( model, [], env )
 

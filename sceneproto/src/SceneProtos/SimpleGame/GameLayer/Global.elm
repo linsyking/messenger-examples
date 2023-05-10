@@ -1,4 +1,4 @@
-module Scenes.Home.GameLayer.Global exposing
+module SceneProtos.SimpleGame.GameLayer.Global exposing
     ( dataToLDT
     , ldtToData
     , getLayerT
@@ -15,10 +15,10 @@ module Scenes.Home.GameLayer.Global exposing
 import Canvas exposing (Renderable)
 import Lib.Layer.Base exposing (Layer, LayerMsg, LayerTarget)
 import Messenger.GeneralModel exposing (GeneralModel)
-import Scenes.Home.GameLayer.Common exposing (EnvC)
-import Scenes.Home.GameLayer.Export exposing (Data, nullData)
-import Scenes.Home.LayerBase exposing (CommonData, LayerInitData)
-import Scenes.Home.LayerSettings exposing (LayerDataType(..), LayerT)
+import SceneProtos.SimpleGame.GameLayer.Common exposing (EnvC)
+import SceneProtos.SimpleGame.GameLayer.Export exposing (Data, nullData)
+import SceneProtos.SimpleGame.LayerBase exposing (CommonData, LayerInitData)
+import SceneProtos.SimpleGame.LayerSettings exposing (LayerDataType(..), LayerT)
 
 
 {-| dataToLDT

@@ -1,7 +1,7 @@
 module Lib.Layer.Base exposing
     ( LayerMsg(..)
     , LayerTarget(..)
-    , Layer, Env, noCommonData, addCommonData
+    , Layer
     )
 
 {-| This is the doc for this module
@@ -14,13 +14,13 @@ Using layers can help us deal with different things in different layers.
 
 @docs LayerMsg
 @docs LayerTarget
-@docs Layer, Env, noCommonData, addCommonData
+@docs Layer
 
 -}
 
-import Base exposing (GlobalData, Msg)
 import Canvas exposing (Renderable)
 import Lib.Audio.Base exposing (AudioOption)
+import Lib.Env.Env exposing (EnvC)
 import Messenger.GeneralModel exposing (GeneralModel)
 
 
@@ -32,54 +32,7 @@ a is the layer data, b is the common data that shares between layers, c is the i
 
 -}
 type alias Layer a b c =
-    GeneralModel a (Env b) c LayerMsg LayerTarget Renderable
-
-
-{-| Environment data type.
--}
-type alias Env b =
-    { msg : Msg
-    , globalData : GlobalData
-    , t : Int
-    , commonData : b
-    }
-
-
-{-| Remove common data from environment.
-
-Useful when sending message to a component.
-
--}
-noCommonData :
-    Env b
-    ->
-        { msg : Msg
-        , globalData : GlobalData
-        , t : Int
-        }
-noCommonData env =
-    { msg = env.msg
-    , globalData = env.globalData
-    , t = env.t
-    }
-
-
-{-| Add the common data back.
--}
-addCommonData :
-    b
-    ->
-        { msg : Msg
-        , globalData : GlobalData
-        , t : Int
-        }
-    -> Env b
-addCommonData commonData env =
-    { msg = env.msg
-    , globalData = env.globalData
-    , t = env.t
-    , commonData = commonData
-    }
+    GeneralModel a (EnvC b) c LayerMsg LayerTarget Renderable
 
 
 {-| LayerMsg

@@ -15,13 +15,14 @@
             "elm/time": "1.0.0",
             "ianmackenzie/elm-units": "2.9.0",
             "linsyking/elm-canvas": "3.1.0",
-            "linsyking/messenger-core": "3.0.2"
+            "linsyking/messenger-core": "3.1.0"
         },
         "indirect": {
             "elm/random": "1.0.0",
             "elm/url": "1.0.0",
             "elm/virtual-dom": "1.0.3",
             "elm-community/array-extra": "2.6.0",
+            "elm-community/list-extra": "8.7.0",
             "mgold/elm-nonempty-list": "4.2.0"
         }
     },
