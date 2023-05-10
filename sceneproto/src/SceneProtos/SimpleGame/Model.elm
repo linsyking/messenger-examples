@@ -19,22 +19,30 @@ import Lib.Audio.Base exposing (AudioOption(..))
 import Lib.Env.Env exposing (Env, EnvC, addCommonData, noCommonData)
 import Lib.Layer.Base exposing (LayerMsg(..))
 import Lib.Layer.LayerHandler exposing (updateLayer, viewLayer)
-import Lib.Scene.Base exposing (SceneInitData(..), SceneMsg(..), SceneOutputMsg(..))
+import Lib.Scene.Base exposing (SceneInitData(..), SceneOutputMsg(..))
 import SceneProtos.SimpleGame.Common exposing (Model)
 import SceneProtos.SimpleGame.GameLayer.Export as GameLayer
 import SceneProtos.SimpleGame.GameLayer.Global as GameLayerG
-import SceneProtos.SimpleGame.LayerBase exposing (CommonData, LayerInitData(..), nullCommonData)
+import SceneProtos.SimpleGame.LayerBase exposing (CommonData, nullCommonData)
+import SceneProtos.SimpleGame.LayerInit exposing (LayerInitData(..))
 
 
 {-| Initialize the model
 -}
 initModel : Env -> SceneInitData -> Model
-initModel env _ =
-    { commonData = nullCommonData
-    , layers =
-        [ GameLayerG.getLayerT (GameLayer.initLayer (addCommonData nullCommonData env) NullLayerInitData)
-        ]
-    }
+initModel env i =
+    case i of
+        SimpleGameInitData x ->
+            { commonData = nullCommonData
+            , layers =
+                [ GameLayerG.getLayerT (GameLayer.initLayer (addCommonData nullCommonData env) (GameLayerInitData x))
+                ]
+            }
+
+        _ ->
+            { commonData = nullCommonData
+            , layers = []
+            }
 
 
 {-| handleLayerMsg

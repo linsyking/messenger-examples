@@ -13,19 +13,26 @@ module SceneProtos.SimpleGame.GameLayer.Model exposing
 -}
 
 import Array
-import Canvas exposing (Renderable, empty)
+import Canvas exposing (Renderable)
 import Lib.Component.Base exposing (ComponentMsg(..))
 import Lib.Layer.Base exposing (LayerMsg(..), LayerTarget(..))
+import SceneProtos.SimpleGame.GameComponent.Base exposing (GameComponentInitData(..))
+import SceneProtos.SimpleGame.GameComponent.Handler exposing (viewGC)
 import SceneProtos.SimpleGame.GameLayer.Common exposing (EnvC, Model)
-import SceneProtos.SimpleGame.LayerBase exposing (LayerInitData)
+import SceneProtos.SimpleGame.LayerInit exposing (LayerInitData(..))
 
 
 {-| initModel
 Add components here
 -}
 initModel : EnvC -> LayerInitData -> Model
-initModel _ _ =
-    { balls = Array.empty }
+initModel _ i =
+    case i of
+        GameLayerInitData x ->
+            x
+
+        _ ->
+            { balls = Array.empty }
 
 
 {-| updateModel
@@ -48,5 +55,5 @@ If you have other elements than components, add them after viewComponent.
 
 -}
 viewModel : EnvC -> Model -> Renderable
-viewModel _ _ =
-    empty
+viewModel env model =
+    viewGC env model.balls

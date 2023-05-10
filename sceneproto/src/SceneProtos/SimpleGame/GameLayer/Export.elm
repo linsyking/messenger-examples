@@ -16,7 +16,8 @@ import Array
 import Lib.Layer.Base exposing (Layer)
 import SceneProtos.SimpleGame.GameLayer.Common exposing (EnvC, Model)
 import SceneProtos.SimpleGame.GameLayer.Model exposing (initModel, updateModel, viewModel)
-import SceneProtos.SimpleGame.LayerBase exposing (CommonData, LayerInitData)
+import SceneProtos.SimpleGame.LayerBase exposing (CommonData)
+import SceneProtos.SimpleGame.LayerInit exposing (LayerInitData)
 
 
 {-| Data

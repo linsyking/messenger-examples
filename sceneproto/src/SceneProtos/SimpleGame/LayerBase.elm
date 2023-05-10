@@ -1,6 +1,6 @@
 module SceneProtos.SimpleGame.LayerBase exposing
     ( CommonData
-    , LayerInitData(..), SimpleGameInit, nullCommonData
+    , nullCommonData
     )
 
 {-| This is the doc for this module
@@ -25,13 +25,3 @@ type alias CommonData =
 nullCommonData : CommonData
 nullCommonData =
     {}
-
-
-type LayerInitData
-    = NullLayerInitData
-
-
-type alias SimpleGameInit =
-    { ballPositions : List ( Int, Int )
-    , ballVelocities : List ( Float, Float )
-    }

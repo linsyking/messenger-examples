@@ -1,4 +1,8 @@
-module SceneProtos.SimpleGame.GameComponents.Ball.Ball exposing (..)
+module SceneProtos.SimpleGame.GameComponents.Ball.Ball exposing
+    ( initModel
+    , updateModel
+    , viewModel
+    )
 
 import Canvas exposing (Renderable, circle, shapes)
 import Canvas.Settings exposing (fill)
