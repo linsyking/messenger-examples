@@ -8,8 +8,11 @@ This module records all the scenes.
 
 -}
 
+import SceneProtos.SimpleGame.Export as SimpleGame
+import SceneProtos.SimpleGame.Global as SimpleGameG
 import Scenes.Home.Export as Home
 import Scenes.Home.Global as HomeG
+import Scenes.Scene1.Export as Scene1
 import Scenes.SceneSettings exposing (SceneT)
 
 
@@ -19,4 +22,5 @@ Add all the scenes here
 allScenes : List ( String, SceneT )
 allScenes =
     [ ( "Home", HomeG.sceneToST Home.scene )
+    , ( "Scene1", SimpleGameG.sceneToST <| SimpleGame.genScene Scene1.game )
     ]

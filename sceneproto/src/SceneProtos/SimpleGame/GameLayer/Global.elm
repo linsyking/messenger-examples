@@ -9,8 +9,8 @@ module SceneProtos.SimpleGame.GameLayer.Global exposing (getLayerT)
 import Canvas exposing (Renderable)
 import Lib.Layer.Base exposing (Layer, LayerMsg, LayerTarget)
 import Messenger.GeneralModel exposing (GeneralModel)
-import SceneProtos.SimpleGame.GameLayer.Common exposing (EnvC)
-import SceneProtos.SimpleGame.GameLayer.Export exposing (Data, nullData)
+import SceneProtos.SimpleGame.GameLayer.Common exposing (EnvC, nullModel)
+import SceneProtos.SimpleGame.GameLayer.Export exposing (Data)
 import SceneProtos.SimpleGame.LayerBase exposing (CommonData)
 import SceneProtos.SimpleGame.LayerSettings exposing (LayerDataType(..), LayerT)
 
@@ -31,7 +31,7 @@ ldtToData ldt =
             x
 
         _ ->
-            nullData
+            nullModel
 
 
 {-| getLayerT

@@ -21,7 +21,7 @@ import Color
 -}
 initScene : String
 initScene =
-    "Home"
+    "Scene1"
 
 
 {-| Time Interval in milliseconds.

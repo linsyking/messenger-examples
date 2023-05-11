@@ -13,7 +13,7 @@ module SceneProtos.SimpleGame.Export exposing
 -}
 
 import Lib.Env.Env exposing (Env)
-import Lib.Scene.Base exposing (Scene, SceneInitData(..), SceneTMsg)
+import Lib.Scene.Base exposing (Scene, SceneInitData(..), SceneTMsg(..))
 import SceneProtos.SimpleGame.Common exposing (Model)
 import SceneProtos.SimpleGame.LayerBase exposing (nullCommonData)
 import SceneProtos.SimpleGame.LayerInit exposing (SimpleGameInit)
@@ -46,7 +46,7 @@ genScene im =
                     initModel env <| SimpleGameInitData (im env init)
 
                 _ ->
-                    nullData
+                    initModel env <| SimpleGameInitData (im env NullSceneMsg)
     , update = updateModel
     , view = viewModel
     }

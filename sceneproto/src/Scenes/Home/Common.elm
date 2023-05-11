@@ -1,13 +1,13 @@
-module Scenes.Home.Common exposing (Model)
+module Scenes.Home.Common exposing (Model, nullModel)
 
 {-| This is the doc for this module
 
-@docs Model
+@docs Model, nullModel
 
 -}
 
 import Lib.Scene.Base exposing (LayerPacker)
-import Scenes.Home.LayerBase exposing (CommonData)
+import Scenes.Home.LayerBase exposing (CommonData, nullCommonData)
 import Scenes.Home.LayerSettings exposing (LayerT)
 
 
@@ -15,3 +15,12 @@ import Scenes.Home.LayerSettings exposing (LayerT)
 -}
 type alias Model =
     LayerPacker CommonData LayerT
+
+
+{-| nullModel
+-}
+nullModel : Model
+nullModel =
+    { commonData = nullCommonData
+    , layers = []
+    }

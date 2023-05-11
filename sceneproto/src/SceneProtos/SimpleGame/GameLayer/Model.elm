@@ -12,13 +12,13 @@ module SceneProtos.SimpleGame.GameLayer.Model exposing
 
 -}
 
-import Array
+import Array exposing (Array)
 import Canvas exposing (Renderable)
 import Lib.Component.Base exposing (ComponentMsg(..))
 import Lib.Layer.Base exposing (LayerMsg(..), LayerTarget(..))
-import SceneProtos.SimpleGame.GameComponent.Base exposing (GameComponentInitData(..))
-import SceneProtos.SimpleGame.GameComponent.Handler exposing (viewGC)
-import SceneProtos.SimpleGame.GameLayer.Common exposing (EnvC, Model)
+import SceneProtos.SimpleGame.GameComponent.Base exposing (GameComponent, GameComponentInitData(..), GameComponentMsg(..))
+import SceneProtos.SimpleGame.GameComponent.Handler exposing (update, updateGC, viewGC)
+import SceneProtos.SimpleGame.GameLayer.Common exposing (EnvC, Model, nullModel)
 import SceneProtos.SimpleGame.LayerInit exposing (LayerInitData(..))
 
 
@@ -32,7 +32,85 @@ initModel _ i =
             x
 
         _ ->
-            { balls = Array.empty }
+            nullModel
+
+
+detectCollision : Array GameComponent -> Array GameComponent
+detectCollision newgcs =
+    Array.foldl
+        (\gc lastGC ->
+            let
+                x =
+                    Tuple.first gc.data.position
+
+                y =
+                    Tuple.second gc.data.position
+
+                r =
+                    gc.data.radius
+
+                gcd =
+                    gc.data
+
+                newgc =
+                    if x - r < 0 then
+                        { gc | data = { gcd | velocity = ( -1 * Tuple.first gc.data.velocity, Tuple.second gc.data.velocity ), position = ( r, y ) } }
+
+                    else if x + r > 1920 then
+                        { gc | data = { gcd | velocity = ( -1 * Tuple.first gc.data.velocity, Tuple.second gc.data.velocity ), position = ( 1920 - r, y ) } }
+
+                    else if y - r < 0 then
+                        { gc | data = { gcd | velocity = ( Tuple.first gc.data.velocity, -1 * Tuple.second gc.data.velocity ), position = ( x, r ) } }
+
+                    else if y + r > 1080 then
+                        { gc | data = { gcd | velocity = ( Tuple.first gc.data.velocity, -1 * Tuple.second gc.data.velocity ), position = ( x, 1080 - r ) } }
+
+                    else
+                        gc
+            in
+            Array.push newgc lastGC
+        )
+        Array.empty
+        newgcs
+
+
+distance : ( Int, Int ) -> ( Int, Int ) -> Float
+distance ( x1, y1 ) ( x2, y2 ) =
+    let
+        x =
+            toFloat (x2 - x1)
+
+        y =
+            toFloat (y2 - y1)
+    in
+    sqrt (x * x + y * y)
+
+
+checkEat : EnvC -> Array GameComponent -> Maybe GameComponent -> ( Array GameComponent, Maybe GameComponent )
+checkEat env newgcs bh =
+    case bh of
+        Nothing ->
+            ( newgcs, Nothing )
+
+        Just blackhole ->
+            let
+                ( xs, bl ) =
+                    Array.foldl
+                        (\gc ( lastGC, lastBlackhole ) ->
+                            let
+                                bcd =
+                                    blackhole.data
+                            in
+                            if floor (distance gc.data.position blackhole.data.position) + gc.data.radius < lastBlackhole.data.radius then
+                                ( lastGC, { lastBlackhole | data = { bcd | radius = bcd.radius + gc.data.radius } } )
+
+                            else
+                                ( Array.push gc lastGC, lastBlackhole )
+                        )
+                        ( Array.empty, blackhole )
+                        newgcs
+            in
+            ( xs, Just bl )
 
 
 {-| updateModel
@@ -43,7 +121,14 @@ Add your logic to handle msg and LayerMsg here
 -}
 updateModel : EnvC -> LayerMsg -> Model -> ( Model, List ( LayerTarget, LayerMsg ), EnvC )
 updateModel env _ model =
-    ( model, [], env )
+    let
+        ( gc1, _, env1 ) =
+            updateGC env model.balls
+
+        ( gc2, bh ) =
+            checkEat env (detectCollision gc1) model.blackhole
+    in
+    ( { model | balls = gc2, blackhole = bh }, [], env1 )
 
 
 {-| viewModel
@@ -56,4 +141,10 @@ If you have other elements than components, add them after viewComponent.
 -}
 viewModel : EnvC -> Model -> Renderable
 viewModel env model =
-    viewGC env model.balls
+    viewGC env <|
+        case model.blackhole of
+            Just bh ->
+                Array.push bh model.balls
+
+            Nothing ->
+                model.balls

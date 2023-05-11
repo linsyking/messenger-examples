@@ -83,9 +83,9 @@ recBody =
 Return a list of messages sent to the parentlayer.
 
 -}
-updateComponents : Env -> ComponentMsg -> Array Component -> ( Array Component, List ComponentMsg, Env )
-updateComponents =
-    updateObjects recBody
+updateComponents : Env -> Array Component -> ( Array Component, List ComponentMsg, Env )
+updateComponents env =
+    updateObjects recBody env NullComponentMsg
 
 
 {-| Generate the view of the components

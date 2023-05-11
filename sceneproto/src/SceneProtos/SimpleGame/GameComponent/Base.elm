@@ -18,7 +18,8 @@ type GameComponentTarget
 
 
 type GameComponentMsg
-    = NullGCMsg
+    = GCEatenMsg
+    | NullGCMsg
 
 
 type alias Data =

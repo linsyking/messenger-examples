@@ -1,18 +1,15 @@
 module SceneProtos.SimpleGame.GameLayer.Export exposing
     ( Data
-    , nullData
     , initLayer
     )
 
 {-| This is the doc for this module
 
 @docs Data
-@docs nullData
 @docs initLayer
 
 -}
 
-import Array
 import Lib.Layer.Base exposing (Layer)
 import SceneProtos.SimpleGame.GameLayer.Common exposing (EnvC, Model)
 import SceneProtos.SimpleGame.GameLayer.Model exposing (initModel, updateModel, viewModel)
@@ -24,13 +21,6 @@ import SceneProtos.SimpleGame.LayerInit exposing (LayerInitData)
 -}
 type alias Data =
     Model
-
-
-{-| nullData
--}
-nullData : Data
-nullData =
-    { balls = Array.empty }
 
 
 {-| initLayer

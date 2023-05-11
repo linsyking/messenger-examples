@@ -1,8 +1,8 @@
-module SceneProtos.SimpleGame.GameLayer.Common exposing (Model, EnvC)
+module SceneProtos.SimpleGame.GameLayer.Common exposing (Model, EnvC, nullModel)
 
 {-| This is the doc for this module
 
-@docs Model, EnvC
+@docs Model, EnvC, nullModel
 
 -}
 
@@ -16,6 +16,16 @@ import SceneProtos.SimpleGame.LayerBase exposing (CommonData)
 -}
 type alias Model =
     { balls : Array GameComponent
+    , blackhole : Maybe GameComponent
+    }
+
+
+{-| nullModel
+-}
+nullModel : Model
+nullModel =
+    { balls = Array.empty
+    , blackhole = Nothing
     }
 
 

@@ -51,7 +51,7 @@ updateModel env _ model =
             model.components
 
         ( newComponents, newMsg, newEnv ) =
-            updateComponents (noCommonData env) NullComponentMsg components
+            updateComponents (noCommonData env) components
     in
     List.foldl
         (\cTMsg ( m, cmsg, cenv ) ->

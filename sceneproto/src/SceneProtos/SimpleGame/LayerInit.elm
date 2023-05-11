@@ -11,4 +11,5 @@ type LayerInitData
 
 type alias SimpleGameInit =
     { balls : Array GameComponent
+    , blackhole : Maybe GameComponent
     }

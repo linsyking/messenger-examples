@@ -56,7 +56,7 @@ updateModel : Env -> Model -> ( Model, List SceneOutputMsg, Env )
 updateModel env model =
     let
         ( newdata, msgs, newenv ) =
-            updateLayer (addCommonData model.commonData env) NullLayerMsg model.layers
+            updateLayer (addCommonData model.commonData env) model.layers
 
         nmodel =
             { model | commonData = newenv.commonData, layers = newdata }

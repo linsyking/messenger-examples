@@ -16,7 +16,7 @@ import Lib.Env.Env exposing (EnvC)
 import Messenger.GeneralModel exposing (viewModelArray)
 import Messenger.Recursion exposing (RecBody)
 import Messenger.RecursionArray exposing (updateObjects)
-import SceneProtos.SimpleGame.GameComponent.Base exposing (GameComponent, GameComponentMsg, GameComponentTarget(..))
+import SceneProtos.SimpleGame.GameComponent.Base exposing (GameComponent, GameComponentMsg(..), GameComponentTarget(..))
 import SceneProtos.SimpleGame.LayerBase exposing (CommonData)
 
 
@@ -73,9 +73,9 @@ recBody =
 Return a list of messages sent to the parentlayer.
 
 -}
-updateGC : EnvC CommonData -> GameComponentMsg -> Array GameComponent -> ( Array GameComponent, List GameComponentMsg, EnvC CommonData )
-updateGC =
-    updateObjects recBody
+updateGC : EnvC CommonData -> Array GameComponent -> ( Array GameComponent, List GameComponentMsg, EnvC CommonData )
+updateGC env =
+    updateObjects recBody env NullGCMsg
 
 
 {-| Generate the view of the components

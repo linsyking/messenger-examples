@@ -70,9 +70,9 @@ recBody =
 Update all the layers.
 
 -}
-updateLayer : EnvC b -> LayerMsg -> List (Layer a b) -> ( List (Layer a b), List LayerMsg, EnvC b )
-updateLayer =
-    updateObjects recBody
+updateLayer : EnvC b -> List (Layer a b) -> ( List (Layer a b), List LayerMsg, EnvC b )
+updateLayer env =
+    updateObjects recBody env NullLayerMsg
 
 
 {-| viewLayer
