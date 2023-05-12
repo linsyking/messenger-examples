@@ -1,4 +1,4 @@
-module Scenes.Scene1.Export exposing (..)
+module Scenes.Scene1.Export exposing (game)
 
 import Lib.Env.Env exposing (Env)
 import Lib.Scene.Base exposing (SceneTMsg)

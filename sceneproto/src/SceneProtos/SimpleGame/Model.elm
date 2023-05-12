@@ -35,7 +35,7 @@ initModel env i =
         SimpleGameInitData x ->
             { commonData = nullCommonData
             , layers =
-                [ GameLayerG.getLayerT (GameLayer.initLayer (addCommonData nullCommonData env) (GameLayerInitData x))
+                [ GameLayerG.getLayerT <| GameLayer.initLayer (addCommonData nullCommonData env) (GameLayerInitData x)
                 ]
             }
 

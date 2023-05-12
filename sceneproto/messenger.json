@@ -3,5 +3,15 @@
         "Home": [
             "GameLayer"
         ]
+    },
+    "sceneprotos": {
+        "SimpleGame": {
+            "levels": [
+                "Scene1"
+            ],
+            "layers": [
+                "GameLayer"
+            ]
+        }
     }
 }
