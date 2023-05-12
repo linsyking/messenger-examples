@@ -14,7 +14,6 @@ module SceneProtos.SimpleGame.GameLayer.Model exposing
 
 import Array exposing (Array)
 import Canvas exposing (Renderable)
-import Lib.Component.Base exposing (ComponentMsg(..))
 import Lib.Layer.Base exposing (LayerMsg(..), LayerTarget(..))
 import SceneProtos.SimpleGame.GameComponent.Base exposing (GameComponent, GameComponentInitData(..), GameComponentMsg(..))
 import SceneProtos.SimpleGame.GameComponent.Handler exposing (update, updateGC, viewGC)
