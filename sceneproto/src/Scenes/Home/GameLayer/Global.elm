@@ -9,8 +9,8 @@ module Scenes.Home.GameLayer.Global exposing (getLayerT)
 import Canvas exposing (Renderable)
 import Lib.Layer.Base exposing (Layer, LayerMsg, LayerTarget)
 import Messenger.GeneralModel exposing (GeneralModel)
-import Scenes.Home.GameLayer.Common exposing (EnvC)
-import Scenes.Home.GameLayer.Export exposing (Data, nullData)
+import Scenes.Home.GameLayer.Common exposing (EnvC, nullModel)
+import Scenes.Home.GameLayer.Export exposing (Data)
 import Scenes.Home.LayerBase exposing (CommonData)
 import Scenes.Home.LayerSettings exposing (LayerDataType(..), LayerT)
 
@@ -27,7 +27,7 @@ ldtToData ldt =
             x
 
         _ ->
-            nullData
+            nullModel
 
 
 {-| getLayerT

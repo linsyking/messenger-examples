@@ -13,7 +13,8 @@ Don't modify this file.
 import Canvas exposing (Renderable)
 import Lib.Env.Env exposing (Env)
 import Lib.Scene.Base exposing (Scene, SceneInitData, SceneOutputMsg)
-import SceneProtos.SimpleGame.Export exposing (Data, nullData)
+import SceneProtos.SimpleGame.Common exposing (nullModel)
+import SceneProtos.SimpleGame.Export exposing (Data)
 import Scenes.SceneSettings exposing (SceneDataTypes(..), SceneT)
 
 
@@ -33,7 +34,7 @@ sdtToData dt =
             x
 
         _ ->
-            nullData
+            nullModel
 
 
 {-| sceneToST

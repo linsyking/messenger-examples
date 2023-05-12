@@ -1,8 +1,8 @@
-module Scenes.Home.GameLayer.Common exposing (Model, EnvC)
+module Scenes.Home.GameLayer.Common exposing (Model, nullModel, EnvC)
 
 {-| This is the doc for this module
 
-@docs Model, EnvC
+@docs Model, nullModel, EnvC
 
 -}
 
@@ -16,6 +16,14 @@ import Scenes.Home.LayerBase exposing (CommonData)
 -}
 type alias Model =
     { components : Array Component
+    }
+
+
+{-| nullModel
+-}
+nullModel : Model
+nullModel =
+    { components = Array.empty
     }
 
 

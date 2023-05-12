@@ -1,13 +1,11 @@
 module SceneProtos.SimpleGame.Export exposing
     ( Data
-    , nullData
     , genScene
     )
 
 {-| This is the doc for this module
 
 @docs Data
-@docs nullData
 @docs genScene
 
 -}
@@ -15,7 +13,6 @@ module SceneProtos.SimpleGame.Export exposing
 import Lib.Env.Env exposing (Env)
 import Lib.Scene.Base exposing (Scene, SceneInitData(..), SceneTMsg(..))
 import SceneProtos.SimpleGame.Common exposing (Model)
-import SceneProtos.SimpleGame.LayerBase exposing (nullCommonData)
 import SceneProtos.SimpleGame.LayerInit exposing (SimpleGameInit)
 import SceneProtos.SimpleGame.Model exposing (initModel, updateModel, viewModel)
 
@@ -24,15 +21,6 @@ import SceneProtos.SimpleGame.Model exposing (initModel, updateModel, viewModel)
 -}
 type alias Data =
     Model
-
-
-{-| nullData
--}
-nullData : Data
-nullData =
-    { commonData = nullCommonData
-    , layers = []
-    }
 
 
 {-| genScene
