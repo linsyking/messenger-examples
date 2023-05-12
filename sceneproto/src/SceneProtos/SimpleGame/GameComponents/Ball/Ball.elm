@@ -4,11 +4,11 @@ module SceneProtos.SimpleGame.GameComponents.Ball.Ball exposing
     , viewModel
     )
 
-import Canvas exposing (Renderable, circle, shapes)
+import Canvas exposing (Renderable, shapes)
 import Canvas.Settings exposing (fill)
 import Color
-import Lib.Coordinate.Coordinates exposing (heightToReal, posToReal, widthToReal)
 import Lib.Env.Env exposing (Env, EnvC)
+import Lib.Render.Shape exposing (circle)
 import SceneProtos.SimpleGame.GameComponent.Base exposing (Data, GameComponentInitData(..), GameComponentMsg, GameComponentTarget)
 import SceneProtos.SimpleGame.LayerBase exposing (CommonData)
 
@@ -61,4 +61,4 @@ If there is no view function, return Nothing.
 -}
 viewModel : EnvC CommonData -> Data -> Renderable
 viewModel env data =
-    shapes [ fill data.color ] [ circle (posToReal env.globalData data.position) (widthToReal env.globalData data.radius) ]
+    shapes [ fill data.color ] [ circle env.globalData data.position data.radius ]

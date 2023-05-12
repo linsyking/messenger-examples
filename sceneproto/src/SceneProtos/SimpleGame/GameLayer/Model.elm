@@ -98,11 +98,14 @@ checkEat env newgcs bh =
                     Array.foldl
                         (\gc ( lastGC, lastBlackhole ) ->
                             let
-                                bcd =
-                                    blackhole.data
+                                ( bh2, _, _ ) =
+                                    update blackhole
+                                        env
+                                        (GCEatMsg gc.data.radius)
                             in
                             if floor (distance gc.data.position blackhole.data.position) + gc.data.radius < lastBlackhole.data.radius then
-                                ( lastGC, { lastBlackhole | data = { bcd | radius = bcd.radius + gc.data.radius } } )
+                                -- Eaten
+                                ( lastGC, bh2 )
 
                             else
                                 ( Array.push gc lastGC, lastBlackhole )

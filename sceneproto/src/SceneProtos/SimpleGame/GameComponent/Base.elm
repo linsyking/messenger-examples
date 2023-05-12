@@ -1,4 +1,10 @@
-module SceneProtos.SimpleGame.GameComponent.Base exposing (..)
+module SceneProtos.SimpleGame.GameComponent.Base exposing
+    ( Data
+    , GameComponent
+    , GameComponentInitData(..)
+    , GameComponentMsg(..)
+    , GameComponentTarget(..)
+    )
 
 import Canvas exposing (Renderable)
 import Color exposing (Color)
@@ -18,7 +24,7 @@ type GameComponentTarget
 
 
 type GameComponentMsg
-    = GCEatenMsg
+    = GCEatMsg Int
     | NullGCMsg
 
 

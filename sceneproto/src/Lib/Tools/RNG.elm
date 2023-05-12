@@ -5,6 +5,12 @@ module Lib.Tools.RNG exposing (genRandomInt, genRandomListInt)
 
 # RNG module
 
+Sample RNG module.
+
+You can add your own RNG generators here.
+
+The seed is often given by the current tick.
+
 @docs genRandomInt, genRandomListInt
 
 -}
@@ -13,9 +19,6 @@ import Random
 
 
 {-| Generate a random int in the range [a, b] using the given seed.
-
-The seed is often given by the current tick.
-
 -}
 genRandomInt : Int -> ( Int, Int ) -> Int
 genRandomInt t ( a, b ) =

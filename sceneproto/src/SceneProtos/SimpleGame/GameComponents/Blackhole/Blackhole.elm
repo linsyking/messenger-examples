@@ -6,12 +6,12 @@ module SceneProtos.SimpleGame.GameComponents.Blackhole.Blackhole exposing (initM
 
 -}
 
-import Canvas exposing (Renderable, circle, shapes)
+import Canvas exposing (Renderable, shapes)
 import Canvas.Settings exposing (fill)
 import Color
-import Lib.Coordinate.Coordinates exposing (posToReal, widthToReal)
 import Lib.Env.Env exposing (Env, EnvC)
-import SceneProtos.SimpleGame.GameComponent.Base exposing (Data, GameComponentInitData(..), GameComponentMsg, GameComponentTarget)
+import Lib.Render.Shape exposing (circle)
+import SceneProtos.SimpleGame.GameComponent.Base exposing (Data, GameComponentInitData(..), GameComponentMsg(..), GameComponentTarget)
 import SceneProtos.SimpleGame.LayerBase exposing (CommonData)
 
 
@@ -46,8 +46,14 @@ Add your component logic here.
 
 -}
 updateModel : EnvC CommonData -> GameComponentMsg -> Data -> ( Data, List ( GameComponentTarget, GameComponentMsg ), EnvC CommonData )
-updateModel env _ d =
-    ( d, [], env )
+updateModel env msg d =
+    case msg of
+        GCEatMsg r ->
+            -- Increase radius
+            ( { d | radius = d.radius + r }, [], env )
+
+        _ ->
+            ( d, [], env )
 
 
 {-| viewModel
@@ -59,4 +65,4 @@ If there is no view function, return Nothing.
 -}
 viewModel : EnvC CommonData -> Data -> Renderable
 viewModel env data =
-    shapes [ fill Color.black ] [ circle (posToReal env.globalData data.position) (widthToReal env.globalData data.radius) ]
+    shapes [ fill Color.black ] [ circle env.globalData data.position data.radius ]
