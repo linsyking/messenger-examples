@@ -18,24 +18,21 @@ Using layers can help us deal with different things in different layers.
 
 -}
 
-import Base exposing (GlobalData, Msg)
 import Canvas exposing (Renderable)
 import Lib.Audio.Base exposing (AudioOption)
+import Lib.Env.Env exposing (EnvC)
+import Messenger.GeneralModel exposing (GeneralModel)
 
 
 {-| Layer
 
 Layer data type.
 
-b is the layer data, a is the common data that shares between layers
+a is the layer data, b is the common data that shares between layers, c is the init data
 
 -}
 type alias Layer a b =
-    { data : b
-    , init : Int -> LayerMsg -> a -> b
-    , update : Msg -> GlobalData -> LayerMsg -> ( b, Int ) -> a -> ( ( b, a, List ( LayerTarget, LayerMsg ) ), GlobalData )
-    , view : ( b, Int ) -> a -> GlobalData -> Renderable
-    }
+    GeneralModel a (EnvC b) LayerMsg LayerTarget Renderable
 
 
 {-| LayerMsg

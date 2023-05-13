@@ -9,17 +9,17 @@ Write a description here for how to use your component.
 -}
 
 import Components.Typer.Typer exposing (initModel, updateModel, viewModel)
-import Lib.Component.Base exposing (Component, ComponentTMsg(..))
+import Lib.Component.Base exposing (Component, ComponentInitData, ComponentMsg(..))
+import Lib.Env.Env exposing (Env)
 
 
 {-| initComponent
 Write a description here for how to initialize your component.
 -}
-initComponent : Int -> Int -> ComponentTMsg -> Component
-initComponent t id ct =
+initComponent : Env -> ComponentInitData -> Component
+initComponent env i =
     { name = "Typer"
-    , data = initModel t id ct
-    , init = initModel
+    , data = initModel env i
     , update = updateModel
     , view = viewModel
     }

@@ -14,8 +14,9 @@ module Lib.Scene.SceneLoader exposing
 
 -}
 
+import Base exposing (Msg)
 import Common exposing (Model)
-import Lib.Scene.Base exposing (SceneMsg)
+import Lib.Scene.Base exposing (SceneInitData)
 import List exposing (head)
 import Scenes.AllScenes exposing (allScenes)
 import Scenes.SceneSettings exposing (SceneT, nullSceneT)
@@ -45,27 +46,27 @@ getScene i =
 
 {-| loadScene
 -}
-loadScene : Model -> SceneT -> SceneMsg -> Model
-loadScene model cs tm =
+loadScene : Msg -> Model -> SceneT -> SceneInitData -> Model
+loadScene msg model cs tm =
     let
         ls =
             { model | currentScene = cs }
 
         ld =
-            { ls | currentData = cs.init ls.time tm }
+            { ls | currentData = cs.init { t = model.time, globalData = model.currentGlobalData, msg = msg } tm }
     in
     ld
 
 
 {-| loadSceneByName
 -}
-loadSceneByName : Model -> String -> SceneMsg -> Model
-loadSceneByName model i tm =
+loadSceneByName : Msg -> Model -> String -> SceneInitData -> Model
+loadSceneByName msg model i tm =
     let
         sc =
             getScene i
     in
-    loadScene model sc tm
+    loadScene msg model sc tm
 
 
 {-| getCurrentScene

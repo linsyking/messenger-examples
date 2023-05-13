@@ -20,7 +20,7 @@ import Lib.Coordinate.Coordinates exposing (fromMouseToReal, getStartPoint, maxH
 import Lib.Layer.Base exposing (LayerMsg(..))
 import Lib.LocalStorage.LocalStorage exposing (decodeLSInfo, encodeLSInfo, sendInfo)
 import Lib.Resources.Base exposing (allTexture, getTexture, saveSprite)
-import Lib.Scene.Base exposing (SceneMsg(..), SceneOutputMsg(..))
+import Lib.Scene.Base exposing (SceneInitData(..), SceneOutputMsg(..))
 import Lib.Scene.SceneLoader exposing (getCurrentScene, loadSceneByName)
 import Lib.Tools.Browser exposing (alert)
 import MainConfig exposing (initScene, timeInterval)
@@ -62,7 +62,7 @@ init : Flags -> ( Model, Cmd Msg, AudioCmd Msg )
 init flags =
     let
         ms =
-            loadSceneByName initModel initScene NullSceneMsg
+            loadSceneByName UnknownMsg initModel initScene NullSceneInitData
 
         oldgd =
             ms.currentGlobalData
@@ -96,8 +96,11 @@ gameUpdate msg model =
 
     else
         let
-            ( sdt, som, newgd ) =
-                (getCurrentScene model).update msg model.currentGlobalData ( model.currentData, model.time )
+            ( sdt, som, newenv ) =
+                (getCurrentScene model).update { msg = msg, globalData = model.currentGlobalData, t = model.time } model.currentData
+
+            newgd =
+                newenv.globalData
 
             timeUpdatedModel =
                 case msg of
@@ -121,7 +124,7 @@ gameUpdate msg model =
                             case singleSOM of
                                 SOMChangeScene ( tm, s ) ->
                                     --- Load new scene
-                                    ( loadSceneByName lastModel s tm
+                                    ( loadSceneByName msg lastModel s tm
                                         |> resetSceneStartTime
                                     , lastCmds ++ [ sendInfo (encodeLSInfo lastModel.currentGlobalData.localstorage) ]
                                     , lastAudioCmds
@@ -261,7 +264,7 @@ view _ model =
                 , style "position" "fixed"
                 ]
                 [ MainConfig.background model.currentGlobalData
-                , (getCurrentScene model).view ( model.currentData, model.time ) model.currentGlobalData
+                , (getCurrentScene model).view { msg = UnknownMsg, t = model.time, globalData = model.currentGlobalData } model.currentData
                 ]
     in
     Html.div []

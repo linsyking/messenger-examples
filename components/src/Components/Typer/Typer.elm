@@ -14,12 +14,12 @@ This is a component model module. It should define init, update and view model.
 
 -}
 
-import Base exposing (GlobalData, Msg(..))
+import Base exposing (Msg(..))
 import Canvas exposing (Renderable, empty)
-import Char
 import Dict
-import Lib.Component.Base exposing (ComponentTMsg(..), ComponentTarget(..), Data, DefinedTypes(..))
+import Lib.Component.Base exposing (ComponentInitData(..), ComponentMsg(..), ComponentTarget(..), Data, DefinedTypes(..))
 import Lib.DefinedTypes.Parser exposing (dBoolGet, dBoolSet, dComponentTargetGet, dIntGet, dStringGet, dStringSet)
+import Lib.Env.Env exposing (Env)
 
 
 {-| initModel
@@ -27,25 +27,21 @@ import Lib.DefinedTypes.Parser exposing (dBoolGet, dBoolSet, dComponentTargetGet
 Initialize the model. It should update the id.
 
 -}
-initModel : Int -> Int -> ComponentTMsg -> Data
-initModel _ id msg =
-    let
-        updater =
-            case msg of
-                ComponentIntMsg i ->
-                    ComponentByID i
+initModel : Env -> ComponentInitData -> Data
+initModel _ i =
+    case i of
+        ComponentID id (ComponentIntData x) ->
+            Dict.fromList
+                [ ( "id", CDInt id )
+                , ( "status", CDBool False ) -- Write to text
+                , ( "isCaps", CDBool False )
+                , ( "isShift", CDBool False )
+                , ( "updater", CDComponentTarget (ComponentByID x) )
+                , ( "text", CDString "" )
+                ]
 
-                _ ->
-                    ComponentParentLayer
-    in
-    Dict.fromList
-        [ ( "id", CDInt id )
-        , ( "status", CDBool False ) -- Write to text
-        , ( "isCaps", CDBool False )
-        , ( "isShift", CDBool False )
-        , ( "updater", CDComponentTarget updater )
-        , ( "text", CDString "" )
-        ]
+        _ ->
+            Dict.fromList []
 
 
 {-| updateModel
@@ -53,8 +49,8 @@ initModel _ id msg =
 Add your component logic here.
 
 -}
-updateModel : Msg -> GlobalData -> ComponentTMsg -> ( Data, Int ) -> ( Data, List ( ComponentTarget, ComponentTMsg ), GlobalData )
-updateModel msg gd ctmsg ( d, _ ) =
+updateModel : Env -> ComponentMsg -> Data -> ( Data, List ( ComponentTarget, ComponentMsg ), Env )
+updateModel env ctmsg d =
     let
         updater =
             dComponentTargetGet d "updater"
@@ -72,14 +68,14 @@ updateModel msg gd ctmsg ( d, _ ) =
                     self =
                         ComponentByID (dIntGet d "id")
                 in
-                case msg of
+                case env.msg of
                     KeyDown 16 ->
                         -- Shift
-                        ( d |> dBoolSet "isShift" True, [], gd )
+                        ( d |> dBoolSet "isShift" True, [], env )
 
                     KeyUp 16 ->
                         -- Shift
-                        ( d |> dBoolSet "isShift" False, [], gd )
+                        ( d |> dBoolSet "isShift" False, [], env )
 
                     KeyDown 8 ->
                         -- Backspace
@@ -87,11 +83,11 @@ updateModel msg gd ctmsg ( d, _ ) =
                             newText =
                                 String.dropRight 1 text
                         in
-                        ( d |> dStringSet "text" newText, [ ( updater, ComponentNamedMsg self (ComponentStringMsg newText) ) ], gd )
+                        ( d |> dStringSet "text" newText, [ ( updater, ComponentNamedMsg self (ComponentStringMsg newText) ) ], env )
 
                     KeyDown 20 ->
                         -- Caps lock
-                        ( d |> dBoolSet "isCaps" (not (dBoolGet d "isCaps")), [], gd )
+                        ( d |> dBoolSet "isCaps" (not (dBoolGet d "isCaps")), [], env )
 
                     KeyDown x ->
                         if isCharacter x then
@@ -99,27 +95,27 @@ updateModel msg gd ctmsg ( d, _ ) =
                                 newText =
                                     String.append text (String.fromChar (transform x))
                             in
-                            ( d |> dStringSet "text" newText, [ ( updater, ComponentNamedMsg self (ComponentStringMsg newText) ) ], gd )
+                            ( d |> dStringSet "text" newText, [ ( updater, ComponentNamedMsg self (ComponentStringMsg newText) ) ], env )
 
                         else
-                            ( d, [ ( updater, ComponentNamedMsg self (ComponentIntMsg x) ) ], gd )
+                            ( d, [ ( updater, ComponentNamedMsg self (ComponentIntMsg x) ) ], env )
 
                     _ ->
-                        ( d, [], gd )
+                        ( d, [], env )
 
             else
                 -- Inactive
-                ( d, [], gd )
+                ( d, [], env )
     in
     case ctmsg of
         ComponentNamedMsg target cmsg ->
             if target == updater then
                 case cmsg of
                     ComponentBoolMsg x ->
-                        ( d |> dBoolSet "status" x, [], gd )
+                        ( d |> dBoolSet "status" x, [], env )
 
                     ComponentStringMsg x ->
-                        ( d |> dStringSet "text" x, [], gd )
+                        ( d |> dStringSet "text" x, [], env )
 
                     _ ->
                         normalUpdate
@@ -182,7 +178,9 @@ transformInt d c =
 
 Change this to your own component view function.
 
+If there is no view function, return Nothing.
+
 -}
-viewModel : ( Data, Int ) -> GlobalData -> Renderable
+viewModel : Env -> Data -> Renderable
 viewModel _ _ =
     empty

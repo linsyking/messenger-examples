@@ -14,14 +14,15 @@ This is a component model module. It should define init, update and view model.
 
 -}
 
-import Base exposing (GlobalData, Msg(..))
-import Canvas exposing (Renderable, empty, group, rect, shapes)
+import Base exposing (Msg(..))
+import Canvas exposing (Renderable, empty, group, shapes)
 import Canvas.Settings.Advanced exposing (alpha)
 import Dict
-import Lib.Component.Base exposing (ComponentTMsg(..), ComponentTarget(..), Data, DefinedTypes(..))
-import Lib.Coordinate.Coordinates exposing (heightToReal, posToReal, widthToReal)
+import Lib.Component.Base exposing (ComponentInitData(..), ComponentMsg(..), ComponentTarget(..), Data, DefinedTypes(..))
 import Lib.DefinedTypes.Parser exposing (dBoolGet, dBoolSet, dComponentTargetGet, dIntGet, dStringGet, dStringSet)
+import Lib.Env.Env exposing (Env)
 import Lib.Render.Render exposing (renderText)
+import Lib.Render.Shape exposing (rect)
 
 
 {-| initModel
@@ -29,23 +30,19 @@ import Lib.Render.Render exposing (renderText)
 Initialize the model. It should update the id.
 
 -}
-initModel : Int -> Int -> ComponentTMsg -> Data
-initModel _ id tmsg =
-    let
-        typer =
-            case tmsg of
-                ComponentIntMsg i ->
-                    ComponentByID i
+initModel : Env -> ComponentInitData -> Data
+initModel _ i =
+    case i of
+        ComponentID id (ComponentIntData x) ->
+            Dict.fromList
+                [ ( "id", CDInt id )
+                , ( "text", CDString "" )
+                , ( "typer", CDComponentTarget (ComponentByID x) )
+                , ( "state", CDBool False )
+                ]
 
-                _ ->
-                    ComponentParentLayer
-    in
-    Dict.fromList
-        [ ( "id", CDInt id )
-        , ( "text", CDString "" )
-        , ( "typer", CDComponentTarget typer )
-        , ( "state", CDBool False )
-        ]
+        _ ->
+            Dict.fromList []
 
 
 {-| updateModel
@@ -53,8 +50,8 @@ initModel _ id tmsg =
 Add your component logic here.
 
 -}
-updateModel : Msg -> GlobalData -> ComponentTMsg -> ( Data, Int ) -> ( Data, List ( ComponentTarget, ComponentTMsg ), GlobalData )
-updateModel msg gd tmsg ( d, _ ) =
+updateModel : Env -> ComponentMsg -> Data -> ( Data, List ( ComponentTarget, ComponentMsg ), Env )
+updateModel env ctmsg d =
     let
         typer =
             dComponentTargetGet d "typer"
@@ -62,55 +59,62 @@ updateModel msg gd tmsg ( d, _ ) =
         self =
             ComponentByID (dIntGet d "id")
     in
-    case msg of
+    case env.msg of
         KeyDown 13 ->
             -- Enter
-            ( d |> dStringSet "text" "" |> dBoolSet "state" False
-            , [ ( ComponentParentLayer, ComponentStringMsg (dStringGet d "text") )
-              , ( typer, ComponentNamedMsg self (ComponentBoolMsg False) )
-              , ( typer, ComponentNamedMsg self (ComponentStringMsg "") )
-              ]
-            , gd
-            )
+            if dBoolGet d "state" then
+                ( d |> dStringSet "text" "" |> dBoolSet "state" False
+                , [ ( ComponentParentLayer, ComponentStringMsg (dStringGet d "text") )
+                  , ( typer, ComponentNamedMsg self (ComponentBoolMsg False) )
+                  , ( typer, ComponentNamedMsg self (ComponentStringMsg "") )
+                  ]
+                , env
+                )
+
+            else
+                ( d, [], env )
 
         KeyDown 17 ->
             -- ctrl
-            ( d |> dBoolSet "state" True, [ ( typer, ComponentNamedMsg self (ComponentBoolMsg True) ) ], gd )
+            ( d |> dBoolSet "state" True, [ ( typer, ComponentNamedMsg self (ComponentBoolMsg True) ) ], env )
 
         _ ->
-            case tmsg of
+            case ctmsg of
                 ComponentNamedMsg target x ->
                     if target == typer then
                         case x of
                             ComponentStringMsg text ->
-                                ( d |> dStringSet "text" text, [], gd )
+                                ( d |> dStringSet "text" text, [], env )
 
                             _ ->
-                                ( d, [], gd )
+                                ( d, [], env )
 
                     else
-                        ( d, [], gd )
+                        ( d, [], env )
 
                 _ ->
-                    ( d, [], gd )
+                    ( d, [], env )
 
 
 {-| viewModel
 
 Change this to your own component view function.
 
-If there is no view function, remove this and change the view function in export module to nothing.
+If there is no view function, return Nothing.
 
 -}
-viewModel : ( Data, Int ) -> GlobalData -> Renderable
-viewModel ( d, _ ) gd =
+viewModel : Env -> Data -> Renderable
+viewModel env d =
     let
         command =
             dStringGet d "text"
+
+        gd =
+            env.globalData
     in
     if dBoolGet d "state" then
         group []
-            [ shapes [ alpha 0.1 ] [ rect (posToReal gd ( 20, 970 )) (widthToReal gd 1850) (heightToReal gd 40) ]
+            [ shapes [ alpha 0.1 ] [ rect gd ( 20, 970 ) ( 1850, 40 ) ]
             , renderText gd 30 ("> " ++ command ++ "_") "sans-seif" ( 30, 975 )
             ]
 

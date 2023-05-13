@@ -13,40 +13,40 @@ module Scenes.Home.GameLayer.Model exposing
 -}
 
 import Array
-import Base exposing (GlobalData, Msg)
 import Canvas exposing (Renderable)
 import Components.Console.Export as Console
 import Components.Typer.Export as Typer
-import Lib.Component.Base exposing (ComponentTMsg(..), ComponentTarget(..))
+import Lib.Component.Base exposing (ComponentInitData(..), ComponentMsg(..))
 import Lib.Component.ComponentHandler exposing (updateComponents, viewComponent)
+import Lib.Env.Env exposing (addCommonData, noCommonData)
 import Lib.Layer.Base exposing (LayerMsg(..), LayerTarget(..))
-import Scenes.Home.GameLayer.Common exposing (Model)
-import Scenes.Home.LayerBase exposing (CommonData)
+import Scenes.Home.GameLayer.Common exposing (EnvC, Model)
+import Scenes.Home.LayerBase exposing (LayerInitData)
 
 
 {-| initModel
 Add components here
 -}
-initModel : Int -> LayerMsg -> CommonData -> Model
-initModel t _ _ =
+initModel : EnvC -> LayerInitData -> Model
+initModel env _ =
     { components =
         Array.fromList
-            [ Typer.initComponent t 0 (ComponentIntMsg 1)
-            , Console.initComponent t 1 (ComponentIntMsg 0)
+            [ Typer.initComponent (noCommonData env) <| ComponentID 0 (ComponentIntData 1)
+            , Console.initComponent (noCommonData env) <| ComponentID 1 (ComponentIntData 0)
             ]
     }
 
 
 {-| Handle component messages (that are sent to this layer).
 -}
-handleComponentMsg : GlobalData -> ComponentTMsg -> ( Model, Int ) -> CommonData -> ( ( Model, CommonData, List ( LayerTarget, LayerMsg ) ), GlobalData )
-handleComponentMsg gd tmsg ( model, _ ) cd =
+handleComponentMsg : EnvC -> ComponentMsg -> Model -> ( Model, List ( LayerTarget, LayerMsg ), EnvC )
+handleComponentMsg env tmsg model =
     case tmsg of
         ComponentStringMsg x ->
-            ( ( model, cd, [ ( LayerParentScene, LayerStringMsg x ) ] ), gd )
+            ( model, [ ( LayerParentScene, LayerStringMsg x ) ], env )
 
         _ ->
-            ( ( model, cd, [] ), gd )
+            ( model, [], env )
 
 
 {-| updateModel
@@ -55,28 +55,25 @@ Default update function
 Add your logic to handle msg and LayerMsg here
 
 -}
-updateModel : Msg -> GlobalData -> LayerMsg -> ( Model, Int ) -> CommonData -> ( ( Model, CommonData, List ( LayerTarget, LayerMsg ) ), GlobalData )
-updateModel msg gd _ ( model, t ) cd =
+updateModel : EnvC -> LayerMsg -> Model -> ( Model, List ( LayerTarget, LayerMsg ), EnvC )
+updateModel env _ model =
     let
         components =
             model.components
 
-        ( newComponents, newMsg, newGlobalData ) =
-            updateComponents msg gd t components
-
-        ( ( newModel, newCommonData, newMsg2 ), newGlobalData2 ) =
-            List.foldl
-                (\cTMsg ( ( m, ccd, cmsg ), cgd ) ->
-                    let
-                        ( ( nm, ncd, nmsg ), ngd ) =
-                            handleComponentMsg cgd cTMsg ( m, t ) ccd
-                    in
-                    ( ( nm, ncd, nmsg ++ cmsg ), ngd )
-                )
-                ( ( { model | components = newComponents }, cd, [] ), newGlobalData )
-                newMsg
+        ( newComponents, newMsg, newEnv ) =
+            updateComponents (noCommonData env) components
     in
-    ( ( newModel, newCommonData, newMsg2 ), newGlobalData2 )
+    List.foldl
+        (\cTMsg ( m, cmsg, cenv ) ->
+            let
+                ( nm, nmsg, nenv ) =
+                    handleComponentMsg cenv cTMsg m
+            in
+            ( nm, nmsg ++ cmsg, nenv )
+        )
+        ( { model | components = newComponents }, [], addCommonData env.commonData newEnv )
+        newMsg
 
 
 {-| viewModel
@@ -87,6 +84,6 @@ If you don't have components, remove viewComponent.
 If you have other elements than components, add them after viewComponent.
 
 -}
-viewModel : ( Model, Int ) -> CommonData -> GlobalData -> Renderable
-viewModel ( model, t ) _ gd =
-    viewComponent gd t model.components
+viewModel : EnvC -> Model -> Renderable
+viewModel env model =
+    viewComponent (noCommonData env) model.components

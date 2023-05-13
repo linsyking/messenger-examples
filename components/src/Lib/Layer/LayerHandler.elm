@@ -1,5 +1,6 @@
 module Lib.Layer.LayerHandler exposing
-    ( updateLayer
+    ( update, match, super, recBody
+    , updateLayer
     , viewLayer
     )
 
@@ -8,59 +9,45 @@ module Lib.Layer.LayerHandler exposing
 
 # Layer Handler
 
-Compare this to Lib.Layer.LayerHandlerRaw.elm.
-
-If you want to implement custom layer handler, please use the raw version.
-
-For example, you can implement a "stopper" that stops the layer updating if some confitions are satisfied.
-
+@docs update, match, super, recBody
 @docs updateLayer
-
 @docs viewLayer
 
 -}
 
-import Base exposing (GlobalData, Msg)
-import Canvas exposing (Renderable)
+import Canvas exposing (Renderable, group)
+import Lib.Env.Env exposing (EnvC)
 import Lib.Layer.Base exposing (Layer, LayerMsg(..), LayerTarget(..))
+import Messenger.GeneralModel exposing (viewModelList)
 import Messenger.Recursion exposing (RecBody)
 import Messenger.RecursionList exposing (updateObjects)
 
 
-type alias Env a =
-    { msg : Msg
-    , globalData : GlobalData
-    , t : Int
-    , commonData : a
-    }
-
-
-type alias LayerT a b =
-    ( String, Layer a b )
-
-
-update : LayerT a b -> Env a -> LayerMsg -> ( LayerT a b, List ( LayerTarget, LayerMsg ), Env a )
-update l env lm =
+{-| Updater
+-}
+update : Layer a b -> EnvC b -> LayerMsg -> ( Layer a b, List ( LayerTarget, LayerMsg ), EnvC b )
+update layer env lm =
     let
-        layer =
-            Tuple.second l
-
-        ( ( newData, newCD, nl ), newGD ) =
-            layer.update env.msg env.globalData lm ( layer.data, env.t ) env.commonData
+        ( newData, newMsgs, newEnv ) =
+            layer.update env lm layer.data
     in
-    ( ( Tuple.first l, { layer | data = newData } ), nl, { env | globalData = newGD, commonData = newCD } )
+    ( { layer | data = newData }, newMsgs, newEnv )
 
 
-match : LayerT a b -> LayerTarget -> Bool
+{-| Matcher
+-}
+match : Layer a b -> LayerTarget -> Bool
 match l t =
     case t of
         LayerParentScene ->
             False
 
         LayerName n ->
-            n == Tuple.first l
+            n == l.name
 
 
+{-| Super
+-}
 super : LayerTarget -> Bool
 super t =
     case t of
@@ -71,14 +58,11 @@ super t =
             False
 
 
-recBody : RecBody (LayerT a b) LayerMsg (Env a) LayerTarget
+{-| Recbody
+-}
+recBody : RecBody (Layer a b) LayerMsg (EnvC b) LayerTarget
 recBody =
     { update = update, match = match, super = super }
-
-
-updateLayerProto : Env a -> LayerMsg -> List (LayerT a b) -> ( List (LayerT a b), List LayerMsg, Env a )
-updateLayerProto =
-    updateObjects recBody
 
 
 {-| updateLayer
@@ -86,16 +70,9 @@ updateLayerProto =
 Update all the layers.
 
 -}
-updateLayer : Msg -> GlobalData -> Int -> a -> List ( String, Layer a b ) -> ( ( List ( String, Layer a b ), a, List LayerMsg ), GlobalData )
-updateLayer msg gd t cd xs =
-    let
-        env =
-            { msg = msg, globalData = gd, t = t, commonData = cd }
-
-        ( nl, nlm, nenv ) =
-            updateLayerProto env NullLayerMsg xs
-    in
-    ( ( nl, nenv.commonData, nlm ), nenv.globalData )
+updateLayer : EnvC b -> List (Layer a b) -> ( List (Layer a b), List LayerMsg, EnvC b )
+updateLayer env =
+    updateObjects recBody env NullLayerMsg
 
 
 {-| viewLayer
@@ -103,7 +80,6 @@ updateLayer msg gd t cd xs =
 Get the view of the layer.
 
 -}
-viewLayer : GlobalData -> Int -> a -> List ( String, Layer a b ) -> Renderable
-viewLayer vp t cd xs =
-    Canvas.group []
-        (List.map (\( _, l ) -> l.view ( l.data, t ) cd vp) xs)
+viewLayer : EnvC b -> List (Layer a b) -> Renderable
+viewLayer env models =
+    group [] <| viewModelList env models

@@ -1,34 +1,25 @@
-module Scenes.Home.GameLayer.Global exposing
-    ( dataToLDT
-    , ldtToData
-    , getLayerT
-    )
+module Scenes.Home.GameLayer.Global exposing (getLayerT)
 
 {-| This is the doc for this module
 
-@docs dataToLDT
-@docs ldtToData
 @docs getLayerT
 
 -}
 
-import Base exposing (GlobalData, Msg)
 import Canvas exposing (Renderable)
 import Lib.Layer.Base exposing (Layer, LayerMsg, LayerTarget)
-import Scenes.Home.GameLayer.Export exposing (Data, nullData)
+import Messenger.GeneralModel exposing (GeneralModel)
+import Scenes.Home.GameLayer.Common exposing (EnvC, nullModel)
+import Scenes.Home.GameLayer.Export exposing (Data)
 import Scenes.Home.LayerBase exposing (CommonData)
 import Scenes.Home.LayerSettings exposing (LayerDataType(..), LayerT)
 
 
-{-| dataToLDT
--}
 dataToLDT : Data -> LayerDataType
 dataToLDT data =
     GameLayerData data
 
 
-{-| ldtToData
--}
 ldtToData : LayerDataType -> Data
 ldtToData ldt =
     case ldt of
@@ -36,28 +27,24 @@ ldtToData ldt =
             x
 
         _ ->
-            nullData
+            nullModel
 
 
 {-| getLayerT
 -}
-getLayerT : Layer CommonData Data -> LayerT
+getLayerT : Layer Data CommonData -> LayerT
 getLayerT layer =
     let
-        init : Int -> LayerMsg -> CommonData -> LayerDataType
-        init t lm cd =
-            dataToLDT (layer.init t lm cd)
-
-        update : Msg -> GlobalData -> LayerMsg -> ( LayerDataType, Int ) -> CommonData -> ( ( LayerDataType, CommonData, List ( LayerTarget, LayerMsg ) ), GlobalData )
-        update m gd lm ( ldt, t ) cd =
+        update : EnvC -> LayerMsg -> LayerDataType -> ( LayerDataType, List ( LayerTarget, LayerMsg ), EnvC )
+        update env lm ldt =
             let
-                ( ( rldt, rcd, ltm ), newgd ) =
-                    layer.update m gd lm ( ldtToData ldt, t ) cd
+                ( rldt, newmsg, newenv ) =
+                    layer.update env lm (ldtToData ldt)
             in
-            ( ( dataToLDT rldt, rcd, ltm ), newgd )
+            ( dataToLDT rldt, newmsg, newenv )
 
-        view : ( LayerDataType, Int ) -> CommonData -> GlobalData -> Renderable
-        view ( ldt, t ) cd gd =
-            layer.view ( ldtToData ldt, t ) cd gd
+        view : EnvC -> LayerDataType -> Renderable
+        view env ldt =
+            layer.view env (ldtToData ldt)
     in
-    Layer (dataToLDT layer.data) init update view
+    GeneralModel layer.name (dataToLDT layer.data) update view

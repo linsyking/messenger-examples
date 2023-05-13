@@ -1,10 +1,9 @@
 module Lib.Component.Base exposing
-    ( ComponentTMsg(..)
-    , DefinedTypes(..)
+    ( DefinedTypes(..)
     , Component
     , Data
     , nullComponent
-    , ComponentTarget(..)
+    , ComponentInitData(..), ComponentMsg(..), ComponentTarget(..)
     )
 
 {-|
@@ -30,9 +29,10 @@ Gamecomponents have better speed when communicating with each other. (their mess
 
 -}
 
-import Base exposing (GlobalData, Msg)
 import Canvas exposing (Renderable, empty)
 import Dict exposing (Dict)
+import Lib.Env.Env exposing (Env)
+import Messenger.GeneralModel exposing (GeneralModel)
 
 
 
@@ -51,12 +51,16 @@ Examples are [GameComponent](https://github.com/linsyking/Reweave/blob/master/sr
 
 -}
 type alias Component =
-    { name : String
-    , data : Data
-    , init : Int -> Int -> ComponentTMsg -> Data
-    , update : Msg -> GlobalData -> ComponentTMsg -> ( Data, Int ) -> ( Data, List ( ComponentTarget, ComponentTMsg ), GlobalData )
-    , view : ( Data, Int ) -> GlobalData -> Renderable
-    }
+    GeneralModel Data Env ComponentMsg ComponentTarget Renderable
+
+
+{-| Data type used to initialize a component.
+-}
+type ComponentInitData
+    = ComponentID Int ComponentInitData
+    | ComponentIntData Int
+    | ComponentMsg ComponentMsg
+    | NullComponentInitData
 
 
 {-| nullComponent
@@ -65,12 +69,11 @@ nullComponent : Component
 nullComponent =
     { name = "NULL"
     , data = Dict.empty
-    , init = \_ _ _ -> Dict.empty
     , update =
-        \_ gd _ _ ->
+        \env _ _ ->
             ( Dict.empty
             , []
-            , gd
+            , env
             )
     , view = \_ _ -> empty
     }
@@ -87,16 +90,16 @@ You may add your own data types here.
 However, if your data types are too complicated, you might want to create your own component type (like game component) to achieve better performance.
 
 -}
-type ComponentTMsg
+type ComponentMsg
     = ComponentStringMsg String
     | ComponentIntMsg Int
     | ComponentFloatMsg Float
     | ComponentBoolMsg Bool
-    | ComponentStringDataMsg String ComponentTMsg
-    | ComponentListMsg (List ComponentTMsg)
+    | ComponentStringDataMsg String ComponentMsg
+    | ComponentListMsg (List ComponentMsg)
     | ComponentComponentMsg Component
     | ComponentComponentTargetMsg ComponentTarget
-    | ComponentNamedMsg ComponentTarget ComponentTMsg
+    | ComponentNamedMsg ComponentTarget ComponentMsg
     | ComponentDTMsg DefinedTypes
     | NullComponentMsg
 
