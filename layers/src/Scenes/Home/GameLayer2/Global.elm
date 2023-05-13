@@ -1,13 +1,7 @@
-module Scenes.Home.GameLayer2.Global exposing
-    ( dataToLDT
-    , ldtToData
-    , getLayerT
-    )
+module Scenes.Home.GameLayer2.Global exposing (getLayerT)
 
 {-| This is the doc for this module
 
-@docs dataToLDT
-@docs ldtToData
 @docs getLayerT
 
 -}
@@ -15,21 +9,17 @@ module Scenes.Home.GameLayer2.Global exposing
 import Canvas exposing (Renderable)
 import Lib.Layer.Base exposing (Layer, LayerMsg, LayerTarget)
 import Messenger.GeneralModel exposing (GeneralModel)
-import Scenes.Home.GameLayer2.Common exposing (Env)
-import Scenes.Home.GameLayer2.Export exposing (Data, nullData)
-import Scenes.Home.LayerBase exposing (CommonData, LayerInitData)
+import Scenes.Home.GameLayer2.Common exposing (EnvC, nullModel)
+import Scenes.Home.GameLayer2.Export exposing (Data)
+import Scenes.Home.LayerBase exposing (CommonData)
 import Scenes.Home.LayerSettings exposing (LayerDataType(..), LayerT)
 
 
-{-| dataToLDT
--}
 dataToLDT : Data -> LayerDataType
 dataToLDT data =
     GameLayer2Data data
 
 
-{-| ldtToData
--}
 ldtToData : LayerDataType -> Data
 ldtToData ldt =
     case ldt of
@@ -37,19 +27,15 @@ ldtToData ldt =
             x
 
         _ ->
-            nullData
+            nullModel
 
 
 {-| getLayerT
 -}
-getLayerT : Layer Data CommonData LayerInitData -> LayerT
+getLayerT : Layer Data CommonData -> LayerT
 getLayerT layer =
     let
-        init : Env -> LayerInitData -> LayerDataType
-        init env i =
-            dataToLDT (layer.init env i)
-
-        update : Env -> LayerMsg -> LayerDataType -> ( LayerDataType, List ( LayerTarget, LayerMsg ), Env )
+        update : EnvC -> LayerMsg -> LayerDataType -> ( LayerDataType, List ( LayerTarget, LayerMsg ), EnvC )
         update env lm ldt =
             let
                 ( rldt, newmsg, newenv ) =
@@ -57,8 +43,8 @@ getLayerT layer =
             in
             ( dataToLDT rldt, newmsg, newenv )
 
-        view : Env -> LayerDataType -> Renderable
+        view : EnvC -> LayerDataType -> Renderable
         view env ldt =
             layer.view env (ldtToData ldt)
     in
-    GeneralModel layer.name (dataToLDT layer.data) init update view
+    GeneralModel layer.name (dataToLDT layer.data) update view

@@ -9,7 +9,8 @@ Write a description here for how to use your component.
 -}
 
 import Components.Rect.Rect exposing (initModel, updateModel, viewModel)
-import Lib.Component.Base exposing (Component, ComponentInitData, ComponentTMsg(..), Env)
+import Lib.Component.Base exposing (Component, ComponentInitData, ComponentMsg(..))
+import Lib.Env.Env exposing (Env)
 
 
 {-| initComponent
@@ -19,7 +20,6 @@ initComponent : Env -> ComponentInitData -> Component
 initComponent env i =
     { name = "Rect"
     , data = initModel env i
-    , init = initModel
     , update = updateModel
     , view = viewModel
     }

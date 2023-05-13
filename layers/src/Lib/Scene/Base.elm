@@ -1,32 +1,28 @@
 module Lib.Scene.Base exposing
-    ( SceneMsg(..)
-    , SceneOutputMsg(..)
-    , Scene, Env, SceneInitData(..)
+    ( SceneTMsg(..), SceneOutputMsg(..)
+    , Scene, SceneInitData(..)
     , LayerPacker
     )
 
-{-| This is the doc for this module
+{-|
 
 
 # Scene
 
-Scene plays an important role in our game engine.
+Scene plays an important role in Messenger.
 
 It is like a "page". You can change scenes in the game.
 
-Different levels are different scenes.
+You have to send data to next scene if you don't store the data in globaldata.
 
-You have to transmit data to next scene if you don't store the data in globaldata.
-
-@docs SceneMsg
-@docs SceneOutputMsg
-@docs Scene, Env, SceneInitData
+@docs SceneTMsg, SceneOutputMsg
+@docs Scene, SceneInitData
 
 -}
 
-import Base exposing (GlobalData, Msg)
 import Canvas exposing (Renderable)
 import Lib.Audio.Base exposing (AudioOption)
+import Lib.Env.Env exposing (Env)
 
 
 {-| Scene
@@ -38,22 +34,14 @@ type alias Scene a =
     }
 
 
-{-| Environment data
--}
-type alias Env =
-    { msg : Msg
-    , t : Int
-    , globalData : GlobalData
-    }
-
-
 {-| Data to initilize the scene.
 -}
 type SceneInitData
-    = NullSceneInitData
+    = SceneTransMsg SceneTMsg
+    | NullSceneInitData
 
 
-{-| SceneMsg
+{-| SceneTMsg
 You can pass some messages to the scene to initilize it.
 
 Add your own messages here if you want to do more things.
@@ -61,7 +49,7 @@ Add your own messages here if you want to do more things.
 Commonly, a game engine may want to add the engine init settings here.
 
 -}
-type SceneMsg
+type SceneTMsg
     = SceneStringMsg String
     | SceneIntMsg Int
     | NullSceneMsg

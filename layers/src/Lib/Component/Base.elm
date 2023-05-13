@@ -1,10 +1,9 @@
 module Lib.Component.Base exposing
-    ( ComponentTMsg(..)
-    , DefinedTypes(..)
+    ( DefinedTypes(..)
     , Component
     , Data
     , nullComponent
-    , ComponentInitData(..), ComponentTarget(..), Env
+    , ComponentInitData(..), ComponentMsg(..), ComponentTarget(..)
     )
 
 {-|
@@ -30,10 +29,10 @@ Gamecomponents have better speed when communicating with each other. (their mess
 
 -}
 
-import Base exposing (GlobalData, Msg)
 import Canvas exposing (Renderable, empty)
 import Color exposing (Color)
 import Dict exposing (Dict)
+import Lib.Env.Env exposing (Env)
 import Messenger.GeneralModel exposing (GeneralModel)
 
 
@@ -53,16 +52,7 @@ Examples are [GameComponent](https://github.com/linsyking/Reweave/blob/master/sr
 
 -}
 type alias Component =
-    GeneralModel Data Env ComponentInitData ComponentTMsg ComponentTarget Renderable
-
-
-{-| Environment data
--}
-type alias Env =
-    { msg : Msg
-    , t : Int
-    , globalData : GlobalData
-    }
+    GeneralModel Data Env ComponentMsg ComponentTarget Renderable
 
 
 {-| Data type used to initialize a component.
@@ -70,7 +60,7 @@ type alias Env =
 type ComponentInitData
     = ComponentID Int ComponentInitData
     | RectInitData Int Int Int Int Color
-    | ComponentMsg ComponentTMsg
+    | ComponentMsg ComponentMsg
     | NullComponentInitData
 
 
@@ -80,7 +70,6 @@ nullComponent : Component
 nullComponent =
     { name = "NULL"
     , data = Dict.empty
-    , init = \_ _ -> Dict.empty
     , update =
         \env _ _ ->
             ( Dict.empty
@@ -102,16 +91,16 @@ You may add your own data types here.
 However, if your data types are too complicated, you might want to create your own component type (like game component) to achieve better performance.
 
 -}
-type ComponentTMsg
+type ComponentMsg
     = ComponentStringMsg String
     | ComponentIntMsg Int
     | ComponentFloatMsg Float
     | ComponentBoolMsg Bool
-    | ComponentStringDataMsg String ComponentTMsg
-    | ComponentListMsg (List ComponentTMsg)
+    | ComponentStringDataMsg String ComponentMsg
+    | ComponentListMsg (List ComponentMsg)
     | ComponentComponentMsg Component
     | ComponentComponentTargetMsg ComponentTarget
-    | ComponentNamedMsg ComponentTarget ComponentTMsg
+    | ComponentNamedMsg ComponentTarget ComponentMsg
     | ComponentDTMsg DefinedTypes
     | NullComponentMsg
 
@@ -156,8 +145,8 @@ type DefinedTypes
     | CDBool Bool
     | CDFloat Float
     | CDString String
+    | CDColor Color
     | CDComponent Component
     | CDComponentTarget ComponentTarget
     | CDListDT (List DefinedTypes)
     | CDDictDT (Dict String DefinedTypes)
-    | CDColor Color

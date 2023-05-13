@@ -1,8 +1,10 @@
 {
+    "version": "0.1.6",
     "scenes": {
         "Home": [
             "GameLayer",
             "GameLayer2"
         ]
-    }
+    },
+    "sceneprotos": {}
 }

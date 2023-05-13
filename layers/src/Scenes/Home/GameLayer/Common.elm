@@ -1,14 +1,14 @@
-module Scenes.Home.GameLayer.Common exposing (Model, Env)
+module Scenes.Home.GameLayer.Common exposing (Model, nullModel, EnvC)
 
 {-| This is the doc for this module
 
-@docs Model, Env
+@docs Model, nullModel, EnvC
 
 -}
 
 import Array exposing (Array)
 import Lib.Component.Base exposing (Component)
-import Lib.Layer.Base as L
+import Lib.Env.Env as Env
 import Scenes.Home.LayerBase exposing (CommonData)
 
 
@@ -19,7 +19,15 @@ type alias Model =
     }
 
 
+{-| nullModel
+-}
+nullModel : Model
+nullModel =
+    { components = Array.empty
+    }
+
+
 {-| Convenient type alias for the environment
 -}
-type alias Env =
-    L.Env CommonData
+type alias EnvC =
+    Env.EnvC CommonData

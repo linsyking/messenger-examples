@@ -20,7 +20,7 @@ import Lib.Coordinate.Coordinates exposing (fromMouseToReal, getStartPoint, maxH
 import Lib.Layer.Base exposing (LayerMsg(..))
 import Lib.LocalStorage.LocalStorage exposing (decodeLSInfo, encodeLSInfo, sendInfo)
 import Lib.Resources.Base exposing (allTexture, getTexture, saveSprite)
-import Lib.Scene.Base exposing (SceneInitData(..), SceneMsg(..), SceneOutputMsg(..))
+import Lib.Scene.Base exposing (SceneInitData(..), SceneOutputMsg(..))
 import Lib.Scene.SceneLoader exposing (getCurrentScene, loadSceneByName)
 import Lib.Tools.Browser exposing (alert)
 import MainConfig exposing (initScene, timeInterval)

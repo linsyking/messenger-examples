@@ -59,6 +59,9 @@ fixedPosToReal gd ( x, y ) =
 
 
 {-| posToReal
+
+Transform from the virtual coordinate system to the real pixel system.
+
 -}
 posToReal : GlobalData -> ( Int, Int ) -> ( Float, Float )
 posToReal gd ( x, y ) =
@@ -69,10 +72,11 @@ posToReal gd ( x, y ) =
         realHeight =
             gd.realHeight
     in
-    ( toFloat realWidth * (toFloat x / toFloat (plWidth - 1)), toFloat realHeight * (toFloat y / toFloat (plHeight - 1)) )
+    ( toFloat realWidth * (toFloat x / toFloat plWidth), toFloat realHeight * (toFloat y / toFloat plHeight) )
 
 
 {-| widthToReal
+Use this if you want to draw something based on the length.
 -}
 widthToReal : GlobalData -> Int -> Float
 widthToReal gd x =
@@ -80,10 +84,11 @@ widthToReal gd x =
         realWidth =
             gd.realWidth
     in
-    toFloat realWidth * (toFloat x / toFloat (plWidth - 1))
+    toFloat realWidth * (toFloat x / toFloat plWidth)
 
 
 {-| heightToReal
+Theoretically this function is identical to widthToReal, but if possible you can use this to draw something based on the height (like rectangle).
 -}
 heightToReal : GlobalData -> Int -> Float
 heightToReal gd x =
@@ -91,7 +96,7 @@ heightToReal gd x =
         realHeight =
             gd.realHeight
     in
-    toFloat realHeight * (toFloat x / toFloat (plHeight - 1))
+    toFloat realHeight * (toFloat x / toFloat plHeight)
 
 
 {-| maxHandW

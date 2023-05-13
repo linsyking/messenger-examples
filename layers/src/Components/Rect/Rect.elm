@@ -15,13 +15,15 @@ This is a component model module. It should define init, update and view model.
 -}
 
 import Base exposing (Msg(..))
-import Canvas exposing (Renderable, rect, shapes)
+import Canvas exposing (Renderable, shapes)
 import Canvas.Settings exposing (fill)
 import Color
 import Dict
-import Lib.Component.Base exposing (ComponentInitData(..), ComponentTMsg(..), ComponentTarget(..), Data, DefinedTypes(..), Env)
-import Lib.Coordinate.Coordinates exposing (heightToReal, judgeMouse, posToReal, widthToReal)
+import Lib.Component.Base exposing (ComponentInitData(..), ComponentMsg(..), ComponentTarget(..), Data, DefinedTypes(..))
+import Lib.Coordinate.Coordinates exposing (judgeMouse)
 import Lib.DefinedTypes.Parser exposing (dColorGet, dColorSet, dIntGet)
+import Lib.Env.Env exposing (Env)
+import Lib.Render.Shape exposing (rect)
 
 
 {-| initModel
@@ -51,7 +53,7 @@ initModel _ i =
 Add your component logic here.
 
 -}
-updateModel : Env -> ComponentTMsg -> Data -> ( Data, List ( ComponentTarget, ComponentTMsg ), Env )
+updateModel : Env -> ComponentMsg -> Data -> ( Data, List ( ComponentTarget, ComponentMsg ), Env )
 updateModel env _ d =
     let
         x =
@@ -108,5 +110,5 @@ viewModel env d =
     in
     shapes
         [ fill color ]
-        [ rect (posToReal gd ( x, y )) (widthToReal gd w) (heightToReal gd h)
+        [ rect gd ( x, y ) ( w, h )
         ]
