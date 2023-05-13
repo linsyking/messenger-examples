@@ -20,7 +20,7 @@ import Lib.Component.Base exposing (ComponentInitData(..), ComponentMsg(..), Com
 import Lib.Component.ComponentHandler exposing (updateComponents, viewComponent)
 import Lib.Env.Env exposing (addCommonData, noCommonData)
 import Lib.Layer.Base exposing (LayerMsg(..), LayerTarget(..))
-import Messenger.RecursionArray exposing (updateObjectByIndex, updateObjectsByTarget)
+import Messenger.RecursionArray exposing (updateObjectsByTarget)
 import Scenes.Home.GameLayer.Common exposing (EnvC, Model)
 import Scenes.Home.LayerBase exposing (LayerInitData)
 
@@ -67,7 +67,7 @@ updateModel env _ model =
             model.components
 
         ( newComponents, newMsg, newEnv ) =
-            updateComponents (noCommonData env) NullComponentMsg components
+            updateComponents (noCommonData env) components
 
         ( newModel, newMsg2, newEnv2 ) =
             List.foldl
@@ -81,7 +81,7 @@ updateModel env _ model =
                 ( { model | components = newComponents }, [], addCommonData env.commonData newEnv )
                 newMsg
     in
-    if env.t == 100 then
+    if env.t == 0 then
         let
             ( nc, _, _ ) =
                 model.components |> updateObjectsByTarget Lib.Component.ComponentHandler.recBody (noCommonData env) (ComponentIntMsg 100) (ComponentByName "B")
