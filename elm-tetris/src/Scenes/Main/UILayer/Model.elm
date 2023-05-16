@@ -14,8 +14,11 @@ module Scenes.Main.UILayer.Model exposing
 
 import Array
 import Canvas exposing (Renderable)
+import Html exposing (Html)
+import Html.Attributes exposing (style)
 import Lib.Component.Base exposing (ComponentMsg(..))
 import Lib.Component.ComponentHandler exposing (updateComponents, viewComponent)
+import Lib.Coordinate.HTML exposing (genAttribute)
 import Lib.Env.Env exposing (addCommonData, noCommonData)
 import Lib.Layer.Base exposing (LayerMsg(..), LayerTarget(..))
 import Scenes.Main.LayerBase exposing (LayerInitData)
@@ -38,6 +41,16 @@ handleComponentMsg env _ model =
     ( model, [], env )
 
 
+htmlView : EnvC -> Html msg
+htmlView env =
+    Html.div
+        (genAttribute env.globalData ( 360, 0 ) ( 360, 540 )
+            ++ [ style "background-color" "yellow"
+               ]
+        )
+        [ Html.text "Hello World" ]
+
+
 {-| updateModel
 Default update function
 
@@ -52,6 +65,12 @@ updateModel env _ model =
 
         ( newComponents, newMsg, newEnv ) =
             updateComponents (noCommonData env) components
+
+        gd =
+            newEnv.globalData
+
+        newgd =
+            { gd | extraHTML = Just <| htmlView env }
     in
     List.foldl
         (\cTMsg ( m, cmsg, cenv ) ->
@@ -61,7 +80,7 @@ updateModel env _ model =
             in
             ( nm, nmsg ++ cmsg, nenv )
         )
-        ( { model | components = newComponents }, [], addCommonData env.commonData newEnv )
+        ( { model | components = newComponents }, [], addCommonData env.commonData { newEnv | globalData = newgd } )
         newMsg
 
 

@@ -52,6 +52,9 @@ floatpairadd ( x, y ) ( z, w ) =
 
 
 {-| fixedPosToReal
+
+Same as posToReal, but add the initial position of canvas.
+
 -}
 fixedPosToReal : GlobalData -> ( Int, Int ) -> ( Float, Float )
 fixedPosToReal gd ( x, y ) =

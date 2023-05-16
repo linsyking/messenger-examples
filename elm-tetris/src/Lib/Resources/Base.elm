@@ -32,11 +32,11 @@ import Canvas.Texture as Texture exposing (Texture)
 import Dict exposing (Dict)
 
 
-{-| Get the path of the resource.
--}
-getResourcePath : String -> String
-getResourcePath x =
-    "assets/" ++ x
+-- {-| Get the path of the resource.
+-- -}
+-- getResourcePath : String -> String
+-- getResourcePath x =
+--     "assets/" ++ x
 
 
 {-| getTexture

@@ -21,7 +21,7 @@ import Color
 -}
 initScene : String
 initScene =
-    "Home"
+    "Main"
 
 
 {-| Time Interval in milliseconds.
@@ -42,14 +42,14 @@ The default scale is 16x9.
 -}
 plHeight : Int
 plHeight =
-    1080
+    960
 
 
 {-| The width of the game screen in pixel.
 -}
 plWidth : Int
 plWidth =
-    1920
+    720
 
 
 {-| The background of the game.
