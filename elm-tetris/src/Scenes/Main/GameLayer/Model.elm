@@ -32,8 +32,12 @@ import Scenes.Main.UILayer.Common exposing (EnvC)
 Add components here
 -}
 initModel : EnvC -> LayerInitData -> Model
-initModel _ _ =
-    nullModel
+initModel env _ =
+    { nullModel
+        | score = env.globalData.localstorage.maxScore
+        , lines = env.globalData.localstorage.lines
+        , next = Tetriminos.random env.globalData.localstorage.maxScore
+    }
 
 
 {-| updateModel
@@ -48,7 +52,7 @@ updateModel env msg model =
         LayerTetrisMsg event ->
             case event of
                 Start ->
-                    ( spawnTetrimino
+                    ( spawnTetrimino env
                         { model
                             | lines = 0
                             , score = 0
@@ -106,11 +110,30 @@ updateModel env msg model =
         _ ->
             case env.msg of
                 Tick _ ->
+                    let
+                        gd =
+                            env.globalData
+
+                        ls =
+                            gd.localstorage
+
+                        newLS =
+                            { ls
+                                | maxScore = max ls.maxScore model.score
+                                , lines = model.lines
+                            }
+
+                        newGD =
+                            { gd | localstorage = newLS }
+
+                        newEnv =
+                            { env | globalData = newGD }
+                    in
                     if env.commonData.state == Playing then
-                        animate 15 env model
+                        animate 15 newEnv model
 
                     else
-                        ( model, [], env )
+                        ( model, [], newEnv )
 
                 _ ->
                     ( model, [], env )
@@ -122,7 +145,7 @@ animate elapsed env model =
         (model
             |> moveTetrimino elapsed
             |> rotateTetrimino elapsed
-            |> dropTetrimino elapsed
+            |> dropTetrimino env elapsed
         )
 
 
@@ -245,25 +268,24 @@ checkEndGame env model =
         ( model, [], env )
 
 
-spawnTetrimino : Model -> Model
-spawnTetrimino model =
+spawnTetrimino : EnvC -> Model -> Model
+spawnTetrimino env model =
     let
-        ( next, seed ) =
-            Tetriminos.random model.seed
+        next =
+            Tetriminos.random env.t
 
         ( x, y ) =
             Grid.initPosition model.width model.next
     in
     { model
         | next = next
-        , seed = seed
         , active = model.next
         , position = ( x, toFloat y )
     }
 
 
-dropTetrimino : Float -> Model -> Model
-dropTetrimino elapsed model =
+dropTetrimino : EnvC -> Float -> Model -> Model
+dropTetrimino env elapsed model =
     let
         ( x, y ) =
             model.position
@@ -295,7 +317,7 @@ dropTetrimino elapsed model =
                         1
                       )
         }
-            |> spawnTetrimino
+            |> spawnTetrimino env
             |> clearLines
 
     else
@@ -369,6 +391,8 @@ renderPanel env model =
     group []
         [ renderTextWithColor env.globalData 40 "Tetris" "Helvetica" (Color.rgb255 52 73 95) ( 350, 50 )
         , renderTextWithColor env.globalData 14 "Score" "Helvetica" (Color.rgb255 189 195 199) ( 350, 120 )
+        , renderTextWithColor env.globalData 14 "Best Score" "Helvetica" (Color.rgb255 189 195 199) ( 430, 120 )
+        , renderTextWithColor env.globalData 30 (String.fromInt env.globalData.localstorage.maxScore) "Helvetica" (Color.rgb255 57 147 208) ( 430, 140 )
         , renderTextWithColor env.globalData 30 (String.fromInt model.score) "Helvetica" (Color.rgb255 57 147 208) ( 350, 140 )
         , renderTextWithColor env.globalData 14 "Lines Cleared" "Helvetica" (Color.rgb255 189 195 199) ( 350, 200 )
         , renderTextWithColor env.globalData 30 (String.fromInt model.lines) "Helvetica" (Color.rgb255 57 147 208) ( 350, 220 )

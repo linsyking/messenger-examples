@@ -5,8 +5,8 @@ import Lib.Tetris.Grid as G exposing (Grid)
 import Random
 
 
-random : Random.Seed -> ( Grid Color, Random.Seed )
-random seed =
+random : Int -> Grid Color
+random t =
     let
         number =
             Random.int 0 (List.length tetriminos - 1)
@@ -14,7 +14,7 @@ random seed =
         tetrimino n =
             Maybe.withDefault G.empty (List.head (List.drop n tetriminos))
     in
-    Random.step (Random.map tetrimino number) seed
+    Tuple.first <| Random.step (Random.map tetrimino number) (Random.initialSeed t)
 
 
 tetriminos : List (Grid Color)

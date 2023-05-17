@@ -11,7 +11,6 @@ import Lib.Env.Env as Env
 import Lib.Tetris.Base exposing (AnimationState)
 import Lib.Tetris.Grid as G exposing (Grid)
 import Lib.Tetris.Tetriminos as Tetriminos
-import Random
 import Scenes.Main.LayerBase exposing (CommonData, State(..))
 
 
@@ -23,7 +22,6 @@ type alias Model =
     , grid : Grid Color
     , lines : Int
     , next : Grid Color
-    , seed : Random.Seed
     , score : Int
     , acceleration : Bool
     , moveLeft : Bool
@@ -39,17 +37,12 @@ type alias Model =
 -}
 nullModel : Model
 nullModel =
-    let
-        ( next, seed ) =
-            Tetriminos.random (Random.initialSeed 0)
-    in
     { active = G.empty
     , position = ( 0, 0 )
     , grid = G.empty
     , lines = 0
-    , next = next
+    , next = Tetriminos.random 0
     , score = 0
-    , seed = seed
     , acceleration = False
     , moveLeft = False
     , moveRight = False

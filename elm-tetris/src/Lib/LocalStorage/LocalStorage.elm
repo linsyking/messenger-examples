@@ -39,8 +39,14 @@ decodeLSInfo info =
     let
         oldvol =
             Result.withDefault 0.5 (decodeString (at [ "volume" ] Decode.float) info)
+
+        oldScore =
+            Result.withDefault 0 (decodeString (at [ "score" ] Decode.int) info)
+
+        oldLines =
+            Result.withDefault 0 (decodeString (at [ "lines" ] Decode.int) info)
     in
-    LSInfo oldvol
+    LSInfo oldvol oldScore oldLines
 
 
 {-| encodeLSInfo
@@ -55,5 +61,7 @@ encodeLSInfo info =
     Encode.encode 0
         (Encode.object
             [ ( "volume", Encode.float info.volume )
+            , ( "lines", Encode.int info.lines )
+            , ( "score", Encode.int info.maxScore )
             ]
         )

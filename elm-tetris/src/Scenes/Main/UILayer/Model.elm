@@ -149,7 +149,7 @@ htmlView : EnvC -> Html msg
 htmlView env =
     Html.div
         (genAttribute env.globalData ( 0, 30 ) ( 300, 600 )
-            ++ [ style "background-color" "rgba(236, 240, 241, 0.35)"
+            ++ [ style "background-color" "rgba(236, 240, 241, 0.65)"
                , style "line-height" "1.5"
                , style "overflow" "auto"
                , style "display"
@@ -159,6 +159,7 @@ htmlView env =
                      else
                         "block"
                     )
+               , style "user-select" "none"
                ]
         )
         [ Markdown.toHtml [ style "padding" "0 15px" ]

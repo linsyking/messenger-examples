@@ -17,11 +17,12 @@ module Common exposing
 -}
 
 import Audio exposing (Audio, AudioData)
-import Base exposing (GlobalData, LSInfo, Msg(..))
+import Base exposing (GlobalData, Msg(..))
 import Dict
 import Lib.Audio.Audio exposing (getAudio)
 import Lib.Audio.Base exposing (AudioRepo)
 import Scenes.SceneSettings exposing (SceneDataTypes, SceneT)
+import Lib.LocalStorage.LocalStorage exposing (decodeLSInfo)
 
 
 {-| Model
@@ -95,7 +96,7 @@ initGlobalData =
     , scenestarttime = 0
     , mousePos = ( 0, 0 )
     , extraHTML = Nothing
-    , localstorage = LSInfo 0.5
+    , localstorage = decodeLSInfo ""
     }
 
 
