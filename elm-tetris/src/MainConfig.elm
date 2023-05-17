@@ -42,14 +42,14 @@ The default scale is 16x9.
 -}
 plHeight : Int
 plHeight =
-    960
+    720
 
 
 {-| The width of the game screen in pixel.
 -}
 plWidth : Int
 plWidth =
-    720
+    520
 
 
 {-| The background of the game.

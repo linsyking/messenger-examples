@@ -27,6 +27,7 @@ import MainConfig exposing (initScene, timeInterval)
 import Scenes.SceneSettings exposing (SceneDataTypes(..), nullSceneT)
 import Task
 import Time
+import Browser.Events exposing (onMouseUp)
 
 
 {-| initModel
@@ -239,6 +240,7 @@ subscriptions _ _ =
         , onKeyUp (Decode.map (\x -> KeyUp x) (Decode.field "keyCode" Decode.int))
         , onResize (\w h -> NewWindowSize ( w, h ))
         , onMouseDown (Decode.map3 (\b x y -> MouseDown b ( x, y )) (Decode.field "button" Decode.int) (Decode.field "clientX" Decode.float) (Decode.field "clientY" Decode.float))
+        , onMouseUp (Decode.map2 (\x y -> MouseUp ( x, y )) (Decode.field "clientX" Decode.float) (Decode.field "clientY" Decode.float))
         , onMouseMove (Decode.map2 (\x y -> MouseMove ( x, y )) (Decode.field "clientX" Decode.int) (Decode.field "clientY" Decode.int))
         ]
 

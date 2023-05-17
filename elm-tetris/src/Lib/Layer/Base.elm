@@ -22,6 +22,7 @@ import Canvas exposing (Renderable)
 import Lib.Audio.Base exposing (AudioOption)
 import Lib.Env.Env exposing (EnvC)
 import Messenger.GeneralModel exposing (GeneralModel)
+import Lib.Tetris.Base exposing (TetrisEvent)
 
 
 {-| Layer
@@ -47,6 +48,7 @@ type LayerMsg
     | LayerStringDataMsg String LayerMsg
     | LayerSoundMsg String String AudioOption
     | LayerStopSoundMsg String
+    | LayerTetrisMsg TetrisEvent
     | NullLayerMsg
 
 

@@ -1,8 +1,7 @@
 module Lib.Render.Render exposing
     ( renderSprite
     , renderSpriteWithRev
-    , renderText
-    , renderTextWithColor
+    , renderText, renderTextWithColor, renderTextWithColorAlign
     , renderSpriteRawPos
     )
 
@@ -10,8 +9,7 @@ module Lib.Render.Render exposing
 
 @docs renderSprite
 @docs renderSpriteWithRev
-@docs renderText
-@docs renderTextWithColor
+@docs renderText, renderTextWithColor, renderTextWithColorAlign
 @docs renderSpriteRawPos
 
 -}
@@ -299,6 +297,7 @@ renderText gd size s ft ( x, y ) =
     text
         [ font { size = floor rx, family = ft }
         , align Start
+        , fill Color.black
         ]
         ( dsx, dsy + rx - 1 )
         s
@@ -319,6 +318,27 @@ renderTextWithColor gd size s ft col ( x, y ) =
     text
         [ font { size = floor rx, family = ft }
         , align Start
+        , fill col
+        ]
+        ( dsx, dsy + rx - 1 )
+        s
+
+
+{-| renderTextWithColorAlign
+Render texts with color and align.
+-}
+renderTextWithColorAlign : GlobalData -> Int -> String -> String -> Color -> TextAlign -> ( Int, Int ) -> Renderable
+renderTextWithColorAlign gd size s ft col al ( x, y ) =
+    let
+        rx =
+            heightToReal gd size
+
+        ( dsx, dsy ) =
+            posToReal gd ( x, y )
+    in
+    text
+        [ font { size = floor rx, family = ft }
+        , align al
         , fill col
         ]
         ( dsx, dsy + rx - 1 )

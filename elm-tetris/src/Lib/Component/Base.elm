@@ -30,9 +30,11 @@ Gamecomponents have better speed when communicating with each other. (their mess
 -}
 
 import Canvas exposing (Renderable, empty)
+import Components.Button.Base exposing (ButtonInit)
 import Dict exposing (Dict)
 import Lib.Env.Env exposing (Env)
 import Messenger.GeneralModel exposing (GeneralModel)
+import Color exposing (Color)
 
 
 
@@ -59,6 +61,7 @@ type alias Component =
 type ComponentInitData
     = ComponentID Int ComponentInitData
     | ComponentMsg ComponentMsg
+    | ComponentButtonMsg ButtonInit ComponentTarget ComponentMsg
     | NullComponentInitData
 
 
@@ -94,6 +97,7 @@ type ComponentMsg
     | ComponentIntMsg Int
     | ComponentFloatMsg Float
     | ComponentBoolMsg Bool
+    | ComponentMsgMsg ComponentMsg
     | ComponentStringDataMsg String ComponentMsg
     | ComponentListMsg (List ComponentMsg)
     | ComponentComponentMsg Component
@@ -144,6 +148,8 @@ type DefinedTypes
     | CDFloat Float
     | CDString String
     | CDComponent Component
+    | CDComponentMsg ComponentMsg
     | CDComponentTarget ComponentTarget
+    | CDColor Color
     | CDListDT (List DefinedTypes)
     | CDDictDT (Dict String DefinedTypes)

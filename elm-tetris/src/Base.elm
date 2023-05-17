@@ -49,6 +49,7 @@ type Msg
     | PlaySoundGotTime String AudioOption Audio.Source Time.Posix
     | TextureLoaded String (Maybe Texture)
     | MouseDown Int ( Float, Float )
+    | MouseUp ( Float, Float )
     | MouseMove ( Int, Int )
     | UnknownMsg
 
