@@ -1,0 +1,14 @@
+{
+    "version": "0.1.6",
+    "scenes": {},
+    "sceneprotos": {
+        "CoreEngine": {
+            "levels": [
+                "Level1"
+            ],
+            "layers": [
+                "GameLayer"
+            ]
+        }
+    }
+}

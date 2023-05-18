@@ -15,7 +15,6 @@ module Scenes.Home.GameLayer.Model exposing
 import Base exposing (Msg(..))
 import Canvas exposing (Renderable, empty, group, shapes)
 import Canvas.Settings exposing (fill)
-import Canvas.Settings.Advanced exposing (alpha)
 import Color exposing (Color)
 import Lib.Component.Base exposing (ComponentMsg(..))
 import Lib.Layer.Base exposing (LayerMsg(..), LayerTarget(..))
