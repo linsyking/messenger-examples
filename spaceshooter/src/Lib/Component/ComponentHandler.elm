@@ -16,14 +16,13 @@ The mosy commonly used one is the `updateComponents` function, which will update
 
 -}
 
-import Array exposing (Array)
 import Canvas exposing (Renderable, group)
 import Dict
 import Lib.Component.Base exposing (Component, ComponentMsg(..), ComponentTarget(..), DefinedTypes(..))
-import Lib.Env.Env exposing (Env)
-import Messenger.GeneralModel exposing (viewModelArray)
+import Lib.Env.Env exposing (Env, cleanEnv)
+import Messenger.GeneralModel exposing (viewModelList)
 import Messenger.Recursion exposing (RecBody)
-import Messenger.RecursionArray exposing (updateObjects)
+import Messenger.RecursionList exposing (updateObjects)
 
 
 
@@ -75,21 +74,22 @@ recBody =
     { update = update
     , match = match
     , super = super
+    , clean = cleanEnv
     }
 
 
-{-| Update all the components in an array and recursively update the components which have messenges sent.
+{-| Update all the components in a list and recursively update the components which have messenges sent.
 
 Return a list of messages sent to the parentlayer.
 
 -}
-updateComponents : Env -> Array Component -> ( Array Component, List ComponentMsg, Env )
+updateComponents : Env -> List Component -> ( List Component, List ComponentMsg, Env )
 updateComponents env =
     updateObjects recBody env NullComponentMsg
 
 
 {-| Generate the view of the components
 -}
-viewComponent : Env -> Array Component -> Renderable
+viewComponent : Env -> List Component -> Renderable
 viewComponent env xs =
-    group [] <| viewModelArray env xs
+    group [] <| viewModelList env xs

@@ -30,10 +30,19 @@ import SceneProtos.CoreEngine.LayerInit exposing (LayerInitData(..))
 {-| Initialize the model
 -}
 initModel : Env -> SceneInitData -> Model
-initModel env _ =
+initModel env init =
+    let
+        layerInitData =
+            case init of
+                CoreEngineInitData x ->
+                    GameLayerInitData x
+
+                _ ->
+                    NullLayerInitData
+    in
     { commonData = nullCommonData
     , layers =
-        [ GameLayerG.getLayerT <| GameLayer.initLayer (addCommonData nullCommonData env) NullLayerInitData
+        [ GameLayerG.getLayerT <| GameLayer.initLayer (addCommonData nullCommonData env) layerInitData
         ]
     }
 

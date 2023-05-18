@@ -1,21 +1,24 @@
 module SceneProtos.CoreEngine.GameComponent.Handler exposing
     ( update, match, super, recBody
     , updateGC, viewGC
+    , removeDead
+    , removeOutOfBound
     )
 
 {-| Handler to update game components
 
 @docs update, match, super, recBody
 @docs updateGC, viewGC
+@docs removeDead
 
 -}
 
-import Array exposing (Array)
+import Base exposing (Msg(..))
 import Canvas exposing (Renderable, group)
-import Lib.Env.Env exposing (EnvC)
-import Messenger.GeneralModel exposing (viewModelArray)
+import Lib.Env.Env exposing (EnvC, cleanEnvC)
+import Messenger.GeneralModel exposing (viewModelList)
 import Messenger.Recursion exposing (RecBody)
-import Messenger.RecursionArray exposing (updateObjects)
+import Messenger.RecursionList exposing (updateObjects)
 import SceneProtos.CoreEngine.GameComponent.Base exposing (GameComponent, GameComponentMsg(..), GameComponentTarget(..))
 import SceneProtos.CoreEngine.LayerBase exposing (CommonData)
 
@@ -65,6 +68,7 @@ recBody =
     { update = update
     , match = match
     , super = super
+    , clean = cleanEnvC
     }
 
 
@@ -73,13 +77,42 @@ recBody =
 Return a list of messages sent to the parentlayer.
 
 -}
-updateGC : EnvC CommonData -> Array GameComponent -> ( Array GameComponent, List GameComponentMsg, EnvC CommonData )
-updateGC env =
-    updateObjects recBody env NullGCMsg
+updateGC : EnvC CommonData -> List GameComponent -> ( List GameComponent, List GameComponentMsg, EnvC CommonData )
+updateGC env xs =
+    let
+        ( newGC, newMsg, newEnv ) =
+            updateObjects recBody env NullGCMsg xs
+    in
+    ( newGC, newMsg, newEnv )
 
 
 {-| Generate the view of the components
 -}
-viewGC : EnvC CommonData -> Array GameComponent -> Renderable
+viewGC : EnvC CommonData -> List GameComponent -> Renderable
 viewGC env xs =
-    group [] <| viewModelArray env xs
+    group [] <| viewModelList env xs
+
+
+
+-- Helper Functions
+
+
+{-| Remove dead objects
+-}
+removeDead : List GameComponent -> List GameComponent
+removeDead =
+    List.filter (\x -> x.data.alive)
+
+
+{-| Remove OoB objects
+-}
+removeOutOfBound : List GameComponent -> List GameComponent
+removeOutOfBound =
+    List.filter
+        (\p ->
+            let
+                ( x, _ ) =
+                    p.data.position
+            in
+            x > -200 && x < 2000
+        )

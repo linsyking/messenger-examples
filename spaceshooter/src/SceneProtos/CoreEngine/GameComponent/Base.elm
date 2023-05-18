@@ -12,9 +12,9 @@ import Lib.Component.Base exposing (DefinedTypes)
 import Lib.Env.Env exposing (EnvC)
 import Messenger.GeneralModel exposing (GeneralModel)
 import SceneProtos.CoreEngine.GameComponents.Bullet.Base exposing (Bullet)
-import SceneProtos.CoreEngine.LayerBase exposing (CommonData)
 import SceneProtos.CoreEngine.GameComponents.Enemy.Base exposing (Enemy)
 import SceneProtos.CoreEngine.GameComponents.Ship.Base exposing (Ship)
+import SceneProtos.CoreEngine.LayerBase exposing (CommonData)
 
 
 type alias GameComponent =
@@ -28,16 +28,18 @@ type GameComponentTarget
 
 
 type GameComponentMsg
-    = GCEatMsg Int
-    | GCNewBullet Bullet
+    = GCNewBulletMsg Bullet
+    | GCCollisionMsg String
+    | GCGameOverMsg
     | NullGCMsg
 
 
 type alias Data =
     { uid : Int
     , position : ( Float, Float )
-    , velocity : ( Float, Float )
+    , velocity : Float
     , collisionBox : ( Float, Float )
+    , alive : Bool
     , extra : Dict String DefinedTypes
     }
 

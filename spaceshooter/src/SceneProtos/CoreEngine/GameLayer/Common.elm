@@ -6,7 +6,6 @@ module SceneProtos.CoreEngine.GameLayer.Common exposing (Model, EnvC, nullModel)
 
 -}
 
-import Array exposing (Array)
 import Lib.Env.Env as Env
 import SceneProtos.CoreEngine.GameComponent.Base exposing (GameComponent)
 import SceneProtos.CoreEngine.LayerBase exposing (CommonData)
@@ -15,7 +14,7 @@ import SceneProtos.CoreEngine.LayerBase exposing (CommonData)
 {-| Model
 -}
 type alias Model =
-    { objects : Array GameComponent
+    { objects : List GameComponent
     }
 
 
@@ -23,7 +22,7 @@ type alias Model =
 -}
 nullModel : Model
 nullModel =
-    { objects = Array.empty
+    { objects = []
     }
 
 

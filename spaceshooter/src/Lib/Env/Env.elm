@@ -1,6 +1,7 @@
 module Lib.Env.Env exposing
     ( Env, EnvC
     , noCommonData, addCommonData
+    , cleanEnv, cleanEnvC
     )
 
 {-|
@@ -11,12 +12,12 @@ module Lib.Env.Env exposing
 Provide type support for environment variables.
 
 @docs Env, EnvC
-
 @docs noCommonData, addCommonData
+@docs cleanEnv, cleanEnvC
 
 -}
 
-import Base exposing (GlobalData, Msg)
+import Base exposing (GlobalData, Msg(..))
 
 
 {-| Normal environment.
@@ -60,3 +61,17 @@ addCommonData commonData env =
     , t = env.t
     , commonData = commonData
     }
+
+
+{-| Clean the environment
+-}
+cleanEnv : Env -> Env
+cleanEnv env =
+    { env | msg = UnknownMsg }
+
+
+{-| Clean the environment with commonData
+-}
+cleanEnvC : EnvC b -> EnvC b
+cleanEnvC env =
+    { env | msg = UnknownMsg }

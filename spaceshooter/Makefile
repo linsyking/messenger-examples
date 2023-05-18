@@ -1,6 +1,6 @@
 all:
 	mkdir -p build
-	elm make src/Main.elm --optimize --output=build/main.js
+	elm make src/Main.elm --output=build/main.js
 	cp -f public/index.html .
 	cp -f public/style.css build/style.css
 	cp -f public/*.js build/
@@ -10,3 +10,10 @@ format:
 
 clean:
 	rm -rf build/
+
+publish:
+	mkdir -p build
+	elm make src/Main.elm --optimize --output=build/main.js
+	cp -f public/index.html .
+	cp -f public/style.css build/style.css
+	cp -f public/*.js build/

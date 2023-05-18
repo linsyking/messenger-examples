@@ -4,7 +4,7 @@ import Color exposing (Color)
 
 
 type alias Bullet =
-    { velocity : ( Float, Float )
+    { velocity : Float
     , position : ( Float, Float )
     , color : Color
     }
