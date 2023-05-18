@@ -48,10 +48,6 @@ initModel env _ =
                             "New Game"
                         , background = Color.darkBlue
                         }
-                        ComponentParentLayer
-                        (ComponentStringMsg
-                            "Start"
-                        )
             , Button.initComponent (noCommonData env) <|
                 ComponentID 1 <|
                     ComponentButtonMsg
@@ -61,8 +57,6 @@ initModel env _ =
                         , text = "↻"
                         , background = Color.rgb255 236 240 241
                         }
-                        ComponentParentLayer
-                        (ComponentStringMsg "Rotate")
             , Button.initComponent (noCommonData env) <|
                 ComponentID 2 <|
                     ComponentButtonMsg
@@ -72,8 +66,6 @@ initModel env _ =
                         , text = "←"
                         , background = Color.rgb255 236 240 241
                         }
-                        ComponentParentLayer
-                        (ComponentStringMsg "Left")
             , Button.initComponent (noCommonData env) <|
                 ComponentID 3 <|
                     ComponentButtonMsg
@@ -83,8 +75,6 @@ initModel env _ =
                         , text = "→"
                         , background = Color.rgb255 236 240 241
                         }
-                        ComponentParentLayer
-                        (ComponentStringMsg "Right")
             , Button.initComponent (noCommonData env) <|
                 ComponentID 4 <|
                     ComponentButtonMsg
@@ -94,51 +84,50 @@ initModel env _ =
                         , text = "↓"
                         , background = Color.rgb255 236 240 241
                         }
-                        ComponentParentLayer
-                        (ComponentStringMsg "Accelerate")
             ]
     }
 
 
-updateButtonText : EnvC -> Model -> String -> String -> Model
-updateButtonText env model s s2 =
+updateButtonText : EnvC -> Model -> String -> Model
+updateButtonText env model s =
     let
         ( comp, _, _ ) =
             updateObjectByIndex recBody (noCommonData env) (ComponentStringMsg s) 0 model.components
-
-        ( comp2, _, _ ) =
-            updateObjectByIndex recBody (noCommonData env) (ComponentMsgMsg (ComponentStringMsg s2)) 0 comp
     in
-    { model | components = comp2 }
+    { model | components = comp }
 
 
 {-| Handle component messages (that are sent to this layer).
 -}
 handleComponentMsg : EnvC -> ComponentMsg -> Model -> ( Model, List ( LayerTarget, LayerMsg ), EnvC )
 handleComponentMsg env cmsg model =
-    case cmsg of
-        ComponentStringMsg "Start" ->
-            ( updateButtonText env model "Pause" "Pause", [ ( LayerName "GameLayer", LayerTetrisMsg Start ) ], { env | commonData = setState Playing env.commonData } )
+    case ( cmsg, env.commonData.state ) of
+        ( ComponentIntMsg 0, Stopped ) ->
+            ( updateButtonText env model "Pause", [ ( LayerName "GameLayer", LayerTetrisMsg Start ) ], { env | commonData = setState Playing env.commonData } )
 
-        ComponentStringMsg "Pause" ->
-            ( updateButtonText env model "Resume" "Resume", [ ( LayerName "GameLayer", LayerTetrisMsg Pause ) ], { env | commonData = setState Paused env.commonData } )
+        ( ComponentIntMsg 0, Paused ) ->
+            ( updateButtonText env model "Pause", [ ( LayerName "GameLayer", LayerTetrisMsg Resume ) ], { env | commonData = setState Playing env.commonData } )
 
-        ComponentStringMsg "Resume" ->
-            ( updateButtonText env model "Pause" "Pause", [ ( LayerName "GameLayer", LayerTetrisMsg Resume ) ], { env | commonData = setState Playing env.commonData } )
+        ( ComponentIntMsg 0, Playing ) ->
+            ( updateButtonText env model "Resume", [ ( LayerName "GameLayer", LayerTetrisMsg Pause ) ], { env | commonData = setState Paused env.commonData } )
 
-        ComponentStringMsg "Release" ->
+        ( ComponentStringMsg "Release", Playing ) ->
             ( model, [ ( LayerName "GameLayer", LayerTetrisMsg CancelAll ) ], env )
 
-        ComponentStringMsg "Left" ->
+        ( ComponentIntMsg 2, Playing ) ->
+            -- Left Button
             ( model, [ ( LayerName "GameLayer", LayerTetrisMsg (MoveLeft True) ) ], env )
 
-        ComponentStringMsg "Right" ->
+        ( ComponentIntMsg 3, Playing ) ->
+            -- Right Button
             ( model, [ ( LayerName "GameLayer", LayerTetrisMsg (MoveRight True) ) ], env )
 
-        ComponentStringMsg "Rotate" ->
+        ( ComponentIntMsg 1, Playing ) ->
+            -- Rotate Button
             ( model, [ ( LayerName "GameLayer", LayerTetrisMsg (Rotate True) ) ], env )
 
-        ComponentStringMsg "Accelerate" ->
+        ( ComponentIntMsg 4, Playing ) ->
+            -- Accelerate Button
             ( model, [ ( LayerName "GameLayer", LayerTetrisMsg (Accelerate True) ) ], env )
 
         _ ->
@@ -206,16 +195,16 @@ updateModel env lmsg model =
         newMsg2 =
             case env.msg of
                 KeyDown 37 ->
-                    [ ComponentStringMsg "Left" ]
+                    [ ComponentIntMsg 2 ]
 
                 KeyDown 39 ->
-                    [ ComponentStringMsg "Right" ]
+                    [ ComponentIntMsg 3 ]
 
                 KeyDown 40 ->
-                    [ ComponentStringMsg "Accelerate" ]
+                    [ ComponentIntMsg 4 ]
 
                 KeyDown 38 ->
-                    [ ComponentStringMsg "Rotate" ]
+                    [ ComponentIntMsg 1 ]
 
                 KeyUp _ ->
                     [ ComponentStringMsg "Release" ]
@@ -229,7 +218,7 @@ updateModel env lmsg model =
         model3 =
             case lmsg of
                 LayerTetrisMsg GameOver ->
-                    updateButtonText env model2 "New Game" "Start"
+                    updateButtonText env model2 "New Game"
 
                 _ ->
                     model2

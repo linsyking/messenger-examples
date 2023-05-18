@@ -61,7 +61,7 @@ type alias Component =
 type ComponentInitData
     = ComponentID Int ComponentInitData
     | ComponentMsg ComponentMsg
-    | ComponentButtonMsg ButtonInit ComponentTarget ComponentMsg
+    | ComponentButtonMsg ButtonInit
     | NullComponentInitData
 
 

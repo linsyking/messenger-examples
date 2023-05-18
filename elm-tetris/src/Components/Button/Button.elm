@@ -22,7 +22,7 @@ import Components.Button.Base exposing (ButtonInit)
 import Dict
 import Lib.Component.Base exposing (ComponentInitData(..), ComponentMsg(..), ComponentTarget(..), Data, DefinedTypes(..))
 import Lib.Coordinate.Coordinates exposing (judgeMouse)
-import Lib.DefinedTypes.Parser exposing (dColorGet, dComponentMsgGet, dComponentMsgSet, dComponentTargetGet, dIntGet, dStringGet, dStringSet)
+import Lib.DefinedTypes.Parser exposing (dColorGet, dIntGet, dStringGet, dStringSet)
 import Lib.Env.Env exposing (Env)
 import Lib.Render.Render exposing (renderTextWithColorAlign)
 import Lib.Render.Shape exposing (rect)
@@ -36,12 +36,10 @@ Initialize the model. It should update the id.
 initModel : Env -> ComponentInitData -> Data
 initModel _ i =
     case i of
-        ComponentID id (ComponentButtonMsg b target msg) ->
+        ComponentID id (ComponentButtonMsg b) ->
             Dict.fromList
                 [ ( "id", CDInt id )
                 , ( "label", CDString b.text )
-                , ( "target", CDComponentTarget target )
-                , ( "msg", CDComponentMsg msg )
                 , ( "color", CDColor b.background )
                 , ( "textcolor", CDColor b.textColor )
                 , ( "x", CDInt <| Tuple.first b.position )
@@ -80,16 +78,13 @@ updateModel env ctmsg d =
                 ComponentStringMsg x ->
                     d |> dStringSet "label" x
 
-                ComponentMsgMsg x ->
-                    d |> dComponentMsgSet "msg" x
-
                 _ ->
                     d
     in
     case env.msg of
         MouseDown _ pos ->
             if judgeMouse env.globalData pos button.position button.size then
-                ( newData, [ ( dComponentTargetGet d "target", dComponentMsgGet d "msg" ) ], env )
+                ( newData, [ ( ComponentParentLayer, ComponentIntMsg (dIntGet d "id") ) ], env )
 
             else
                 ( newData, [], env )

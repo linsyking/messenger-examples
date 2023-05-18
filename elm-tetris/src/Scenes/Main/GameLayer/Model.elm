@@ -35,7 +35,6 @@ initModel : EnvC -> LayerInitData -> Model
 initModel env _ =
     { nullModel
         | score = env.globalData.localstorage.maxScore
-        , lines = env.globalData.localstorage.lines
         , next = Tetriminos.random env.globalData.localstorage.maxScore
     }
 
@@ -120,7 +119,6 @@ updateModel env msg model =
                         newLS =
                             { ls
                                 | maxScore = max ls.maxScore model.score
-                                , lines = model.lines
                             }
 
                         newGD =
