@@ -8,7 +8,7 @@ module Main exposing (main)
 
 import Audio exposing (AudioCmd, AudioData)
 import Base exposing (Flags, Msg(..))
-import Browser.Events exposing (onKeyDown, onKeyUp, onMouseDown, onMouseMove, onResize)
+import Browser.Events exposing (onKeyDown, onKeyUp, onMouseDown, onMouseMove, onMouseUp, onResize)
 import Canvas
 import Common exposing (Model, audio, initGlobalData, resetSceneStartTime, updateSceneStartTime)
 import Dict
@@ -27,7 +27,6 @@ import MainConfig exposing (initScene, timeInterval)
 import Scenes.SceneSettings exposing (SceneDataTypes(..), nullSceneT)
 import Task
 import Time
-import Browser.Events exposing (onMouseUp)
 
 
 {-| initModel
