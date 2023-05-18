@@ -5,8 +5,7 @@ module SceneProtos.CoreEngine.GameComponents.Ship.Model exposing
     )
 
 import Base exposing (Msg(..))
-import Canvas exposing (Renderable, group, shapes)
-import Canvas.Settings exposing (fill)
+import Canvas exposing (Renderable)
 import Color
 import Dict
 import Lib.Component.Base exposing (DefinedTypes(..))
@@ -14,7 +13,6 @@ import Lib.Coordinate.Coordinates exposing (floored)
 import Lib.DefinedTypes.Parser exposing (dIntGet)
 import Lib.Env.Env exposing (Env, EnvC)
 import Lib.Render.Render exposing (renderSprite)
-import Lib.Render.Shape exposing (rect)
 import Lib.Tools.KeyCode exposing (arrowDown, arrowUp)
 import SceneProtos.CoreEngine.GameComponent.Base exposing (Data, GameComponentInitData(..), GameComponentMsg(..), GameComponentTarget(..))
 import SceneProtos.CoreEngine.GameComponents.Bullet.Base exposing (Bullet)
@@ -107,9 +105,4 @@ viewModel env data =
         gd =
             env.globalData
     in
-    group []
-        [ shapes [ fill Color.white ]
-            [ rect gd (floored data.position) (floored data.collisionBox)
-            ]
-        , renderSprite gd [] (floored data.position) (floored data.collisionBox) "ship"
-        ]
+    renderSprite gd [] (floored data.position) (floored data.collisionBox) "ship"

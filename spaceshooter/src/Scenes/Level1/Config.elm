@@ -11,6 +11,6 @@ import SceneProtos.CoreEngine.GameComponents.Ship.Export as Ship
 
 initObjects : Env -> SceneTMsg -> List GameComponent
 initObjects env _ =
-    [ Ship.initGC env <| GCIdData 0 (GCShipInitData <| Ship ( 300, 500 ) 15)
+    [ Ship.initGC env <| GCIdData 0 (GCShipInitData <| Ship ( 100, 500 ) 15)
     , Enemy.initGC env <| GCIdData 1 (GCEnemyInitData <| Enemy -1 ( 1920, 1000 ) 50 10 25)
     ]

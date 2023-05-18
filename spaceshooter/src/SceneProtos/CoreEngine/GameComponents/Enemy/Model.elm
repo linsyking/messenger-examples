@@ -4,8 +4,7 @@ module SceneProtos.CoreEngine.GameComponents.Enemy.Model exposing
     , viewModel
     )
 
-import Canvas exposing (Renderable, group, shapes)
-import Canvas.Settings exposing (fill)
+import Canvas exposing (Renderable)
 import Color
 import Dict
 import Lib.Component.Base exposing (DefinedTypes(..))
@@ -13,7 +12,6 @@ import Lib.Coordinate.Coordinates exposing (floored)
 import Lib.DefinedTypes.Parser exposing (dFloatGet, dIntGet)
 import Lib.Env.Env exposing (Env, EnvC)
 import Lib.Render.Render exposing (renderSprite)
-import Lib.Render.Shape exposing (rect)
 import SceneProtos.CoreEngine.GameComponent.Base exposing (Data, GameComponentInitData(..), GameComponentMsg(..), GameComponentTarget(..))
 import SceneProtos.CoreEngine.GameComponents.Bullet.Base exposing (Bullet)
 import SceneProtos.CoreEngine.LayerBase exposing (CommonData)
@@ -107,9 +105,4 @@ viewModel env data =
         gd =
             env.globalData
     in
-    group []
-        [ shapes [ fill Color.white ]
-            [ rect gd (floored data.position) (floored data.collisionBox)
-            ]
-        , renderSprite gd [] (floored data.position) (floored data.collisionBox) "enemy"
-        ]
+    renderSprite gd [] (floored data.position) (floored data.collisionBox) "enemy"
