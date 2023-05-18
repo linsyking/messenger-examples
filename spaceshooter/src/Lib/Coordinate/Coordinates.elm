@@ -7,6 +7,7 @@ module Lib.Coordinate.Coordinates exposing
     , getStartPoint
     , judgeMouse
     , fromMouseToReal
+    , floored
     )
 
 {-|
@@ -164,3 +165,10 @@ judgeMouse gd ( mx, my ) ( x, y ) ( w, h ) =
 fromMouseToReal : GlobalData -> ( Float, Float ) -> ( Float, Float )
 fromMouseToReal gd ( px, py ) =
     ( px - gd.startLeft, py - gd.startTop )
+
+
+{-| Turn a float pair into an int pair.
+-}
+floored : ( Float, Float ) -> ( Int, Int )
+floored ( x, y ) =
+    ( floor x, floor y )

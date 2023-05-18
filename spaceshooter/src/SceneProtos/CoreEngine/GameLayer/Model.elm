@@ -12,8 +12,9 @@ module SceneProtos.CoreEngine.GameLayer.Model exposing
 
 -}
 
-import Canvas exposing (Renderable, empty)
+import Canvas exposing (Renderable)
 import Lib.Layer.Base exposing (LayerMsg(..), LayerTarget(..))
+import SceneProtos.CoreEngine.GameComponent.Handler exposing (viewGC)
 import SceneProtos.CoreEngine.GameLayer.Common exposing (EnvC, Model, nullModel)
 import SceneProtos.CoreEngine.LayerInit exposing (LayerInitData(..))
 
@@ -22,8 +23,13 @@ import SceneProtos.CoreEngine.LayerInit exposing (LayerInitData(..))
 Add components here
 -}
 initModel : EnvC -> LayerInitData -> Model
-initModel _ _ =
-    nullModel
+initModel _ init =
+    case init of
+        GameLayerInitData x ->
+            x
+
+        _ ->
+            nullModel
 
 
 {-| updateModel
@@ -46,5 +52,5 @@ If you have other elements than components, add them after viewComponent.
 
 -}
 viewModel : EnvC -> Model -> Renderable
-viewModel _ _ =
-    empty
+viewModel env model =
+    viewGC env model.objects

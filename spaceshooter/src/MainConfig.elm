@@ -21,7 +21,7 @@ import Color
 -}
 initScene : String
 initScene =
-    "Home"
+    "Level1"
 
 
 {-| Time Interval in milliseconds.
@@ -61,4 +61,4 @@ Default is a white rectangle. You can change the background color to other color
 -}
 background : GlobalData -> Renderable
 background gd =
-    Canvas.shapes [ fill Color.white ] [ Canvas.rect ( 0, 0 ) (toFloat gd.realWidth) (toFloat gd.realHeight) ]
+    Canvas.shapes [ fill <| Color.rgb255 105 203 255 ] [ Canvas.rect ( 0, 0 ) (toFloat gd.realWidth) (toFloat gd.realHeight) ]

@@ -10,6 +10,9 @@ module SceneProtos.CoreEngine.LayerInit exposing
 
 -}
 
+import Array exposing (Array)
+import SceneProtos.CoreEngine.GameComponent.Base exposing (GameComponent)
+
 
 {-| LayerInitData
 
@@ -17,10 +20,12 @@ Edit your own LayerInitData here.
 
 -}
 type LayerInitData
-    = NullLayerInitData
+    = GameLayerInitData CoreEngineInit
+    | NullLayerInitData
 
 
 {-| Init Data
 -}
 type alias CoreEngineInit =
-    {}
+    { objects : Array GameComponent
+    }
