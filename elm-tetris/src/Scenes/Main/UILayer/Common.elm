@@ -6,7 +6,6 @@ module Scenes.Main.UILayer.Common exposing (Model, nullModel, EnvC)
 
 -}
 
-import Array exposing (Array)
 import Lib.Component.Base exposing (Component)
 import Lib.Env.Env as Env
 import Scenes.Main.LayerBase exposing (CommonData)
@@ -15,7 +14,7 @@ import Scenes.Main.LayerBase exposing (CommonData)
 {-| Model
 -}
 type alias Model =
-    { components : Array Component
+    { components : List Component
     }
 
 
@@ -23,7 +22,7 @@ type alias Model =
 -}
 nullModel : Model
 nullModel =
-    { components = Array.empty
+    { components = []
     }
 
 

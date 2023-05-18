@@ -12,7 +12,6 @@ module Scenes.Main.UILayer.Model exposing
 
 -}
 
-import Array
 import Base exposing (Msg(..))
 import Canvas exposing (Renderable)
 import Color
@@ -26,7 +25,7 @@ import Lib.Env.Env exposing (addCommonData, noCommonData)
 import Lib.Layer.Base exposing (LayerMsg(..), LayerTarget(..))
 import Lib.Tetris.Base exposing (TetrisEvent(..))
 import Markdown
-import Messenger.RecursionArray exposing (updateObjectByIndex)
+import Messenger.RecursionList exposing (updateObjectByIndex)
 import Scenes.Main.LayerBase exposing (LayerInitData, State(..), setState)
 import Scenes.Main.UILayer.Common exposing (EnvC, Model)
 
@@ -37,54 +36,53 @@ Add components here
 initModel : EnvC -> LayerInitData -> Model
 initModel env _ =
     { components =
-        Array.fromList
-            [ Button.initComponent (noCommonData env) <|
-                ComponentID 0 <|
-                    ComponentButtonMsg
-                        { position = ( 350, 550 )
-                        , textColor = Color.white
-                        , size = ( 120, 50 )
-                        , text =
-                            "New Game"
-                        , background = Color.darkBlue
-                        }
-            , Button.initComponent (noCommonData env) <|
-                ComponentID 1 <|
-                    ComponentButtonMsg
-                        { position = ( 10, 650 )
-                        , textColor = Color.black
-                        , size = ( 50, 50 )
-                        , text = "↻"
-                        , background = Color.rgb255 236 240 241
-                        }
-            , Button.initComponent (noCommonData env) <|
-                ComponentID 2 <|
-                    ComponentButtonMsg
-                        { position = ( 80, 650 )
-                        , textColor = Color.black
-                        , size = ( 50, 50 )
-                        , text = "←"
-                        , background = Color.rgb255 236 240 241
-                        }
-            , Button.initComponent (noCommonData env) <|
-                ComponentID 3 <|
-                    ComponentButtonMsg
-                        { position = ( 150, 650 )
-                        , textColor = Color.black
-                        , size = ( 50, 50 )
-                        , text = "→"
-                        , background = Color.rgb255 236 240 241
-                        }
-            , Button.initComponent (noCommonData env) <|
-                ComponentID 4 <|
-                    ComponentButtonMsg
-                        { position = ( 220, 650 )
-                        , textColor = Color.black
-                        , size = ( 50, 50 )
-                        , text = "↓"
-                        , background = Color.rgb255 236 240 241
-                        }
-            ]
+        [ Button.initComponent (noCommonData env) <|
+            ComponentID 0 <|
+                ComponentButtonMsg
+                    { position = ( 350, 550 )
+                    , textColor = Color.white
+                    , size = ( 120, 50 )
+                    , text =
+                        "New Game"
+                    , background = Color.darkBlue
+                    }
+        , Button.initComponent (noCommonData env) <|
+            ComponentID 1 <|
+                ComponentButtonMsg
+                    { position = ( 10, 650 )
+                    , textColor = Color.black
+                    , size = ( 50, 50 )
+                    , text = "↻"
+                    , background = Color.rgb255 236 240 241
+                    }
+        , Button.initComponent (noCommonData env) <|
+            ComponentID 2 <|
+                ComponentButtonMsg
+                    { position = ( 80, 650 )
+                    , textColor = Color.black
+                    , size = ( 50, 50 )
+                    , text = "←"
+                    , background = Color.rgb255 236 240 241
+                    }
+        , Button.initComponent (noCommonData env) <|
+            ComponentID 3 <|
+                ComponentButtonMsg
+                    { position = ( 150, 650 )
+                    , textColor = Color.black
+                    , size = ( 50, 50 )
+                    , text = "→"
+                    , background = Color.rgb255 236 240 241
+                    }
+        , Button.initComponent (noCommonData env) <|
+            ComponentID 4 <|
+                ComponentButtonMsg
+                    { position = ( 220, 650 )
+                    , textColor = Color.black
+                    , size = ( 50, 50 )
+                    , text = "↓"
+                    , background = Color.rgb255 236 240 241
+                    }
+        ]
     }
 
 
