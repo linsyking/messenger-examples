@@ -49,6 +49,15 @@ initModel _ initData =
             }
 
 
+moveShip : Data -> Data
+moveShip d =
+    let
+        ( x, y ) =
+            d.position
+    in
+    { d | position = ( x, y + d.velocity ) }
+
+
 {-| updateModel
 
 Add your component logic here.
@@ -75,10 +84,17 @@ updateModel env gcmsg d =
                 case env.msg of
                     KeyDown key ->
                         if key == arrowDown then
-                            ( { d | position = ( x, y + 20 ) }, [], env )
+                            ( { d | velocity = 10 }, [], env )
 
                         else if key == arrowUp then
-                            ( { d | position = ( x, y - 20 ) }, [], env )
+                            ( { d | velocity = -10 }, [], env )
+
+                        else
+                            ( d, [], env )
+
+                    KeyUp key ->
+                        if key == arrowDown || key == arrowUp then
+                            ( { d | velocity = 0 }, [], env )
 
                         else
                             ( d, [], env )
@@ -86,10 +102,10 @@ updateModel env gcmsg d =
                     _ ->
                         if modBy interval env.t == 0 then
                             -- Generate a new bullet
-                            ( d, [ ( GCParent, GCNewBulletMsg (Bullet 10 ( x + 170, y + 20 ) Color.blue) ) ], env )
+                            ( moveShip d, [ ( GCParent, GCNewBulletMsg (Bullet 10 ( x + 170, y + 20 ) Color.blue) ) ], env )
 
                         else
-                            ( d, [], env )
+                            ( moveShip d, [], env )
 
 
 {-| viewModel
