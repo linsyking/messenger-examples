@@ -1,20 +1,21 @@
 module SceneProtos.CoreEngine.GameLayer.Export exposing
     ( Data
-    , initLayer
+    , initLayer, initFromScene
     )
 
 {-| This is the doc for this module
 
 @docs Data
-@docs initLayer
+@docs initLayer, initFromScene
 
 -}
 
+import Lib.Env.Env exposing (Env)
 import Lib.Layer.Base exposing (Layer)
 import SceneProtos.CoreEngine.GameLayer.Common exposing (EnvC, Model)
 import SceneProtos.CoreEngine.GameLayer.Model exposing (initModel, updateModel, viewModel)
 import SceneProtos.CoreEngine.LayerBase exposing (CommonData)
-import SceneProtos.CoreEngine.LayerInit exposing (LayerInitData)
+import SceneProtos.CoreEngine.LayerInit exposing (CoreEngineInit, LayerInitData(..))
 
 
 {-| Data
@@ -32,3 +33,10 @@ initLayer env i =
     , update = updateModel
     , view = viewModel
     }
+
+
+{-| Initialize from the scene
+-}
+initFromScene : Env -> CoreEngineInit -> LayerInitData
+initFromScene _ init =
+    GameLayerInitData init

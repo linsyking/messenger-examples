@@ -1,9 +1,9 @@
-module SceneProtos.CoreEngine.GameComponents.Bullet.Base exposing (Bullet)
+module SceneProtos.CoreEngine.GameComponents.Bullet.Base exposing (BulletInit)
 
 import Color exposing (Color)
 
 
-type alias Bullet =
+type alias BulletInit =
     { velocity : Float
     , position : ( Float, Float )
     , color : Color

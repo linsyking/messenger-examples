@@ -1,7 +1,7 @@
-module SceneProtos.CoreEngine.GameComponents.Ship.Base exposing (Ship)
+module SceneProtos.CoreEngine.GameComponents.Ship.Base exposing (ShipInit)
 
 
-type alias Ship =
+type alias ShipInit =
     { position : ( Float, Float )
     , interval : Int
     }
