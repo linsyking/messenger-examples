@@ -1,13 +1,14 @@
 module MainConfig exposing
-    ( initScene
+    ( initScene, initSceneSettings
     , timeInterval
     , background, plHeight, plWidth
     )
 
 {-| This module is used for configuring the parameters of the game framework.
 
-@docs initScene
+@docs initScene, initSceneSettings
 @docs timeInterval
+@docs background, plHeight, plWidth
 
 -}
 
@@ -15,6 +16,7 @@ import Base exposing (GlobalData)
 import Canvas exposing (Renderable)
 import Canvas.Settings exposing (fill)
 import Color
+import Lib.Scene.Base exposing (SceneInitData(..))
 
 
 {-| Start scene of the game
@@ -22,6 +24,13 @@ import Color
 initScene : String
 initScene =
     "Home"
+
+
+{-| Initial scene settings
+-}
+initSceneSettings : SceneInitData
+initSceneSettings =
+    NullSceneInitData
 
 
 {-| Time Interval in milliseconds.

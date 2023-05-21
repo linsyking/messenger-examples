@@ -21,7 +21,7 @@ import Lib.Component.ComponentHandler exposing (updateComponents, viewComponent)
 import Lib.Env.Env exposing (addCommonData, noCommonData)
 import Lib.Layer.Base exposing (LayerMsg(..), LayerTarget(..))
 import Scenes.Home.GameLayer.Common exposing (EnvC, Model)
-import Scenes.Home.LayerBase exposing (LayerInitData)
+import Scenes.Home.LayerInit exposing (LayerInitData)
 
 
 {-| initModel

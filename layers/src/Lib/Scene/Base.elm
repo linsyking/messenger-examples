@@ -1,5 +1,5 @@
 module Lib.Scene.Base exposing
-    ( SceneTMsg(..), SceneOutputMsg(..)
+    ( SceneOutputMsg(..)
     , Scene, SceneInitData(..)
     , LayerPacker
     )
@@ -15,7 +15,7 @@ It is like a "page". You can change scenes in the game.
 
 You have to send data to next scene if you don't store the data in globaldata.
 
-@docs SceneTMsg, SceneOutputMsg
+@docs SceneOutputMsg
 @docs Scene, SceneInitData
 
 -}
@@ -23,6 +23,7 @@ You have to send data to next scene if you don't store the data in globaldata.
 import Canvas exposing (Renderable)
 import Lib.Audio.Base exposing (AudioOption)
 import Lib.Env.Env exposing (Env)
+import Scenes.Home.LayerInit exposing (HomeInit)
 
 
 {-| Scene
@@ -37,22 +38,8 @@ type alias Scene a =
 {-| Data to initilize the scene.
 -}
 type SceneInitData
-    = SceneTransMsg SceneTMsg
+    = HomeInitData HomeInit
     | NullSceneInitData
-
-
-{-| SceneTMsg
-You can pass some messages to the scene to initilize it.
-
-Add your own messages here if you want to do more things.
-
-Commonly, a game engine may want to add the engine init settings here.
-
--}
-type SceneTMsg
-    = SceneStringMsg String
-    | SceneIntMsg Int
-    | NullSceneMsg
 
 
 {-| SceneOutputMsg

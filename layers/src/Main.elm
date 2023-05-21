@@ -23,7 +23,7 @@ import Lib.Resources.Base exposing (allTexture, getTexture, saveSprite)
 import Lib.Scene.Base exposing (SceneInitData(..), SceneOutputMsg(..))
 import Lib.Scene.SceneLoader exposing (getCurrentScene, loadSceneByName)
 import Lib.Tools.Browser exposing (alert)
-import MainConfig exposing (initScene, timeInterval)
+import MainConfig exposing (initScene, initSceneSettings, timeInterval)
 import Scenes.SceneSettings exposing (SceneDataTypes(..), nullSceneT)
 import Task
 import Time
@@ -62,7 +62,7 @@ init : Flags -> ( Model, Cmd Msg, AudioCmd Msg )
 init flags =
     let
         ms =
-            loadSceneByName UnknownMsg initModel initScene NullSceneInitData
+            loadSceneByName UnknownMsg initModel initScene initSceneSettings
 
         oldgd =
             ms.currentGlobalData

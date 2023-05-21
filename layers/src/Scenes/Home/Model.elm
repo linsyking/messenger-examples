@@ -25,17 +25,27 @@ import Scenes.Home.GameLayer.Export as GameLayer
 import Scenes.Home.GameLayer.Global as GameLayerG
 import Scenes.Home.GameLayer2.Export as GameLayer2
 import Scenes.Home.GameLayer2.Global as GameLayer2G
-import Scenes.Home.LayerBase exposing (CommonData, LayerInitData(..), nullCommonData)
+import Scenes.Home.LayerBase exposing (CommonData, nullCommonData)
+import Scenes.Home.LayerInit exposing (initCommonData, nullHomeInit)
 
 
 {-| Initialize the model
 -}
 initModel : Env -> SceneInitData -> Model
-initModel env _ =
-    { commonData = nullCommonData
+initModel env init =
+    let
+        layerInitData =
+            case init of
+                HomeInitData x ->
+                    x
+
+                _ ->
+                    nullHomeInit
+    in
+    { commonData = initCommonData env layerInitData
     , layers =
-        [ GameLayerG.getLayerT <| GameLayer.initLayer (addCommonData nullCommonData env) NullLayerInitData
-        , GameLayer2G.getLayerT <| GameLayer2.initLayer (addCommonData nullCommonData env) NullLayerInitData
+        [ GameLayerG.getLayerT <| GameLayer.initLayer (addCommonData nullCommonData env) (GameLayer.initFromScene env layerInitData)
+        , GameLayer2G.getLayerT <| GameLayer2.initLayer (addCommonData nullCommonData env) (GameLayer2.initFromScene env layerInitData)
         ]
     }
 
