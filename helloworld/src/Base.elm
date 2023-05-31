@@ -5,7 +5,7 @@ module Base exposing
     , LSInfo
     )
 
-{-| This is the doc for this module
+{-| Base module
 
 WARNING: This file should have no dependencies
 
@@ -43,14 +43,17 @@ type Msg
     = Tick Time.Posix
     | KeyDown Int
     | KeyUp Int
-    | StringMessage String
     | NewWindowSize ( Int, Int )
     | SoundLoaded String AudioOption (Result Audio.LoadError Audio.Source)
     | PlaySoundGotTime String AudioOption Audio.Source Time.Posix
     | TextureLoaded String (Maybe Texture)
-    | MouseDown Int ( Float, Float )
-    | MouseMove ( Int, Int )
-    | UnknownMsg
+    | RealMouseDown Int ( Float, Float )
+    | MouseDown Int ( Int, Int )
+    | RealMouseUp ( Float, Float )
+    | MouseUp ( Int, Int )
+    | MouseMove ( Float, Float )
+    | Prompt String String
+    | NullMsg
 
 
 {-| GlobalData
@@ -76,12 +79,12 @@ type alias GlobalData =
     , realHeight : Int
     , startLeft : Float
     , startTop : Float
-    , audioVolume : Float
     , sprites : Dict String Texture
-    , scenestarttime : Int
-    , mousePos : ( Float, Float )
+    , sceneStartTime : Int
+    , mousePos : ( Int, Int )
     , extraHTML : Maybe (Html Msg)
-    , localstorage : LSInfo
+    , localStorage : LSInfo
+    , lastLocalStorage : LSInfo
     }
 
 

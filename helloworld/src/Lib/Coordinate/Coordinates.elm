@@ -1,12 +1,12 @@
 module Lib.Coordinate.Coordinates exposing
     ( fixedPosToReal
-    , posToReal
-    , widthToReal
-    , heightToReal
+    , posToReal, posToVirtual
+    , lengthToReal
+    , fromRealLength
     , maxHandW
     , getStartPoint
-    , judgeMouse
-    , fromMouseToReal
+    , judgeMouseRect
+    , fromMouseToVirtual
     )
 
 {-|
@@ -19,13 +19,13 @@ This module deals with the coordinate transformation.
 This module is very important because it can calculate the correct position of the point you want to draw.
 
 @docs fixedPosToReal
-@docs posToReal
-@docs widthToReal
-@docs heightToReal
+@docs posToReal, posToVirtual
+@docs lengthToReal
+@docs fromRealLength
 @docs maxHandW
 @docs getStartPoint
-@docs judgeMouse
-@docs fromMouseToReal
+@docs judgeMouseRect
+@docs fromMouseToVirtual
 
 -}
 
@@ -52,6 +52,9 @@ floatpairadd ( x, y ) ( z, w ) =
 
 
 {-| fixedPosToReal
+
+Same as posToReal, but add the initial position of canvas.
+
 -}
 fixedPosToReal : GlobalData -> ( Int, Int ) -> ( Float, Float )
 fixedPosToReal gd ( x, y ) =
@@ -75,11 +78,25 @@ posToReal gd ( x, y ) =
     ( toFloat realWidth * (toFloat x / toFloat plWidth), toFloat realHeight * (toFloat y / toFloat plHeight) )
 
 
+{-| Inverse of posToReal.
+-}
+posToVirtual : GlobalData -> ( Float, Float ) -> ( Int, Int )
+posToVirtual gd ( x, y ) =
+    let
+        realWidth =
+            gd.realWidth
+
+        realHeight =
+            gd.realHeight
+    in
+    ( floor (toFloat plWidth * (x / toFloat realWidth)), floor (toFloat plHeight * (y / toFloat realHeight)) )
+
+
 {-| widthToReal
 Use this if you want to draw something based on the length.
 -}
-widthToReal : GlobalData -> Int -> Float
-widthToReal gd x =
+lengthToReal : GlobalData -> Int -> Float
+lengthToReal gd x =
     let
         realWidth =
             gd.realWidth
@@ -87,16 +104,15 @@ widthToReal gd x =
     toFloat realWidth * (toFloat x / toFloat plWidth)
 
 
-{-| heightToReal
-Theoretically this function is identical to widthToReal, but if possible you can use this to draw something based on the height (like rectangle).
+{-| The inverse function of widthToReal.
 -}
-heightToReal : GlobalData -> Int -> Float
-heightToReal gd x =
+fromRealLength : GlobalData -> Float -> Int
+fromRealLength gd x =
     let
-        realHeight =
-            gd.realHeight
+        realWidth =
+            gd.realWidth
     in
-    toFloat realHeight * (toFloat x / toFloat plHeight)
+    floor (toFloat plWidth * (x / toFloat realWidth))
 
 
 {-| maxHandW
@@ -128,36 +144,20 @@ getStartPoint ( w, h ) =
         ( 0, (toFloat h - fh) / 2 )
 
 
-{-| judgeMouse
+{-| judgeMouseRect
 Judge whether the mouse position is in the rectangle.
 -}
-judgeMouse : GlobalData -> ( Float, Float ) -> ( Int, Int ) -> ( Int, Int ) -> Bool
-judgeMouse gd ( mx, my ) ( x, y ) ( w, h ) =
-    let
-        ( rpx, rpy ) =
-            posToReal gd ( x, y )
-
-        rw =
-            widthToReal gd w
-
-        rh =
-            heightToReal gd h
-
-        mpx =
-            mx - gd.startLeft
-
-        mpy =
-            my - gd.startTop
-    in
-    if rpx <= mpx && mpx <= rpx + rw && rpy <= mpy && mpy <= rpy + rh then
+judgeMouseRect : ( Int, Int ) -> ( Int, Int ) -> ( Int, Int ) -> Bool
+judgeMouseRect ( mx, my ) ( x, y ) ( w, h ) =
+    if x <= mx && mx <= x + w && y <= my && my <= y + h then
         True
 
     else
         False
 
 
-{-| fromMouseToReal
+{-| fromMouseToVirtual
 -}
-fromMouseToReal : GlobalData -> ( Float, Float ) -> ( Float, Float )
-fromMouseToReal gd ( px, py ) =
-    ( px - gd.startLeft, py - gd.startTop )
+fromMouseToVirtual : GlobalData -> ( Float, Float ) -> ( Int, Int )
+fromMouseToVirtual gd ( px, py ) =
+    posToVirtual gd ( px - gd.startLeft, py - gd.startTop )

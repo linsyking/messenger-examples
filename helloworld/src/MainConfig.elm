@@ -1,20 +1,25 @@
 module MainConfig exposing
-    ( initScene
+    ( initScene, initSceneSettings
     , timeInterval
     , background, plHeight, plWidth
+    , debug
     )
 
-{-| This module is used for configuring the parameters of the game framework.
+{-| MainConfig
 
-@docs initScene
+This module is used for configuring the parameters of the game framework.
+
+@docs initScene, initSceneSettings
 @docs timeInterval
+@docs background, plHeight, plWidth
+@docs debug
 
 -}
 
 import Base exposing (GlobalData)
 import Canvas exposing (Renderable)
-import Canvas.Settings exposing (fill)
-import Color
+import Lib.Scene.Base exposing (SceneInitData(..))
+import Scenes.Home.SceneInit exposing (HomeInit)
 
 
 {-| Start scene of the game
@@ -22,6 +27,13 @@ import Color
 initScene : String
 initScene =
     "Home"
+
+
+{-| Initial scene settings
+-}
+initSceneSettings : SceneInitData
+initSceneSettings =
+    HomeInitData (HomeInit "John")
 
 
 {-| Time Interval in milliseconds.
@@ -52,13 +64,26 @@ plWidth =
     1920
 
 
+{-| Debug flag
+-}
+debug : Bool
+debug =
+    True
+
+
 {-| The background of the game.
 
 This renderable will be rendered below all other renderables.
 
-Default is a white rectangle. You can change the background color to other color when debugging.
+Default is clear function that cleans the background.
+
+You can change the background color to other color when debugging.
+
+Change color by using this:
+
+Canvas.shapes [ fill Color.blue ][ Canvas.rect ( 0, 0 ) (toFloat gd.realWidth) (toFloat gd.realHeight) ]
 
 -}
 background : GlobalData -> Renderable
 background gd =
-    Canvas.shapes [ fill Color.white ] [ Canvas.rect ( 0, 0 ) (toFloat gd.realWidth) (toFloat gd.realHeight) ]
+    Canvas.clear ( 0, 0 ) (toFloat gd.realWidth) (toFloat gd.realHeight)

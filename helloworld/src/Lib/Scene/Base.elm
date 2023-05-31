@@ -23,6 +23,8 @@ You have to send data to next scene if you don't store the data in globaldata.
 import Canvas exposing (Renderable)
 import Lib.Audio.Base exposing (AudioOption)
 import Lib.Env.Env exposing (Env)
+import Scenes.Game.SceneInit exposing (GameInit)
+import Scenes.Home.SceneInit exposing (HomeInit)
 
 
 {-| Scene
@@ -37,12 +39,14 @@ type alias Scene a =
 {-| Data to initilize the scene.
 -}
 type SceneInitData
-    = SceneTransMsg SceneTMsg
+    = GameInitData GameInit
+    | HomeInitData HomeInit
+    | SceneTransMsg SceneTMsg
     | NullSceneInitData
 
 
 {-| SceneTMsg
-You can pass some messages to the scene to initilize it.
+You can pass some messages to the scene to initilize it (along with the SceneInitData).
 
 Add your own messages here if you want to do more things.
 
@@ -64,10 +68,11 @@ Add your own messages here if you want to do more things.
 -}
 type SceneOutputMsg
     = SOMChangeScene ( SceneInitData, String )
-    | SOMPlayAudio String String AudioOption
+    | SOMPlayAudio String String AudioOption -- audio name, audio url, audio option
     | SOMAlert String
     | SOMStopAudio String
     | SOMSetVolume Float
+    | SOMPrompt String String -- name, title
 
 
 {-| This datatype is used in Scene definition.

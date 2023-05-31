@@ -8,7 +8,7 @@ module Main exposing (main)
 
 import Audio exposing (AudioCmd, AudioData)
 import Base exposing (Flags, Msg(..))
-import Browser.Events exposing (onKeyDown, onKeyUp, onMouseDown, onMouseMove, onResize)
+import Browser.Events exposing (onKeyDown, onKeyUp, onMouseDown, onMouseMove, onMouseUp, onResize)
 import Canvas
 import Common exposing (Model, audio, initGlobalData, resetSceneStartTime, updateSceneStartTime)
 import Dict
@@ -16,14 +16,14 @@ import Html exposing (Html)
 import Html.Attributes exposing (style)
 import Json.Decode as Decode
 import Lib.Audio.Audio exposing (audioPortFromJS, audioPortToJS, loadAudio, stopAudio)
-import Lib.Coordinate.Coordinates exposing (fromMouseToReal, getStartPoint, maxHandW)
+import Lib.Coordinate.Coordinates exposing (fromMouseToVirtual, getStartPoint, maxHandW)
 import Lib.Layer.Base exposing (LayerMsg(..))
 import Lib.LocalStorage.LocalStorage exposing (decodeLSInfo, encodeLSInfo, sendInfo)
 import Lib.Resources.Base exposing (allTexture, getTexture, saveSprite)
 import Lib.Scene.Base exposing (SceneInitData(..), SceneOutputMsg(..))
-import Lib.Scene.SceneLoader exposing (getCurrentScene, loadSceneByName)
-import Lib.Tools.Browser exposing (alert)
-import MainConfig exposing (initScene, timeInterval)
+import Lib.Scene.SceneLoader exposing (existScene, getCurrentScene, loadSceneByName)
+import Lib.Tools.Browser exposing (alert, prompt, promptReceiver)
+import MainConfig exposing (debug, initScene, initSceneSettings, timeInterval)
 import Scenes.SceneSettings exposing (SceneDataTypes(..), nullSceneT)
 import Task
 import Time
@@ -62,7 +62,7 @@ init : Flags -> ( Model, Cmd Msg, AudioCmd Msg )
 init flags =
     let
         ms =
-            loadSceneByName UnknownMsg initModel initScene NullSceneInitData
+            loadSceneByName NullMsg initModel initScene initSceneSettings
 
         oldgd =
             ms.currentGlobalData
@@ -78,7 +78,7 @@ init flags =
 
         -- Update volume in globaldata
         newgd =
-            { oldgd | localstorage = ls, audioVolume = ls.volume, browserViewPort = ( flags.windowWidth, flags.windowHeight ), realWidth = gw, realHeight = gh, startLeft = fl, startTop = ft }
+            { oldgd | localStorage = ls, browserViewPort = ( flags.windowWidth, flags.windowHeight ), realWidth = gw, realHeight = gh, startLeft = fl, startTop = ft }
     in
     ( { ms | currentGlobalData = newgd }, Cmd.none, Audio.cmdNone )
 
@@ -96,63 +96,80 @@ gameUpdate msg model =
 
     else
         let
+            oldLocalStorage =
+                model.currentGlobalData.localStorage
+
             ( sdt, som, newenv ) =
                 (getCurrentScene model).update { msg = msg, globalData = model.currentGlobalData, t = model.time } model.currentData
 
-            newgd =
+            newGD1 =
                 newenv.globalData
+
+            newGD2 =
+                { newGD1 | lastLocalStorage = oldLocalStorage }
 
             timeUpdatedModel =
                 case msg of
                     Tick _ ->
                         -- Tick event needs to update time
-                        { model | time = model.time + 1, currentGlobalData = newgd }
+                        { model | time = model.time + 1, currentGlobalData = newGD2 }
 
                     _ ->
-                        { model | currentGlobalData = newgd }
+                        { model | currentGlobalData = newGD2 }
 
             newModel =
-                { timeUpdatedModel | currentData = sdt }
+                updateSceneStartTime { timeUpdatedModel | currentData = sdt }
 
             ( newmodel, cmds, audiocmds ) =
-                if List.isEmpty som then
-                    ( updateSceneStartTime newModel, [ sendInfo (encodeLSInfo timeUpdatedModel.currentGlobalData.localstorage) ], [] )
+                List.foldl
+                    (\singleSOM ( lastModel, lastCmds, lastAudioCmds ) ->
+                        case singleSOM of
+                            SOMChangeScene ( tm, s ) ->
+                                --- Load new scene
+                                ( loadSceneByName msg lastModel s tm
+                                    |> resetSceneStartTime
+                                , lastCmds
+                                , lastAudioCmds
+                                )
 
-                else
-                    List.foldl
-                        (\singleSOM ( lastModel, lastCmds, lastAudioCmds ) ->
-                            case singleSOM of
-                                SOMChangeScene ( tm, s ) ->
-                                    --- Load new scene
-                                    ( loadSceneByName msg lastModel s tm
-                                        |> resetSceneStartTime
-                                    , lastCmds ++ [ sendInfo (encodeLSInfo lastModel.currentGlobalData.localstorage) ]
-                                    , lastAudioCmds
-                                    )
+                            SOMPlayAudio name path opt ->
+                                ( lastModel, lastCmds, lastAudioCmds ++ [ Audio.loadAudio (SoundLoaded name opt) path ] )
 
-                                SOMPlayAudio name path opt ->
-                                    ( lastModel, lastCmds, lastAudioCmds ++ [ Audio.loadAudio (SoundLoaded name opt) path ] )
+                            SOMSetVolume s ->
+                                let
+                                    oldgd =
+                                        lastModel.currentGlobalData
 
-                                SOMSetVolume s ->
-                                    let
-                                        oldgd =
-                                            lastModel.currentGlobalData
+                                    oldLS =
+                                        oldgd.localStorage
 
-                                        newgd2 =
-                                            { oldgd | audioVolume = s }
-                                    in
-                                    ( { lastModel | currentGlobalData = newgd2 }, lastCmds, lastAudioCmds )
+                                    newgd2 =
+                                        { oldgd | localStorage = { oldLS | volume = s } }
+                                in
+                                ( { lastModel | currentGlobalData = newgd2 }, lastCmds, lastAudioCmds )
 
-                                SOMStopAudio name ->
-                                    ( { lastModel | audiorepo = stopAudio lastModel.audiorepo name }, lastCmds, lastAudioCmds )
+                            SOMStopAudio name ->
+                                ( { lastModel | audiorepo = stopAudio lastModel.audiorepo name }, lastCmds, lastAudioCmds )
 
-                                SOMAlert text ->
-                                    ( lastModel, lastCmds ++ [ alert text ], lastAudioCmds )
-                        )
-                        ( newModel, [], [] )
-                        som
+                            SOMAlert text ->
+                                ( lastModel, lastCmds ++ [ alert text ], lastAudioCmds )
+
+                            SOMPrompt name title ->
+                                ( lastModel, lastCmds ++ [ prompt { name = name, title = title } ], lastAudioCmds )
+                    )
+                    ( newModel, [], [] )
+                    som
         in
-        ( newmodel, Cmd.batch cmds, Audio.cmdBatch audiocmds )
+        ( newmodel
+        , Cmd.batch <|
+            if newmodel.currentGlobalData.localStorage /= model.currentGlobalData.lastLocalStorage then
+                -- Save local storage
+                sendInfo (encodeLSInfo newmodel.currentGlobalData.localStorage) :: cmds
+
+            else
+                cmds
+        , Audio.cmdBatch audiocmds
+        )
 
 
 {-| update
@@ -215,9 +232,72 @@ update _ msg model =
                     model.currentGlobalData
 
                 mp =
-                    fromMouseToReal curgd ( toFloat px, toFloat py )
+                    fromMouseToVirtual curgd ( px, py )
             in
             ( { model | currentGlobalData = { curgd | mousePos = mp } }, Cmd.none, Audio.cmdNone )
+
+        RealMouseDown e pos ->
+            let
+                vp =
+                    fromMouseToVirtual model.currentGlobalData pos
+            in
+            gameUpdate (MouseDown e vp) model
+
+        RealMouseUp pos ->
+            let
+                vp =
+                    fromMouseToVirtual model.currentGlobalData pos
+            in
+            gameUpdate (MouseUp vp) model
+
+        KeyDown 112 ->
+            if debug then
+                -- F1
+                ( model, prompt { name = "load", title = "Enter the scene you want to load" }, Audio.cmdNone )
+
+            else
+                gameUpdate msg model
+
+        KeyDown 113 ->
+            if debug then
+                -- F2
+                ( model, prompt { name = "setVolume", title = "Set volume (0-1)" }, Audio.cmdNone )
+
+            else
+                gameUpdate msg model
+
+        Prompt "load" result ->
+            if existScene result then
+                ( loadSceneByName msg model result NullSceneInitData
+                    |> resetSceneStartTime
+                , Cmd.none
+                , Audio.cmdNone
+                )
+
+            else
+                ( model, alert "Scene not found!", Audio.cmdNone )
+
+        Prompt "setVolume" result ->
+            let
+                vol =
+                    String.toFloat result
+            in
+            case vol of
+                Just v ->
+                    let
+                        gd =
+                            model.currentGlobalData
+
+                        ls =
+                            gd.localStorage
+
+                        newGd =
+                            { gd | localStorage = { ls | volume = v } }
+                    in
+                    ( { model | currentGlobalData = newGd }, Cmd.none, Audio.cmdNone )
+
+                Nothing ->
+                    ( model, alert "Not a number", Audio.cmdNone )
 
         _ ->
             gameUpdate msg model
@@ -238,8 +318,10 @@ subscriptions _ _ =
         , onKeyDown (Decode.map (\x -> KeyDown x) (Decode.field "keyCode" Decode.int))
         , onKeyUp (Decode.map (\x -> KeyUp x) (Decode.field "keyCode" Decode.int))
         , onResize (\w h -> NewWindowSize ( w, h ))
-        , onMouseDown (Decode.map3 (\b x y -> MouseDown b ( x, y )) (Decode.field "button" Decode.int) (Decode.field "clientX" Decode.float) (Decode.field "clientY" Decode.float))
-        , onMouseMove (Decode.map2 (\x y -> MouseMove ( x, y )) (Decode.field "clientX" Decode.int) (Decode.field "clientY" Decode.int))
+        , onMouseDown (Decode.map3 (\b x y -> RealMouseDown b ( x, y )) (Decode.field "button" Decode.int) (Decode.field "clientX" Decode.float) (Decode.field "clientY" Decode.float))
+        , onMouseUp (Decode.map2 (\x y -> RealMouseUp ( x, y )) (Decode.field "clientX" Decode.float) (Decode.field "clientY" Decode.float))
+        , onMouseMove (Decode.map2 (\x y -> MouseMove ( x, y )) (Decode.field "clientX" Decode.float) (Decode.field "clientY" Decode.float))
+        , promptReceiver (\p -> Prompt p.name p.result)
         ]
 
 
@@ -264,7 +346,7 @@ view _ model =
                 , style "position" "fixed"
                 ]
                 [ MainConfig.background model.currentGlobalData
-                , (getCurrentScene model).view { msg = UnknownMsg, t = model.time, globalData = model.currentGlobalData } model.currentData
+                , (getCurrentScene model).view { msg = NullMsg, t = model.time, globalData = model.currentGlobalData } model.currentData
                 ]
     in
     Html.div []

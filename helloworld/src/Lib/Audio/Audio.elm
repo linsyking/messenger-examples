@@ -6,7 +6,10 @@ port module Lib.Audio.Audio exposing
     , getAudio
     )
 
-{-| Audio module
+{-|
+
+
+# Audio
 
 This module is used to manage audios.
 

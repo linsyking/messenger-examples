@@ -8,6 +8,8 @@ This module records all the scenes.
 
 -}
 
+import Scenes.Game.Export as Game
+import Scenes.Game.Global as GameG
 import Scenes.Home.Export as Home
 import Scenes.Home.Global as HomeG
 import Scenes.SceneSettings exposing (SceneT)
@@ -19,4 +21,5 @@ Add all the scenes here
 allScenes : List ( String, SceneT )
 allScenes =
     [ ( "Home", HomeG.sceneToST Home.scene )
+    , ( "Game", GameG.sceneToST Game.scene )
     ]

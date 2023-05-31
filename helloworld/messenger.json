@@ -1,8 +1,13 @@
 {
-    "version": "0.1.6",
+    "version": "0.2.4",
+    "template_repo": "ssh://git@focs.ji.sjtu.edu.cn:2222/SilverFOCS-23/messenger-templates.git",
     "scenes": {
         "Home": [
-            "GameLayer"
+            "MainLayer"
+        ],
+        "Game": [
+            "B",
+            "A"
         ]
     },
     "sceneprotos": {}

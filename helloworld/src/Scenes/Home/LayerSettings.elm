@@ -11,14 +11,14 @@ module Scenes.Home.LayerSettings exposing
 -}
 
 import Lib.Layer.Base exposing (Layer)
-import Scenes.Home.GameLayer.Export as GameLayer
 import Scenes.Home.LayerBase exposing (CommonData)
+import Scenes.Home.MainLayer.Export as MainLayer
 
 
 {-| LayerDataType
 -}
 type LayerDataType
-    = GameLayerData GameLayer.Data
+    = MainLayerData MainLayer.Data
     | NullLayerData
 
 

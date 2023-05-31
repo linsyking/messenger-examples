@@ -30,6 +30,7 @@ Gamecomponents have better speed when communicating with each other. (their mess
 -}
 
 import Canvas exposing (Renderable, empty)
+import Color exposing (Color)
 import Dict exposing (Dict)
 import Lib.Env.Env exposing (Env)
 import Messenger.GeneralModel exposing (GeneralModel)
@@ -144,6 +145,8 @@ type DefinedTypes
     | CDFloat Float
     | CDString String
     | CDComponent Component
+    | CDComponentMsg ComponentMsg
     | CDComponentTarget ComponentTarget
+    | CDColor Color
     | CDListDT (List DefinedTypes)
     | CDDictDT (Dict String DefinedTypes)

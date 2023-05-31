@@ -4,7 +4,7 @@ module Lib.Layer.Base exposing
     , Layer
     )
 
-{-| This is the doc for this module
+{-| Layer Base
 
 Layer plays a very important role in the game framework.
 
@@ -39,6 +39,8 @@ type alias Layer a b =
 
 Add your own layer messages here.
 
+LayerSoundMsg name path option
+
 -}
 type LayerMsg
     = LayerStringMsg String
@@ -47,6 +49,7 @@ type LayerMsg
     | LayerStringDataMsg String LayerMsg
     | LayerSoundMsg String String AudioOption
     | LayerStopSoundMsg String
+    | LayerChangeSceneMsg String
     | NullLayerMsg
 
 

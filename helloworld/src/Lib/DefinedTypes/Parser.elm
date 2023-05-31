@@ -1,47 +1,36 @@
 module Lib.DefinedTypes.Parser exposing
-    ( dIntGet
-    , dIntSet
-    , dFloatGet
-    , dFloatSet
-    , dBoolGet
-    , dBoolSet
-    , dStringGet
-    , dStringSet
-    , dListDTGet
-    , dListDTSet
-    , dDictDTGet
-    , dDictDTSet
-    , dComponentGet
-    , dComponentSet
-    , dComponentTargetGet
-    , dComponentTargetSet
+    ( dIntGet, dIntSet
+    , dFloatGet, dFloatSet
+    , dBoolGet, dBoolSet
+    , dStringGet, dStringSet
+    , dListDTGet, dListDTSet
+    , dDictDTGet, dDictDTSet
+    , dComponentGet, dComponentSet
+    , dComponentTargetGet, dComponentTargetSet
+    , dComponentMsgGet, dComponentMsgSet
+    , dColorGet, dColorSet
     )
 
 {-| This is a parser for DefinedTypes.
 
 You have to use functions here to decode and encode DefinedTypes.
 
-@docs dIntGet
-@docs dIntSet
-@docs dFloatGet
-@docs dFloatSet
-@docs dBoolGet
-@docs dBoolSet
-@docs dStringGet
-@docs dStringSet
-@docs dListDTGet
-@docs dListDTSet
-@docs dDictDTGet
-@docs dDictDTSet
-@docs dComponentGet
-@docs dComponentSet
-@docs dComponentTargetGet
-@docs dComponentTargetSet
+@docs dIntGet, dIntSet
+@docs dFloatGet, dFloatSet
+@docs dBoolGet, dBoolSet
+@docs dStringGet, dStringSet
+@docs dListDTGet, dListDTSet
+@docs dDictDTGet, dDictDTSet
+@docs dComponentGet, dComponentSet
+@docs dComponentTargetGet, dComponentTargetSet
+@docs dComponentMsgGet, dComponentMsgSet
+@docs dColorGet, dColorSet
 
 -}
 
+import Color exposing (Color)
 import Dict exposing (Dict)
-import Lib.Component.Base exposing (Component, ComponentTarget(..), DefinedTypes(..), nullComponent)
+import Lib.Component.Base exposing (Component, ComponentMsg(..), ComponentTarget(..), DefinedTypes(..), nullComponent)
 
 
 {-| dIntGet
@@ -214,3 +203,41 @@ dComponentTargetGet f s =
 dComponentTargetSet : String -> ComponentTarget -> Dict String DefinedTypes -> Dict String DefinedTypes
 dComponentTargetSet s t f =
     Dict.update s (\_ -> Just (CDComponentTarget t)) f
+
+
+{-| dComponentMsgGet
+-}
+dComponentMsgGet : Dict String DefinedTypes -> String -> ComponentMsg
+dComponentMsgGet f s =
+    case Dict.get s f of
+        Just (CDComponentMsg x) ->
+            x
+
+        _ ->
+            NullComponentMsg
+
+
+{-| dComponentMsgSet
+-}
+dComponentMsgSet : String -> ComponentMsg -> Dict String DefinedTypes -> Dict String DefinedTypes
+dComponentMsgSet s t f =
+    Dict.update s (\_ -> Just (CDComponentMsg t)) f
+
+
+{-| dColorGet
+-}
+dColorGet : Dict String DefinedTypes -> String -> Color
+dColorGet f s =
+    case Dict.get s f of
+        Just (CDColor x) ->
+            x
+
+        _ ->
+            Color.black
+
+
+{-| dColorSet
+-}
+dColorSet : String -> Color -> Dict String DefinedTypes -> Dict String DefinedTypes
+dColorSet s t f =
+    Dict.update s (\_ -> Just (CDColor t)) f
