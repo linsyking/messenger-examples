@@ -14,6 +14,7 @@ import Lib.DefinedTypes.Parser exposing (dColorGet)
 import Lib.Env.Env exposing (Env, EnvC)
 import SceneProtos.CoreEngine.GameComponent.Base exposing (Data, GameComponentInitData(..), GameComponentMsg(..), GameComponentTarget)
 import SceneProtos.CoreEngine.LayerBase exposing (CommonData)
+import SceneProtos.CoreEngine.GameComponent.Base exposing (nullData)
 
 
 {-| initModel
@@ -37,13 +38,7 @@ initModel _ initData =
             }
 
         _ ->
-            { uid = 0
-            , position = ( 0, 0 )
-            , velocity = 0
-            , collisionBox = ( 0, 0 )
-            , alive = True
-            , extra = Dict.empty
-            }
+            nullData
 
 
 {-| updateModel

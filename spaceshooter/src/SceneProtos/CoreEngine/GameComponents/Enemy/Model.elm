@@ -15,6 +15,7 @@ import Lib.Render.Render exposing (renderSprite)
 import SceneProtos.CoreEngine.GameComponent.Base exposing (Data, GameComponentInitData(..), GameComponentMsg(..), GameComponentTarget(..))
 import SceneProtos.CoreEngine.GameComponents.Bullet.Base exposing (Bullet)
 import SceneProtos.CoreEngine.LayerBase exposing (CommonData)
+import SceneProtos.CoreEngine.GameComponent.Base exposing (nullData)
 
 
 {-| initModel
@@ -40,13 +41,7 @@ initModel _ initData =
             }
 
         _ ->
-            { uid = 0
-            , position = ( 0, 0 )
-            , velocity = 0
-            , alive = True
-            , collisionBox = ( 0, 0 )
-            , extra = Dict.empty
-            }
+            nullData
 
 
 {-| updateModel
