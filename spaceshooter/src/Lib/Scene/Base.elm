@@ -44,7 +44,7 @@ type SceneInitData
 
 
 {-| SceneTMsg
-You can pass some messages to the scene to initilize it (along with the SceneInitData).
+You can pass some messages to the scene to initilize it.
 
 Add your own messages here if you want to do more things.
 

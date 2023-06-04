@@ -1,20 +1,16 @@
 module SceneProtos.CoreEngine.LayerInit exposing
-    ( LayerInitData(..), nullCoreEngineInit
+    ( LayerInitData(..)
     , CoreEngineInit
-    , initCommonData
     )
 
 {-| This is the doc for this module
 
-@docs LayerInitData, nullCoreEngineInit
+@docs LayerInitData
 @docs CoreEngineInit
-@docs initCommonData
 
 -}
 
-import Lib.Env.Env exposing (Env)
 import SceneProtos.CoreEngine.GameComponent.Base exposing (GameComponent)
-import SceneProtos.CoreEngine.LayerBase exposing (CommonData, nullCommonData)
 
 
 {-| LayerInitData
@@ -32,18 +28,3 @@ type LayerInitData
 type alias CoreEngineInit =
     { objects : List GameComponent
     }
-
-
-{-| Null coreengine init
--}
-nullCoreEngineInit : CoreEngineInit
-nullCoreEngineInit =
-    { objects = []
-    }
-
-
-{-| Initialize common data
--}
-initCommonData : Env -> CoreEngineInit -> CommonData
-initCommonData _ _ =
-    nullCommonData

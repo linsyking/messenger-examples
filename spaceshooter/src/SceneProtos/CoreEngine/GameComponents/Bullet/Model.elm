@@ -81,7 +81,7 @@ Change this to your own component view function.
 If there is no view function, return Nothing.
 
 -}
-viewModel : EnvC CommonData -> Data -> Renderable
+viewModel : EnvC CommonData -> Data -> List ( Renderable, Int )
 viewModel env data =
     let
         color =
@@ -90,6 +90,9 @@ viewModel env data =
         gd =
             env.globalData
     in
-    shapes [ fill color ]
-        [ roundRect (posToReal gd (floored data.position)) (widthToReal gd 20) (widthToReal gd 10) [ 10, 10, 10, 10 ]
-        ]
+    [ ( shapes [ fill color ]
+            [ roundRect (posToReal gd (floored data.position)) (widthToReal gd 20) (widthToReal gd 10) [ 10, 10, 10, 10 ]
+            ]
+      , 0
+      )
+    ]

@@ -15,6 +15,7 @@ module SceneProtos.CoreEngine.Model exposing
 -}
 
 import Canvas exposing (Renderable)
+import Lib.Audio.Base exposing (AudioOption(..))
 import Lib.Env.Env exposing (Env, EnvC, addCommonData, noCommonData)
 import Lib.Layer.Base exposing (LayerMsg(..))
 import Lib.Layer.LayerHandler exposing (updateLayer, viewLayer)
@@ -23,7 +24,7 @@ import SceneProtos.CoreEngine.Common exposing (Model)
 import SceneProtos.CoreEngine.GameLayer.Export as GameLayer
 import SceneProtos.CoreEngine.GameLayer.Global as GameLayerG
 import SceneProtos.CoreEngine.LayerBase exposing (CommonData, nullCommonData)
-import SceneProtos.CoreEngine.LayerInit exposing (LayerInitData(..), initCommonData, nullCoreEngineInit)
+import SceneProtos.CoreEngine.LayerInit exposing (LayerInitData(..))
 
 
 {-| Initialize the model
@@ -34,14 +35,14 @@ initModel env init =
         layerInitData =
             case init of
                 CoreEngineInitData x ->
-                    x
+                    GameLayerInitData x
 
                 _ ->
-                    nullCoreEngineInit
+                    NullLayerInitData
     in
-    { commonData = initCommonData env layerInitData
+    { commonData = nullCommonData
     , layers =
-        [ GameLayerG.getLayerT <| GameLayer.initLayer (addCommonData nullCommonData env) (GameLayer.initFromScene env layerInitData)
+        [ GameLayerG.getLayerT <| GameLayer.initLayer (addCommonData nullCommonData env) layerInitData
         ]
     }
 

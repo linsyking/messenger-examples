@@ -1,19 +1,17 @@
 module SceneProtos.CoreEngine.GameComponent.Handler exposing
     ( update, match, super, recBody
     , updateGC, viewGC
-    , removeDead
-    , removeOutOfBound
+    , removeDead, removeOutOfBound
     )
 
 {-| Handler to update game components
 
 @docs update, match, super, recBody
 @docs updateGC, viewGC
-@docs removeDead
+@docs removeDead, removeOutOfBound
 
 -}
 
-import Base exposing (Msg(..))
 import Canvas exposing (Renderable, group)
 import Lib.Env.Env exposing (EnvC, cleanEnvC)
 import Messenger.GeneralModel exposing (viewModelList)
@@ -90,7 +88,11 @@ updateGC env xs =
 -}
 viewGC : EnvC CommonData -> List GameComponent -> Renderable
 viewGC env xs =
-    group [] <| viewModelList env xs
+    group [] <|
+        List.map (\( a, _ ) -> a) <|
+            List.sortBy (\( _, a ) -> a) <|
+                List.concat <|
+                    viewModelList env xs
 
 
 

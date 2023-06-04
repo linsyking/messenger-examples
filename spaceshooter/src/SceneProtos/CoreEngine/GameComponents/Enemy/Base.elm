@@ -1,7 +1,7 @@
-module SceneProtos.CoreEngine.GameComponents.Enemy.Base exposing (EnemyInit)
+module SceneProtos.CoreEngine.GameComponents.Enemy.Base exposing (Enemy)
 
 
-type alias EnemyInit =
+type alias Enemy =
     { velocity : Float
     , position : ( Float, Float )
     , sinF : Float

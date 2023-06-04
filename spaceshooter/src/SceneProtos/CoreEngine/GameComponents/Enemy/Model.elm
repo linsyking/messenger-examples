@@ -13,7 +13,7 @@ import Lib.DefinedTypes.Parser exposing (dFloatGet, dIntGet)
 import Lib.Env.Env exposing (Env, EnvC)
 import Lib.Render.Render exposing (renderSprite)
 import SceneProtos.CoreEngine.GameComponent.Base exposing (Data, GameComponentInitData(..), GameComponentMsg(..), GameComponentTarget(..))
-import SceneProtos.CoreEngine.GameComponents.Bullet.Base exposing (BulletInit)
+import SceneProtos.CoreEngine.GameComponents.Bullet.Base exposing (Bullet)
 import SceneProtos.CoreEngine.LayerBase exposing (CommonData)
 
 
@@ -86,7 +86,7 @@ updateModel env msg d =
                 in
                 if modBy interval env.t == 0 then
                     -- Generate a new bullet
-                    ( newEnemy, [ ( GCParent, GCNewBulletMsg (BulletInit -10 ( x - 50, y + 5 ) Color.red) ) ], env )
+                    ( newEnemy, [ ( GCParent, GCNewBulletMsg (Bullet -10 ( x - 50, y + 5 ) Color.red) ) ], env )
 
                 else
                     ( newEnemy, [], env )
@@ -99,10 +99,10 @@ Change this to your own component view function.
 If there is no view function, return Nothing.
 
 -}
-viewModel : EnvC CommonData -> Data -> Renderable
+viewModel : EnvC CommonData -> Data -> List ( Renderable, Int )
 viewModel env data =
     let
         gd =
             env.globalData
     in
-    renderSprite gd [] (floored data.position) (floored data.collisionBox) "enemy"
+    [ ( renderSprite gd [] (floored data.position) (floored data.collisionBox) "enemy", 0 ) ]

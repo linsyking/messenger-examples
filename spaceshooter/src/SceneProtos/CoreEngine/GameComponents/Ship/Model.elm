@@ -15,7 +15,7 @@ import Lib.Env.Env exposing (Env, EnvC)
 import Lib.Render.Render exposing (renderSprite)
 import Lib.Tools.KeyCode exposing (arrowDown, arrowUp)
 import SceneProtos.CoreEngine.GameComponent.Base exposing (Data, GameComponentInitData(..), GameComponentMsg(..), GameComponentTarget(..))
-import SceneProtos.CoreEngine.GameComponents.Bullet.Base exposing (BulletInit)
+import SceneProtos.CoreEngine.GameComponents.Bullet.Base exposing (Bullet)
 import SceneProtos.CoreEngine.LayerBase exposing (CommonData)
 
 
@@ -102,7 +102,7 @@ updateModel env gcmsg d =
                     _ ->
                         if modBy interval env.t == 0 then
                             -- Generate a new bullet
-                            ( moveShip d, [ ( GCParent, GCNewBulletMsg (BulletInit 10 ( x + 170, y + 20 ) Color.blue) ) ], env )
+                            ( moveShip d, [ ( GCParent, GCNewBulletMsg (Bullet 10 ( x + 170, y + 20 ) Color.blue) ) ], env )
 
                         else
                             ( moveShip d, [], env )
@@ -115,10 +115,10 @@ Change this to your own component view function.
 If there is no view function, return Nothing.
 
 -}
-viewModel : EnvC CommonData -> Data -> Renderable
+viewModel : EnvC CommonData -> Data -> List ( Renderable, Int )
 viewModel env data =
     let
         gd =
             env.globalData
     in
-    renderSprite gd [] (floored data.position) (floored data.collisionBox) "ship"
+    [ ( renderSprite gd [] (floored data.position) (floored data.collisionBox) "ship", 0 ) ]
