@@ -1,0 +1,13 @@
+{
+    "version": "0.2.6",
+    "template_repo": "https://github.com/linsyking/messenger-templates",
+    "scenes": {
+        "Home": [
+            "Main"
+        ],
+        "Home2": [
+            "Main"
+        ]
+    },
+    "sceneprotos": {}
+}
