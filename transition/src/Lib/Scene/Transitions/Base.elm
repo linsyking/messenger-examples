@@ -1,6 +1,6 @@
 module Lib.Scene.Transitions.Base exposing
     ( Transition, SingleTrans
-    , genTransition
+    , genTransition, nullTransition
     )
 
 {-|
@@ -9,7 +9,7 @@ module Lib.Scene.Transitions.Base exposing
 # Transition Base
 
 @docs Transition, SingleTrans
-@docs genTransition
+@docs genTransition, nullTransition
 
 -}
 
@@ -21,6 +21,13 @@ import Canvas exposing (Renderable)
 -}
 type alias SingleTrans =
     GlobalData -> Renderable -> Float -> Renderable
+
+
+{-| Null Transition
+-}
+nullTransition : SingleTrans
+nullTransition _ r _ =
+    r
 
 
 {-| Transition has three stages:

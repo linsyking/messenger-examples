@@ -20,10 +20,9 @@ import Lib.Layer.Base exposing (LayerMsg(..))
 import Lib.Layer.LayerHandler exposing (updateLayer, viewLayer)
 import Lib.Scene.Base exposing (SceneInitData(..), SceneOutputMsg(..))
 import Lib.Scene.Transitions.Base exposing (genTransition)
-import Lib.Scene.Transitions.Scroll exposing (scrollOut)
+import Lib.Scene.Transitions.Scroll exposing (scrollIn, scrollOut)
 import Scenes.Home.Common exposing (Model)
 import Scenes.Home.LayerBase exposing (CommonData)
-import Lib.Scene.Transitions.Scroll exposing (scrollIn)
 
 
 {-| handleLayerMsg
@@ -62,7 +61,16 @@ updateModel env model =
             { model | commonData = newenv.commonData, layers = newdata }
 
         ( newmodel, newsow, newgd2 ) =
-            List.foldl (\x ( y, _, cgd ) -> handleLayerMsg cgd x y) ( nmodel, [], newenv ) msgs
+            List.foldl
+                (\x ( y, lmsg, cgd ) ->
+                    let
+                        ( model2, msg2, env2 ) =
+                            handleLayerMsg cgd x y
+                    in
+                    ( model2, lmsg ++ msg2, env2 )
+                )
+                ( nmodel, [], newenv )
+                msgs
     in
     ( newmodel, newsow, noCommonData newgd2 )
 

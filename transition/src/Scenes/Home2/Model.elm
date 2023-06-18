@@ -18,8 +18,8 @@ import Lib.Env.Env exposing (Env, EnvC, addCommonData, noCommonData)
 import Lib.Layer.Base exposing (LayerMsg(..))
 import Lib.Layer.LayerHandler exposing (updateLayer, viewLayer)
 import Lib.Scene.Base exposing (SceneInitData(..), SceneOutputMsg(..))
-import Lib.Scene.Transitions.Base exposing (genTransition)
-import Lib.Scene.Transitions.Fade exposing (fadeInBlack, fadeOutBlack)
+import Lib.Scene.Transitions.Base exposing (genTransition, nullTransition)
+import Lib.Scene.Transitions.Fade exposing (fadeInWithRenderable)
 import Scenes.Home2.Common exposing (Model)
 import Scenes.Home2.LayerBase exposing (CommonData)
 
@@ -39,7 +39,7 @@ handleLayerMsg env lmsg model =
             ( model, [ SOMStopAudio name ], env )
 
         LayerChangeSceneMsg "Home" ->
-            ( model, [ SOMChangeScene ( NullSceneInitData, "Home", Just <| genTransition 30 30 fadeOutBlack fadeInBlack ) ], env )
+            ( model, [ SOMChangeScene ( NullSceneInitData, "Home", Just <| genTransition 0 30 nullTransition (fadeInWithRenderable <| viewModel (noCommonData env) model) ) ], env )
 
         _ ->
             ( model, [], env )
@@ -60,7 +60,16 @@ updateModel env model =
             { model | commonData = newenv.commonData, layers = newdata }
 
         ( newmodel, newsow, newgd2 ) =
-            List.foldl (\x ( y, _, cgd ) -> handleLayerMsg cgd x y) ( nmodel, [], newenv ) msgs
+            List.foldl
+                (\x ( y, lmsg, cgd ) ->
+                    let
+                        ( model2, msg2, env2 ) =
+                            handleLayerMsg cgd x y
+                    in
+                    ( model2, lmsg ++ msg2, env2 )
+                )
+                ( nmodel, [], newenv )
+                msgs
     in
     ( newmodel, newsow, noCommonData newgd2 )
 
