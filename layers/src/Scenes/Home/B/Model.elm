@@ -28,8 +28,8 @@ type alias Data =
 init : LayerInit SceneCommonData UserData LayerMsg Data
 init env initMsg =
     Data
-        [ Rect.component env <| RectangleInit <| RectMsg.Init 200 200 200 200 Color.green 0
-        , Rect.component env <| RectangleInit <| RectMsg.Init 150 150 200 200 Color.yellow 1
+        [ Rect.component env <| RectangleInit <| RectMsg.Init 150 150 200 200 Color.yellow 0
+        , Rect.component env <| RectangleInit <| RectMsg.Init 200 200 200 200 Color.green 1
         ]
 
 

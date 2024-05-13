@@ -40,8 +40,8 @@ init env msg =
     { renderSettings = []
     , commonData = cd
     , layers =
-        [ B.layer envcd NullLayerMsg
-        , A.layer envcd NullLayerMsg
+        [ A.layer envcd NullLayerMsg
+        , B.layer envcd NullLayerMsg
         ]
     }
 
