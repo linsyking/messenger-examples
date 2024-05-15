@@ -1,67 +1,99 @@
-module Scenes.Home.Model exposing
-    ( handleLayerMsg
-    , updateModel
-    , viewModel
-    )
+module Scenes.Home.Model exposing (scene)
 
-{-| Scene update module
+{-| Scene configuration module
 
-@docs handleLayerMsg
-@docs updateModel
-@docs viewModel
+@docs scene
 
 -}
 
-import Canvas exposing (Renderable)
-import Lib.Audio.Base exposing (AudioOption(..))
-import Lib.Env.Env exposing (Env, EnvC, addCommonData, noCommonData)
-import Lib.Layer.Base exposing (LayerMsg(..))
-import Lib.Layer.LayerHandler exposing (updateLayer, viewLayer)
-import Lib.Scene.Base exposing (SceneOutputMsg(..))
-import Scenes.Home.Common exposing (Model)
-import Scenes.Home.LayerBase exposing (CommonData)
+import Canvas exposing (Renderable, group)
+import Canvas.Settings.Advanced exposing (alpha, imageSmoothing)
+import Color
+import Lib.Base exposing (SceneMsg)
+import Lib.Resources exposing (allSpriteSheets, allTexture)
+import Lib.UserData exposing (UserData)
+import Messenger.Base exposing (GlobalData, loadedSpriteNum)
+import Messenger.Render.Sprite exposing (renderSprite)
+import Messenger.Render.Text exposing (renderTextWithColorCenter)
+import Messenger.Scene.RawScene exposing (RawSceneInit, RawSceneUpdate, RawSceneView, genRawScene)
+import Messenger.Scene.Scene exposing (MConcreteScene, SceneStorage)
+import Messenger.UserConfig exposing (spriteNum)
+import String exposing (fromInt)
 
 
-{-| handleLayerMsg
-
-Usually you are adding logic here.
-
--}
-handleLayerMsg : EnvC CommonData -> LayerMsg -> Model -> ( Model, List SceneOutputMsg, EnvC CommonData )
-handleLayerMsg env lmsg model =
-    case lmsg of
-        LayerSoundMsg name path opt ->
-            ( model, [ SOMPlayAudio name path opt ], env )
-
-        LayerStopSoundMsg name ->
-            ( model, [ SOMStopAudio name ], env )
-
-        _ ->
-            ( model, [], env )
+type alias Data =
+    {}
 
 
-{-| updateModel
+init : RawSceneInit Data UserData SceneMsg
+init env msg =
+    {}
 
-Default update function. Normally you won't change this function.
 
--}
-updateModel : Env -> Model -> ( Model, List SceneOutputMsg, Env )
-updateModel env model =
+update : RawSceneUpdate Data UserData SceneMsg
+update env msg data =
+    ( data, [], env )
+
+
+view : RawSceneView UserData Data
+view env data =
     let
-        ( newdata, msgs, newenv ) =
-            updateLayer (addCommonData model.commonData env) model.layers
+        gd =
+            env.globalData
 
-        nmodel =
-            { model | commonData = newenv.commonData, layers = newdata }
+        rate =
+            5
 
-        ( newmodel, newsow, newgd2 ) =
-            List.foldl (\x ( y, _, cgd ) -> handleLayerMsg cgd x y) ( nmodel, [], newenv ) msgs
+        currentAct x =
+            String.fromInt (modBy (rate * x) gd.sceneStartTime // rate)
     in
-    ( newmodel, newsow, noCommonData newgd2 )
+    group []
+        [ renderSprite env.globalData [ imageSmoothing False ] ( 100, 300 ) ( 100, 0 ) ("player.0/" ++ currentAct 13)
+        , renderSprite env.globalData [ imageSmoothing False ] ( 300, 300 ) ( 100, 0 ) ("player.1/" ++ currentAct 8)
+        , renderSprite env.globalData [ imageSmoothing False ] ( 500, 300 ) ( 100, 0 ) ("player.2/" ++ currentAct 10)
+        , renderSprite env.globalData [ imageSmoothing False ] ( 700, 300 ) ( 100, 0 ) ("player.3/" ++ currentAct 10)
+        , renderSprite env.globalData [ imageSmoothing False ] ( 900, 300 ) ( 100, 0 ) ("player.4/" ++ currentAct 10)
+        , renderSprite env.globalData [ imageSmoothing False ] ( 1100, 300 ) ( 100, 0 ) ("player.5/" ++ currentAct 6)
+        , renderSprite env.globalData [ imageSmoothing False ] ( 1300, 300 ) ( 100, 0 ) ("player.6/" ++ currentAct 4)
+        , renderSprite env.globalData [ imageSmoothing False ] ( 1500, 300 ) ( 100, 0 ) ("player.7/" ++ currentAct 7)
+        , startText gd
+        ]
 
 
-{-| Default view function
+startText : GlobalData UserData -> Renderable
+startText gd =
+    let
+        loaded =
+            loadedSpriteNum gd
+
+        total =
+            spriteNum allTexture allSpriteSheets
+
+        progress =
+            String.slice 0 4 <| String.fromFloat (toFloat loaded / toFloat total * 100)
+
+        text =
+            if loaded < total then
+                "Loading... " ++ fromInt loaded ++ "/" ++ fromInt total ++ " (" ++ progress ++ "%)"
+
+            else
+                ""
+    in
+    group [ alpha (0.7 + sin (toFloat gd.globalTime / 10) / 3) ]
+        [ renderTextWithColorCenter gd 60 text "Arial" Color.black ( 960, 900 )
+        ]
+
+
+scenecon : MConcreteScene Data UserData SceneMsg
+scenecon =
+    { init = init
+    , update = update
+    , view = view
+    }
+
+
+{-| Scene generator
 -}
-viewModel : Env -> Model -> Renderable
-viewModel env model =
-    viewLayer (addCommonData model.commonData env) model.layers
+scene : SceneStorage UserData SceneMsg
+scene =
+    genRawScene scenecon

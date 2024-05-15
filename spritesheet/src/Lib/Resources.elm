@@ -1,19 +1,36 @@
-module Lib.Resources.SpriteSheets exposing (allSpriteSheets)
+module Lib.Resources exposing (allTexture, allSpriteSheets)
 
 {-|
 
 
-# Sprite Sheets
+# Textures
 
-@docs sampleSpriteSheet
+@docs allTexture, allSpriteSheets
 
 -}
 
 import Dict
-import Lib.Render.SpriteSheet exposing (SpriteSheet)
+import Messenger.Render.SpriteSheet exposing (SpriteSheet)
 
 
-{-| Add all your sprite sheets here.
+{-| A list of all the textures.
+
+Add your textures here. Don't worry if your list is too long. You can split those resources according to their usage.
+
+Examples:
+
+[
+( "ball", "assets/img/ball.png" ),
+( "car", "assets/img/car.jpg" )
+]
+
+-}
+allTexture : List ( String, String )
+allTexture =
+    [ ( "player", "assets/sheet.png" ) ]
+
+
+{-| All sprite sheets.
 
 Example:
 

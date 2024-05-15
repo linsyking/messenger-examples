@@ -1,88 +1,104 @@
 module MainConfig exposing
-    ( initScene, initSceneSettings
-    , timeInterval
-    , background, plHeight, plWidth
+    ( background
     , debug
+    , initGlobalData
+    , initScene
+    , initSceneMsg
+    , saveGlobalData
+    , timeInterval
+    , virtualSize
     )
 
-{-| MainConfig
+{-|
 
-This module is used for configuring the parameters of the game framework.
 
-@docs initScene, initSceneSettings
-@docs timeInterval
-@docs background, plHeight, plWidth
+# Main Config
+
+@docs background
 @docs debug
+@docs initGlobalData
+@docs initScene
+@docs initSceneMsg
+@docs saveGlobalData
+@docs timeInterval
+@docs virtualSize
 
 -}
 
-import Base exposing (GlobalData)
 import Canvas exposing (Renderable)
-import Lib.Scene.Base exposing (SceneInitData(..))
+import Lib.Base exposing (SceneMsg)
+import Lib.UserData exposing (UserData, decodeUserData, encodeUserData)
+import Messenger.Base exposing (UserViewGlobalData)
+import Messenger.UserConfig exposing (transparentBackground)
 
 
-{-| Start scene of the game
+{-| Initial scene
 -}
 initScene : String
 initScene =
     "Home"
 
 
-{-| Initial scene settings
+{-| Initial scene message
 -}
-initSceneSettings : SceneInitData
-initSceneSettings =
-    NullSceneInitData
+initSceneMsg : Maybe SceneMsg
+initSceneMsg =
+    Nothing
 
 
-{-| Time Interval in milliseconds.
-Value 16 is approximately 60 fps.
+{-| Virtual screen size
 -}
-timeInterval : Float
-timeInterval =
-    16
-
-
-{-| The height of the game screen in pixel.
-
-You can change this value. However, the position you used in your views are fixed number which will not be scaled automatically.
-So please determine these two values before you start to write your game.
-
-The default scale is 16x9.
-
--}
-plHeight : Int
-plHeight =
-    1080
-
-
-{-| The width of the game screen in pixel.
--}
-plWidth : Int
-plWidth =
-    1920
+virtualSize : { width : Float, height : Float }
+virtualSize =
+    { width = 1920, height = 1080 }
 
 
 {-| Debug flag
 -}
 debug : Bool
 debug =
-    False
+    True
 
 
-{-| The background of the game.
+{-| Background of the scene.
+-}
+background : Messenger.Base.GlobalData userdata -> Renderable
+background =
+    transparentBackground
 
-This renderable will be rendered below all other renderables.
 
-Default is clear function that cleans the background.
+{-| Interval between two Tick messages in milliseconds.
+-}
+timeInterval : Float
+timeInterval =
+    15
 
-You can change the background color to other color when debugging.
 
-Change color by using this:
+{-| Initialize the global data with the user data.
 
-Canvas.shapes [ fill Color.blue ][ Canvas.rect ( 0, 0 ) (toFloat gd.realWidth) (toFloat gd.realHeight) ]
+You may set the initial user data based on the user data.
 
 -}
-background : GlobalData -> Renderable
-background gd =
-    Canvas.clear ( 0, 0 ) (toFloat gd.realWidth) (toFloat gd.realHeight)
+initGlobalData : String -> UserViewGlobalData UserData
+initGlobalData data =
+    let
+        storage =
+            decodeUserData data
+    in
+    { sceneStartTime = 0
+    , globalTime = 0
+    , volume = 0.5
+    , canvasAttributes = []
+    , extraHTML = Nothing
+    , userData = storage
+    }
+
+
+{-| Save Globaldata
+
+Used when saving the user data to local storage.
+
+-}
+saveGlobalData : UserViewGlobalData UserData -> String
+saveGlobalData globalData =
+    encodeUserData globalData.userData
