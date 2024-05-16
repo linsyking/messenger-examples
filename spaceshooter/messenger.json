@@ -1,14 +1,14 @@
 {
-    "version": "0.2.6",
-    "template_repo" : "https://github.com/linsyking/messenger-templates",
-    "scenes": {},
+    "version": "1.0.0",
+    "template_repo": "https://github.com/linsyking/messenger-templates",
+    "scenes": {
+        "Level1": []
+    },
     "sceneprotos": {
-        "CoreEngine": {
-            "levels": [
-                "Level1"
-            ],
+        "Game": {
+            "raw": false,
             "layers": [
-                "GameLayer"
+                "Main"
             ]
         }
     }
