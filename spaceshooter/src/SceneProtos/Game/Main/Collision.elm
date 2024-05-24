@@ -1,24 +1,15 @@
-module SceneProtos.Game.Main.Collision exposing (updateCollision)
+module SceneProtos.Game.Main.Collision exposing (judgeCollision)
 
 import Lib.Base exposing (SceneMsg)
 import Lib.UserData exposing (UserData)
-import Messenger.Base exposing (Env)
 import Messenger.Component.Component exposing (AbstractComponent)
-import Messenger.GeneralModel exposing (MMsgBase, unroll)
-import Messenger.Recursion exposing (updateObjectsWithTarget)
+import Messenger.GeneralModel exposing (unroll)
 import SceneProtos.Game.Components.ComponentBase exposing (BaseData, ComponentMsg(..), ComponentTarget(..))
 import SceneProtos.Game.LayerBase exposing (SceneCommonData)
 
 
 type alias GameComponent =
     AbstractComponent SceneCommonData UserData ComponentTarget ComponentMsg BaseData SceneMsg
-
-
-{-| Update collision of the game components
--}
-updateCollision : Env SceneCommonData UserData -> List GameComponent -> ( List GameComponent, List (MMsgBase ComponentMsg SceneMsg UserData), Env SceneCommonData UserData )
-updateCollision env xs =
-    updateObjectsWithTarget env (judgeCollision xs) xs
 
 
 {-| Judge Collision, return the list of messages to be sent to the game components

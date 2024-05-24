@@ -26,11 +26,11 @@ module MainConfig exposing
 -}
 
 import Canvas exposing (Renderable)
+import Color
 import Lib.Base exposing (SceneMsg)
 import Lib.UserData exposing (UserData, decodeUserData, encodeUserData)
 import Messenger.Base exposing (UserViewGlobalData)
-import Messenger.UserConfig exposing (coloredBackground)
-import Color
+import Messenger.UserConfig exposing (TimeInterval(..), coloredBackground)
 
 
 {-| Initial scene
@@ -70,9 +70,9 @@ background =
 
 {-| Interval between two Tick messages in milliseconds.
 -}
-timeInterval : Float
+timeInterval : TimeInterval
 timeInterval =
-    15
+    Animation
 
 
 {-| Initialize the global data with the user data.
@@ -87,7 +87,9 @@ initGlobalData data =
             decodeUserData data
     in
     { sceneStartTime = 0
-    , globalTime = 0
+    , globalStartTime = 0
+    , sceneStartFrame = 0
+    , globalStartFrame = 0
     , volume = 0.5
     , canvasAttributes = []
     , extraHTML = Nothing

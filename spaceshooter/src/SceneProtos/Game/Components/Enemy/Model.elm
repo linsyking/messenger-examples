@@ -20,6 +20,7 @@ import SceneProtos.Game.LayerBase exposing (SceneCommonData)
 
 type alias Data =
     { interval : Int
+    , timer : Int
     , sinf : Float
     , sina : Float
     }
@@ -29,7 +30,7 @@ init : ComponentInit SceneCommonData UserData ComponentMsg Data BaseData
 init env initMsg =
     case initMsg of
         EnemyInitMsg msg ->
-            ( { interval = msg.bulletInterval, sinf = msg.sinF, sina = msg.sinA }
+            ( { interval = msg.bulletInterval, sinf = msg.sinF, sina = msg.sinA, timer = 15 }
             , { id = msg.id
               , position = msg.position
               , velocity = msg.velocity
@@ -40,29 +41,29 @@ init env initMsg =
             )
 
         _ ->
-            ( { interval = 0, sinf = 0, sina = 0 }, emptyBaseData )
+            ( { interval = 0, sinf = 0, sina = 0, timer = 15 }, emptyBaseData )
 
 
 update : ComponentUpdate SceneCommonData Data UserData SceneMsg ComponentTarget ComponentMsg BaseData
 update env evnt data basedata =
     case evnt of
-        Tick ->
+        Tick dt ->
             let
                 velx =
-                    sin (toFloat env.globalData.sceneStartTime / data.sinf) * data.sina
+                    sin (toFloat env.globalData.sceneStartFrame / data.sinf) * data.sina
 
                 ( x, y ) =
                     basedata.position
 
                 newEnemy =
-                    { basedata | position = ( x + basedata.velocity, y + velx * basedata.velocity ) }
+                    { basedata | position = ( x + basedata.velocity * toFloat dt, y + velx * basedata.velocity * toFloat dt ) }
             in
-            if modBy data.interval env.globalData.sceneStartTime == 0 then
+            if modBy data.interval data.timer <= 10 then
                 -- Generate a new bullet
-                ( ( data, newEnemy ), [ Parent <| OtherMsg <| NewBulletMsg (CreateInitData -10 ( x - 50, y + 5 ) Color.red) ], ( env, False ) )
+                ( ( { data | timer = 15 }, newEnemy ), [ Parent <| OtherMsg <| NewBulletMsg (CreateInitData -1 ( x - 50, y + 5 ) Color.red) ], ( env, False ) )
 
             else
-                ( ( data, newEnemy ), [], ( env, False ) )
+                ( ( { data | timer = data.timer + dt }, newEnemy ), [], ( env, False ) )
 
         _ ->
             ( ( data, basedata ), [], ( env, False ) )

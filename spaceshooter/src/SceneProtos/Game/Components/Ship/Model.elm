@@ -21,23 +21,24 @@ import SceneProtos.Game.LayerBase exposing (SceneCommonData)
 
 type alias Data =
     { interval : Int
+    , timer : Int
     }
 
 
-moveShip : BaseData -> BaseData
-moveShip d =
+moveShip : BaseData -> Int -> BaseData
+moveShip d dt =
     let
         ( x, y ) =
             d.position
     in
-    { d | position = ( x, y + d.velocity ) }
+    { d | position = ( x, y + d.velocity * toFloat dt ) }
 
 
 init : ComponentInit SceneCommonData UserData ComponentMsg Data BaseData
 init env initMsg =
     case initMsg of
         ShipInitMsg msg ->
-            ( { interval = msg.bulletInterval }
+            ( { interval = msg.bulletInterval, timer = 15 }
             , { id = msg.id
               , position = msg.position
               , velocity = 0
@@ -48,31 +49,31 @@ init env initMsg =
             )
 
         _ ->
-            ( { interval = 0 }, emptyBaseData )
+            ( { interval = 0, timer = 15 }, emptyBaseData )
 
 
 update : ComponentUpdate SceneCommonData Data UserData SceneMsg ComponentTarget ComponentMsg BaseData
 update env evnt data basedata =
     if basedata.alive then
         case evnt of
-            Tick ->
-                if modBy data.interval env.globalData.sceneStartTime == 0 then
+            Tick dt ->
+                if modBy data.interval data.timer <= 10 then
                     let
                         ( x, y ) =
                             basedata.position
                     in
                     -- Generate a new bullet
-                    ( ( data, moveShip basedata ), [ Parent <| OtherMsg <| NewBulletMsg (CreateInitData 10 ( x + 170, y + 20 ) Color.blue) ], ( env, False ) )
+                    ( ( { data | timer = 15 }, moveShip basedata dt ), [ Parent <| OtherMsg <| NewBulletMsg (CreateInitData 1 ( x + 170, y + 20 ) Color.blue) ], ( env, False ) )
 
                 else
-                    ( ( data, moveShip basedata ), [], ( env, False ) )
+                    ( ( { data | timer = data.timer + dt }, moveShip basedata dt ), [], ( env, False ) )
 
             KeyDown key ->
                 if key == arrowDown then
-                    ( ( data, { basedata | velocity = 10 } ), [], ( env, False ) )
+                    ( ( data, { basedata | velocity = 2 / 3 } ), [], ( env, False ) )
 
                 else if key == arrowUp then
-                    ( ( data, { basedata | velocity = -10 } ), [], ( env, False ) )
+                    ( ( data, { basedata | velocity = -2 / 3 } ), [], ( env, False ) )
 
                 else
                     ( ( data, basedata ), [], ( env, False ) )
@@ -95,6 +96,10 @@ updaterec : ComponentUpdateRec SceneCommonData Data UserData SceneMsg ComponentT
 updaterec env msg data basedata =
     case msg of
         CollisionMsg _ ->
+            let
+                _ =
+                    Debug.log "collss" basedata.id
+            in
             ( ( data, { basedata | alive = False } ), [ Parent <| OtherMsg <| GameOverMsg ], env )
 
         _ ->

@@ -10,13 +10,14 @@ Set the Data Type, Init logic, Update logic, View logic and Matcher logic here.
 
 import Lib.Base exposing (SceneMsg)
 import Lib.UserData exposing (UserData)
-import Messenger.Component.Component exposing (AbstractComponent, updateComponents, viewComponents)
+import Messenger.Component.Component exposing (AbstractComponent, updateComponentsWithBlock, updateComponentsWithTarget, viewComponents)
 import Messenger.GeneralModel exposing (Matcher, Msg(..), MsgBase(..), unroll)
 import Messenger.Layer.Layer exposing (ConcreteLayer, Handler, LayerInit, LayerStorage, LayerUpdate, LayerUpdateRec, LayerView, genLayer, handleComponentMsgs)
+import Messenger.Layer.LayerExtra exposing (BasicUpdater, Distributor)
 import SceneProtos.Game.Components.Bullet.Model as Bullet
 import SceneProtos.Game.Components.ComponentBase exposing (BaseData, ComponentMsg(..), ComponentTarget)
 import SceneProtos.Game.LayerBase exposing (..)
-import SceneProtos.Game.Main.Collision exposing (updateCollision)
+import SceneProtos.Game.Main.Collision exposing (judgeCollision)
 
 
 type alias GameComponent =
@@ -99,22 +100,35 @@ handleComponentMsg env compmsg data =
                     ( data, [], env )
 
 
+updateBasic : BasicUpdater Data SceneCommonData UserData LayerTarget (LayerMsg SceneMsg) SceneMsg
+updateBasic env evt data =
+    ( { data | components = removeOutOfBound <| removeDead data.components }, [], ( env, False ) )
+
+
+collisionDistributor : Distributor Data SceneCommonData UserData LayerTarget (LayerMsg SceneMsg) SceneMsg (List ( ComponentTarget, ComponentMsg ))
+collisionDistributor env evt data =
+    ( data, ( [], judgeCollision data.components ), env )
+
+
 update : LayerUpdate SceneCommonData UserData LayerTarget (LayerMsg SceneMsg) SceneMsg Data
 update env evt data =
     let
-        comps0 =
-            removeOutOfBound <| removeDead data.components
+        ( data1, lmsg1, ( env1, block1 ) ) =
+            updateBasic env evt data
 
-        ( comps1, msgs1, ( env1, block1 ) ) =
-            updateComponents env evt comps0
+        ( comps1, cmsgs1, ( env2, block2 ) ) =
+            updateComponentsWithBlock env1 evt block1 data1.components
 
-        ( comps2, msgs2, env2 ) =
-            updateCollision env1 comps1
+        ( data2, ( lmsg2, tocmsg ), env3 ) =
+            collisionDistributor env2 evt { data1 | components = comps1 }
 
-        ( data1, msgs3, env3 ) =
-            handleComponentMsgs env2 (msgs2 ++ msgs1) { data | components = comps2 } [] handleComponentMsg
+        ( comps2, cmsgs2, env4 ) =
+            updateComponentsWithTarget env3 tocmsg data2.components
+
+        ( data3, lmsgs3, env5 ) =
+            handleComponentMsgs env4 (cmsgs2 ++ cmsgs1) { data2 | components = comps2 } (lmsg1 ++ lmsg2) handleComponentMsg
     in
-    ( data1, msgs3, ( env3, block1 ) )
+    ( data3, lmsgs3, ( env5, block2 ) )
 
 
 updaterec : LayerUpdateRec SceneCommonData UserData LayerTarget (LayerMsg SceneMsg) SceneMsg Data

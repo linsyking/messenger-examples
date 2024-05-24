@@ -44,10 +44,10 @@ init env initMsg =
 update : ComponentUpdate SceneCommonData Data UserData SceneMsg ComponentTarget ComponentMsg BaseData
 update env evnt data basedata =
     case evnt of
-        Tick ->
+        Tick dt ->
             let
                 newBullet =
-                    { basedata | position = ( Tuple.first basedata.position + basedata.velocity, Tuple.second basedata.position ) }
+                    { basedata | position = ( Tuple.first basedata.position + basedata.velocity * toFloat dt, Tuple.second basedata.position ) }
             in
             ( ( data, newBullet ), [], ( env, False ) )
 
@@ -59,6 +59,10 @@ updaterec : ComponentUpdateRec SceneCommonData Data UserData SceneMsg ComponentT
 updaterec env msg data basedata =
     case msg of
         CollisionMsg "Bullet" ->
+            let
+                _ =
+                    Debug.log "coll" basedata.id
+            in
             ( ( data, { basedata | alive = False } ), [], env )
 
         _ ->
