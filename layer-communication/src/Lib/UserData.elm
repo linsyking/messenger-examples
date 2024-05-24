@@ -13,20 +13,13 @@ import Json.Decode as Decode exposing (at, decodeString)
 import Json.Encode as Encode
 
 
-{-| UserData
-
-`UserData` can store any data in the game.
-Users can **save their own global data** and **implement local storage** here.
-
+{-| User defined data
 -}
 type alias UserData =
     {}
 
 
-{-| encodeUserData
-
-encoder for the Userdata to store the data you want.
-
+{-| Encoder for the UserData.
 -}
 encodeUserData : UserData -> String
 encodeUserData storage =
@@ -39,10 +32,7 @@ encodeUserData storage =
         )
 
 
-{-| decodeUserData
-
-decoder for the Userdata to get data from the storage.
-
+{-| Decoder for the UserData.
 -}
 decodeUserData : String -> UserData
 decodeUserData ls =

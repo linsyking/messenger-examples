@@ -11,11 +11,9 @@ Set the Data Type, Init logic, Update logic, View logic and Matcher logic here.
 import Canvas
 import Lib.Base exposing (SceneMsg)
 import Lib.UserData exposing (UserData)
-import Messenger.Audio.Base exposing (AudioOption(..))
-import Messenger.Base exposing (WorldEvent(..))
-import Messenger.GeneralModel exposing (Matcher, Msg(..), MsgBase(..))
+import Messenger.GeneralModel exposing (Matcher, Msg(..))
 import Messenger.Layer.Layer exposing (ConcreteLayer, LayerInit, LayerStorage, LayerUpdate, LayerUpdateRec, LayerView, genLayer)
-import Scenes.Home.LayerBase exposing (..)
+import Scenes.Home.SceneBase exposing (..)
 
 
 type alias Data =
@@ -29,8 +27,8 @@ init env initMsg =
 
 update : LayerUpdate SceneCommonData UserData LayerTarget LayerMsg SceneMsg Data
 update env evt data =
-    if env.globalData.sceneStartTime == 10 then
-        ( data, [ Other "A" <| IntMsg 2 ], ( env, False ) )
+    if env.globalData.sceneStartFrame == 10 then
+        ( data, [ Other ( "A", IntMsg 2 ) ], ( env, False ) )
 
     else
         ( data, [], ( env, False ) )
@@ -40,7 +38,7 @@ updaterec : LayerUpdateRec SceneCommonData UserData LayerTarget LayerMsg SceneMs
 updaterec env msg data =
     case msg of
         IntMsg x ->
-            ( data, [ Other "A" <| IntMsg (x - 1) ], env )
+            ( data, [ Other ( "A", IntMsg (x - 1) ) ], env )
 
         _ ->
             ( data, [], env )
@@ -66,6 +64,8 @@ layercon =
     }
 
 
+{-| Layer generator
+-}
 layer : LayerStorage SceneCommonData UserData LayerTarget LayerMsg SceneMsg
 layer =
     genLayer layercon

@@ -1,4 +1,4 @@
-module Scenes.Home.LayerBase exposing
+module Scenes.Home.SceneBase exposing
     ( LayerTarget
     , SceneCommonData
     , LayerMsg(..)
@@ -7,9 +7,9 @@ module Scenes.Home.LayerBase exposing
 {-|
 
 
-# LayerBase
+# SceneBase
 
-Basic data for the layers.
+Basic data for the scene.
 
 @docs LayerTarget
 @docs SceneCommonData
@@ -30,10 +30,7 @@ type alias SceneCommonData =
     {}
 
 
-{-| Gerneral meassge for layers.
-
-Add layer specific messages here.
-
+{-| General message for layers
 -}
 type LayerMsg
     = IntMsg Int

@@ -11,11 +11,9 @@ Set the Data Type, Init logic, Update logic, View logic and Matcher logic here.
 import Canvas
 import Lib.Base exposing (SceneMsg)
 import Lib.UserData exposing (UserData)
-import Messenger.Audio.Base exposing (AudioOption(..))
-import Messenger.Base exposing (WorldEvent(..))
-import Messenger.GeneralModel exposing (Matcher, Msg(..), MsgBase(..))
+import Messenger.GeneralModel exposing (Matcher, Msg(..))
 import Messenger.Layer.Layer exposing (ConcreteLayer, LayerInit, LayerStorage, LayerUpdate, LayerUpdateRec, LayerView, genLayer)
-import Scenes.Home.LayerBase exposing (..)
+import Scenes.Home.SceneBase exposing (..)
 
 
 type alias Data =
@@ -37,7 +35,7 @@ updaterec env msg data =
     case msg of
         IntMsg x ->
             if 0 <= x && x < 10 then
-                ( data, [ Other "B" <| IntMsg (3 * x), Other "B" <| IntMsg (10 - 3 * x), Other "C" <| IntMsg x ], env )
+                ( data, [ Other ( "B", IntMsg (3 * x) ), Other ( "B", IntMsg (10 - 3 * x) ), Other ( "C", IntMsg x ) ], env )
 
             else
                 ( data, [], env )
@@ -66,6 +64,8 @@ layercon =
     }
 
 
+{-| Layer generator
+-}
 layer : LayerStorage SceneCommonData UserData LayerTarget LayerMsg SceneMsg
 layer =
     genLayer layercon
