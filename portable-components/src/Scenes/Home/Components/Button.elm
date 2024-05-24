@@ -11,12 +11,12 @@ import Scenes.Home.Components.ComponentBase exposing (BaseData, ComponentMsg(..)
 import Scenes.Home.LayerBase exposing (SceneCommonData)
 
 
-component : Int -> ComponentTarget -> PortableComponentStorage SceneCommonData UserData ComponentTarget ComponentMsg BaseData SceneMsg
-component zindex gtar =
+component : Int -> ComponentTarget -> ComponentMsg -> PortableComponentStorage SceneCommonData UserData ComponentTarget ComponentMsg BaseData SceneMsg
+component zindex gtar gmsg =
     let
         targetCodec : PortableTarCodec Button.Target ComponentTarget
         targetCodec =
-            { encode = \_ -> Button.Other
+            { encode = \_ -> Button.OtherC
             , decode = \_ -> gtar
             }
 
@@ -37,7 +37,7 @@ component zindex gtar =
                             NullComponentMsg
 
                         Button.Pressed ->
-                            ButtonPressed gtar
+                            gmsg
             }
     in
     genPortableComponent Button.componentcon targetCodec msgCodec () zindex

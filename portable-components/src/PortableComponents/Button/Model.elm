@@ -12,7 +12,7 @@ import Messenger.Render.Text exposing (renderText, renderTextWithColorCenter)
 
 
 type Target
-    = Other
+    = OtherC
     | Me
 
 
@@ -46,7 +46,7 @@ update env event data =
     case event of
         MouseDown 0 pos ->
             if judgeMouseRect pos data.pos data.size then
-                ( data, [ Parent <| OtherMsg <| Pressed ], ( env, True ) )
+                ( data, [ Other ( OtherC, Pressed ) ], ( env, True ) )
 
             else
                 ( data, [], ( env, False ) )

@@ -6,21 +6,37 @@ module Scenes.Home.Components.Comp.Model exposing (component)
 
 -}
 
-import Canvas
+import Canvas exposing (shapes)
+import Canvas.Settings exposing (fill)
+import Color exposing (Color, green)
 import Lib.Base exposing (SceneMsg)
 import Lib.UserData exposing (UserData)
+import Messenger.Base exposing (WorldEvent(..))
 import Messenger.Component.Component exposing (ComponentInit, ComponentMatcher, ComponentStorage, ComponentUpdate, ComponentUpdateRec, ComponentView, ConcreteUserComponent, genComponent)
-import Scenes.Home.Components.ComponentBase exposing (BaseData, ComponentMsg, ComponentTarget)
+import Messenger.Coordinate.Coordinates exposing (judgeMouseRect)
+import Messenger.GeneralModel exposing (Msg(..))
+import Messenger.Render.Shape exposing (rect)
+import Scenes.Home.Components.ComponentBase exposing (BaseData, ComponentMsg(..), ComponentTarget)
 import Scenes.Home.LayerBase exposing (SceneCommonData)
 
 
 type alias Data =
-    {}
+    { left : Float
+    , top : Float
+    , width : Float
+    , height : Float
+    , color : Color
+    }
 
 
 init : ComponentInit SceneCommonData UserData ComponentMsg Data BaseData
 init env initMsg =
-    ( {}, () )
+    case initMsg of
+        RectInit initData ->
+            ( initData, () )
+
+        _ ->
+            ( Data 0 0 0 0 Color.black, () )
 
 
 update : ComponentUpdate SceneCommonData Data UserData SceneMsg ComponentTarget ComponentMsg BaseData
@@ -30,17 +46,27 @@ update env evnt data basedata =
 
 updaterec : ComponentUpdateRec SceneCommonData Data UserData SceneMsg ComponentTarget ComponentMsg BaseData
 updaterec env msg data basedata =
-    ( ( data, basedata ), [], env )
+    case msg of
+        RectMsg c ->
+            ( ( { data | color = c }, basedata ), [], env )
+
+        _ ->
+            ( ( data, basedata ), [], env )
 
 
 view : ComponentView SceneCommonData UserData Data BaseData
 view env data basedata =
-    ( Canvas.empty, 0 )
+    ( shapes
+        [ fill data.color
+        ]
+        [ rect env.globalData ( data.left, data.top ) ( data.width, data.height ) ]
+    , 0
+    )
 
 
 matcher : ComponentMatcher Data BaseData ComponentTarget
 matcher data basedata tar =
-    tar == "Comp"
+    tar == "Rect"
 
 
 componentcon : ConcreteUserComponent Data SceneCommonData UserData ComponentTarget ComponentMsg BaseData SceneMsg

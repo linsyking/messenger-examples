@@ -39,7 +39,7 @@ init env msg =
     { renderSettings = []
     , commonData = cd
     , layers =
-        [ Main.layer envcd NullLayerMsg
+        [ Main.layer NullLayerMsg envcd
         ]
     }
 

@@ -1,16 +1,27 @@
-module Lib.Resources exposing (allTexture, allSpriteSheets)
+module Lib.Resources exposing (resources)
 
 {-|
 
 
 # Textures
 
-@docs allTexture, allSpriteSheets
+@docs resources
 
 -}
 
-import Dict
+import Dict exposing (Dict)
 import Messenger.Render.SpriteSheet exposing (SpriteSheet)
+import Messenger.UserConfig exposing (Resources)
+
+
+{-| Resources
+-}
+resources : Resources
+resources =
+    { allTexture = allTexture
+    , allSpriteSheets = allSpriteSheets
+    , allAudio = allAudio
+    }
 
 
 {-| allTexture
@@ -19,17 +30,17 @@ A list of all the textures.
 
 Add your textures here. Don't worry if your list is too long. You can split those resources according to their usage.
 
-Examples:
+Example:
 
-[
-( "ball", "assets/img/ball.png" ),
-( "car", "assets/img/car.jpg" )
-]
+    Dict.fromList
+        [ ( "ball", "assets/img/ball.png" )
+        , ( "car", "assets/img/car.jpg" )
+        ]
 
 -}
-allTexture : List ( String, String )
+allTexture : Dict String String
 allTexture =
-    []
+    Dict.empty
 
 
 {-| Add all your sprite sheets here.
@@ -56,4 +67,14 @@ Example:
 -}
 allSpriteSheets : SpriteSheet
 allSpriteSheets =
+    Dict.empty
+
+
+{-| All audio assets.
+
+The format is the same with `allTexture`.
+
+-}
+allAudio : Dict.Dict String String
+allAudio =
     Dict.empty

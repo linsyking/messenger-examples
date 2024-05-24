@@ -8,6 +8,7 @@ Set the Data Type, Init logic, Update logic, View logic and Matcher logic here.
 
 -}
 
+import Color exposing (orange, red, yellow)
 import Lib.Base exposing (SceneMsg)
 import Lib.UserData exposing (UserData)
 import Messenger.Component.Component exposing (AbstractComponent, updateComponents, viewComponents)
@@ -15,6 +16,8 @@ import Messenger.GeneralModel exposing (Matcher, Msg(..), MsgBase(..))
 import Messenger.Layer.Layer exposing (ConcreteLayer, Handler, LayerInit, LayerStorage, LayerUpdate, LayerUpdateRec, LayerView, genLayer, handleComponentMsgs)
 import PortableComponents.Button.Model as ButtonConfig
 import Scenes.Home.Components.Button as Button
+import Scenes.Home.Components.Comp.Model as Rect
+import Scenes.Home.Components.Comp.Msg as RectMsg
 import Scenes.Home.Components.ComponentBase exposing (BaseData, ComponentMsg(..), ComponentTarget)
 import Scenes.Home.LayerBase exposing (..)
 
@@ -27,8 +30,9 @@ type alias Data =
 init : LayerInit SceneCommonData UserData LayerMsg Data
 init env initMsg =
     Data
-        [ Button.component 0 "b1" env (ButtonInit <| ButtonConfig.Data ( 0, 0 ) ( 100, 100 ) "Button 1")
-        , Button.component 0 "b2" env (ButtonInit <| ButtonConfig.Data ( 300, 300 ) ( 100, 100 ) "Button 2")
+        [ Button.component 1 "Rect" (RectMsg yellow) (ButtonInit <| ButtonConfig.Data ( 0, 0 ) ( 100, 100 ) "Button 1") env
+        , Button.component 1 "Rect" (RectMsg orange) (ButtonInit <| ButtonConfig.Data ( 300, 300 ) ( 100, 100 ) "Button 2") env
+        , Rect.component (RectInit <| RectMsg.Init 200 500 200 200 red) env
         ]
 
 
@@ -37,13 +41,6 @@ handleComponentMsg env compmsg data =
     case compmsg of
         SOMMsg som ->
             ( data, [ Parent <| SOMMsg som ], env )
-
-        OtherMsg (ButtonPressed id) ->
-            let
-                _ =
-                    Debug.log "ButtonPressed" id
-            in
-            ( data, [], env )
 
         _ ->
             ( data, [], env )
