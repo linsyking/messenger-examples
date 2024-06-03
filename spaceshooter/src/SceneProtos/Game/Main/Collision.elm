@@ -5,7 +5,7 @@ import Lib.UserData exposing (UserData)
 import Messenger.Component.Component exposing (AbstractComponent)
 import Messenger.GeneralModel exposing (unroll)
 import SceneProtos.Game.Components.ComponentBase exposing (BaseData, ComponentMsg(..), ComponentTarget(..))
-import SceneProtos.Game.LayerBase exposing (SceneCommonData)
+import SceneProtos.Game.SceneBase exposing (SceneCommonData)
 
 
 type alias GameComponent =

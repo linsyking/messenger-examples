@@ -1,4 +1,4 @@
-module Scenes.Level1.Model exposing (scene)
+module Scenes.Level2.Model exposing (scene)
 
 {-|
 
@@ -29,10 +29,10 @@ init env msg =
 initData : Env () UserData -> Maybe SceneMsg -> InitData SceneMsg
 initData env msg =
     { objects =
-        [ Ship.component (ShipInitMsg <| ShipInit.InitData 0 ( 100, 500 ) 200)
-        , Enemy.component (EnemyInitMsg <| EnemyInit.InitData 1 (-1 / 10) ( 1920, 800 ) 120 30 200)
+        [ Ship.component (ShipInitMsg <| ShipInit.InitData 0 ( 100, 500 ) 250)
+        , Enemy.component (EnemyInitMsg <| EnemyInit.InitData 1 (-1 / 8) ( 1920, 800 ) 120 30 200)
         ]
-    , level = "Level1"
+    , level = "Level2"
     }
 
 

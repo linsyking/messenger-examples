@@ -16,7 +16,7 @@ import Messenger.Misc.KeyCode exposing (arrowDown, arrowUp)
 import Messenger.Render.Sprite exposing (renderSprite)
 import SceneProtos.Game.Components.Bullet.Init exposing (CreateInitData)
 import SceneProtos.Game.Components.ComponentBase exposing (BaseData, ComponentMsg(..), ComponentTarget(..), emptyBaseData)
-import SceneProtos.Game.LayerBase exposing (SceneCommonData)
+import SceneProtos.Game.SceneBase exposing (SceneCommonData)
 
 
 type alias Data =
@@ -69,11 +69,18 @@ update env evnt data basedata =
                     ( ( { data | timer = data.timer + dt }, moveShip basedata dt ), [], ( env, False ) )
 
             KeyDown key ->
+                let
+                    v =
+                        1 / 4
+
+                    vModify =
+                        toFloat env.commonData.score * 1 / 60 |> max (3 / 2)
+                in
                 if key == arrowDown then
-                    ( ( data, { basedata | velocity = 2 / 3 } ), [], ( env, False ) )
+                    ( ( data, { basedata | velocity = v + vModify } ), [], ( env, False ) )
 
                 else if key == arrowUp then
-                    ( ( data, { basedata | velocity = -2 / 3 } ), [], ( env, False ) )
+                    ( ( data, { basedata | velocity = -v - vModify } ), [], ( env, False ) )
 
                 else
                     ( ( data, basedata ), [], ( env, False ) )
@@ -96,10 +103,6 @@ updaterec : ComponentUpdateRec SceneCommonData Data UserData SceneMsg ComponentT
 updaterec env msg data basedata =
     case msg of
         CollisionMsg _ ->
-            let
-                _ =
-                    Debug.log "collss" basedata.id
-            in
             ( ( data, { basedata | alive = False } ), [ Parent <| OtherMsg <| GameOverMsg ], env )
 
         _ ->

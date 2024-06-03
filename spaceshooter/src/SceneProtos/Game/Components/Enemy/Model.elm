@@ -15,7 +15,7 @@ import Messenger.GeneralModel exposing (Msg(..), MsgBase(..))
 import Messenger.Render.Sprite exposing (renderSprite)
 import SceneProtos.Game.Components.Bullet.Init exposing (CreateInitData)
 import SceneProtos.Game.Components.ComponentBase exposing (BaseData, ComponentMsg(..), ComponentTarget(..), emptyBaseData)
-import SceneProtos.Game.LayerBase exposing (SceneCommonData)
+import SceneProtos.Game.SceneBase exposing (SceneCommonData)
 
 
 type alias Data =
@@ -50,17 +50,20 @@ update env evnt data basedata =
         Tick dt ->
             let
                 velx =
-                    sin (toFloat env.globalData.sceneStartFrame / data.sinf) * data.sina
+                    sin (toFloat env.globalData.sceneStartTime / data.sinf) * data.sina
 
                 ( x, y ) =
                     basedata.position
 
                 newEnemy =
                     { basedata | position = ( x + basedata.velocity * toFloat dt, y + velx * basedata.velocity * toFloat dt ) }
+
+                intModify =
+                    max 100 <| floor <| toFloat env.commonData.score / 2
             in
-            if modBy data.interval data.timer <= 10 then
+            if modBy (data.interval - intModify) data.timer <= 10 then
                 -- Generate a new bullet
-                ( ( { data | timer = 15 }, newEnemy ), [ Parent <| OtherMsg <| NewBulletMsg (CreateInitData -1 ( x - 50, y + 5 ) Color.red) ], ( env, False ) )
+                ( ( { data | timer = 15 }, newEnemy ), [ Parent <| OtherMsg <| NewBulletMsg (CreateInitData -1 ( x - 60, y + 5 ) Color.red) ], ( env, False ) )
 
             else
                 ( ( { data | timer = data.timer + dt }, newEnemy ), [], ( env, False ) )
@@ -73,7 +76,11 @@ updaterec : ComponentUpdateRec SceneCommonData Data UserData SceneMsg ComponentT
 updaterec env msg data basedata =
     case msg of
         CollisionMsg "Bullet" ->
-            ( ( data, { basedata | alive = False } ), [], env )
+            let
+                cd =
+                    env.commonData
+            in
+            ( ( data, { basedata | alive = False } ), [], { env | commonData = { cd | score = cd.score + 1 } } )
 
         _ ->
             ( ( data, basedata ), [], env )

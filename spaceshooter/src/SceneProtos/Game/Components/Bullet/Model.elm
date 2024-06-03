@@ -15,7 +15,7 @@ import Messenger.Base exposing (UserEvent(..))
 import Messenger.Component.Component exposing (ComponentInit, ComponentMatcher, ComponentStorage, ComponentUpdate, ComponentUpdateRec, ComponentView, ConcreteUserComponent, genComponent)
 import Messenger.Coordinate.Coordinates exposing (lengthToReal, posToReal)
 import SceneProtos.Game.Components.ComponentBase exposing (BaseData, ComponentMsg(..), ComponentTarget(..), emptyBaseData)
-import SceneProtos.Game.LayerBase exposing (SceneCommonData)
+import SceneProtos.Game.SceneBase exposing (SceneCommonData)
 
 
 type alias Data =
@@ -59,10 +59,6 @@ updaterec : ComponentUpdateRec SceneCommonData Data UserData SceneMsg ComponentT
 updaterec env msg data basedata =
     case msg of
         CollisionMsg "Bullet" ->
-            let
-                _ =
-                    Debug.log "coll" basedata.id
-            in
             ( ( data, { basedata | alive = False } ), [], env )
 
         _ ->

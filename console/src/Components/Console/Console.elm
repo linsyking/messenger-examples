@@ -115,7 +115,7 @@ viewModel env d =
     if dBoolGet d "state" then
         group []
             [ shapes [ alpha 0.1 ] [ rect gd ( 20, 970 ) ( 1850, 40 ) ]
-            , renderText gd 30 ("> " ++ command ++ "_") "sans-seif" ( 30, 975 )
+            , renderText gd 30 ("> " ++ command ++ "|") "sans-seif" ( 30, 975 )
             ]
 
     else

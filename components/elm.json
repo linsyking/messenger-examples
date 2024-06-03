@@ -11,7 +11,7 @@
             "elm/json": "1.1.3",
             "elm/time": "1.0.0",
             "linsyking/elm-canvas": "4.0.0",
-            "linsyking/messenger-core": "12.0.2"
+            "linsyking/messenger-core": "12.0.3"
         },
         "indirect": {
             "MartinSStewart/elm-audio": "4.0.4",
