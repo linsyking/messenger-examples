@@ -49,8 +49,6 @@ update env evt data =
         ( comps1, msgs1, ( env1, block1 ) ) =
             updateComponents env evt data.components
 
-        -- _ =
-        --     Debug.log "comps" <| List.map (\x -> (unroll x).matcher 0) comps1
         ( data1, msgs2, env2 ) =
             handleComponentMsgs env1 msgs1 { data | components = comps1 } [] handleComponentMsg
     in

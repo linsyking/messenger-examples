@@ -42,17 +42,9 @@ init env initMsg =
 
 update : ComponentUpdate SceneCommonData Data UserData SceneMsg ComponentTarget ComponentMsg BaseData
 update env evnt data basedata =
-    -- let
-    --     _ =
-    --         Debug.log "update" data.id
-    -- in
     case evnt of
         MouseDown 0 pos ->
             if judgeMouseRect pos ( data.left, data.top ) ( data.width, data.height ) then
-                let
-                    _ =
-                        Debug.log "click" data.id
-                in
                 ( ( { data | color = Color.black }, basedata )
                 , List.filterMap
                     (\n ->
@@ -68,10 +60,6 @@ update env evnt data basedata =
                 )
 
             else
-                let
-                    _ =
-                        Debug.log "xrange" data.id
-                in
                 ( ( data, basedata ), [], ( env, False ) )
 
         _ ->
