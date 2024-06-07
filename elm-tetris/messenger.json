@@ -1,10 +1,13 @@
 {
-    "version": "0.1.6",
+    "version": "1.0.0",
+    "template_repo": "https://github.com/linsyking/messenger-templates",
     "scenes": {
-        "Main": [
-            "GameLayer",
-            "UILayer"
-        ]
+        "Main": {
+            "layers": [
+                "GameLayer",
+                "FrontLayer"
+            ]
+        }
     },
     "sceneprotos": {}
 }

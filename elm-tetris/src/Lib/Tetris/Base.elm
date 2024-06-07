@@ -1,20 +1,24 @@
-module Lib.Tetris.Base exposing (AnimationState, TetrisEvent(..))
+module Lib.Tetris.Base exposing (AnimationState, Direction(..), TetrisEvent(..))
 
 
 type TetrisEvent
     = Start
     | Pause
     | Resume
-    | MoveLeft Bool
-    | MoveRight Bool
+    | Move Direction
     | Rotate Bool
     | Accelerate Bool
     | CancelAll
     | GameOver
 
 
+type Direction
+    = Left
+    | Right
+
+
 type alias AnimationState =
-    Maybe
-        { active : Bool
-        , elapsed : Float
-        }
+    { key : Bool
+    , active : Bool
+    , elapsed : Int
+    }
