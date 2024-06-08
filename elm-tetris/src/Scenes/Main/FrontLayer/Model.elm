@@ -94,7 +94,7 @@ renderPanel ({ commonData } as env) =
         [ renderTextWithColor env.globalData 40 "Tetris" "Helvetica" (Color.rgb255 52 73 95) ( 350, 50 )
         , renderTextWithColor env.globalData 14 "Score" "Helvetica" (Color.rgb255 189 195 199) ( 350, 120 )
         , renderTextWithColor env.globalData 14 "Best Score" "Helvetica" (Color.rgb255 189 195 199) ( 430, 120 )
-        , renderTextWithColor env.globalData 30 (String.fromInt env.globalData.userData.maxScore) "Helvetica" (Color.rgb255 57 147 208) ( 430, 140 )
+        , renderTextWithColor env.globalData 30 (String.fromInt env.globalData.userData.lastMaxScore) "Helvetica" (Color.rgb255 57 147 208) ( 430, 140 )
         , renderTextWithColor env.globalData 30 (String.fromInt commonData.score) "Helvetica" (Color.rgb255 57 147 208) ( 350, 140 )
         , renderTextWithColor env.globalData 14 "Lines Cleared" "Helvetica" (Color.rgb255 189 195 199) ( 350, 200 )
         , renderTextWithColor env.globalData 30 (String.fromInt commonData.lines) "Helvetica" (Color.rgb255 57 147 208) ( 350, 220 )

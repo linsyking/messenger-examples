@@ -11,6 +11,7 @@ module Scenes.Main.Components.GameGrid.Animate exposing
 import Lib.Tetris.Base exposing (AnimationState, Direction(..), TetrisEvent(..))
 import Lib.Tetris.Grid as G
 import Lib.Tetris.Tetriminos as Tetriminos
+import Lib.UserData exposing (UserData)
 import Messenger.GeneralModel exposing (Msg(..), MsgBase(..))
 import Scenes.Main.Components.ComponentBase exposing (ComponentMsg(..))
 import Scenes.Main.Components.GameGrid.Base exposing (Data, EnvGameGrid, OutputMsg)
@@ -243,9 +244,16 @@ level env =
 
 
 checkEndGame : EnvGameGrid -> Data -> ( Data, List OutputMsg, EnvGameGrid )
-checkEndGame ({ commonData } as env) data =
+checkEndGame ({ commonData, globalData } as env) data =
     if List.any identity (G.mapToList (\_ ( _, y ) -> y < 0) data.grid) then
-        ( data, [ Other ( "Button", TetrisMsg GameOver ) ], { env | commonData = { commonData | state = Stopped } } )
+        let
+            currentMaxScore =
+                max globalData.userData.currentMaxScore commonData.score
+        in
+        ( data
+        , [ Other ( "Button", TetrisMsg GameOver ) ]
+        , { commonData = { commonData | state = Stopped }, globalData = { globalData | userData = UserData currentMaxScore currentMaxScore } }
+        )
 
     else
         ( data, [], env )

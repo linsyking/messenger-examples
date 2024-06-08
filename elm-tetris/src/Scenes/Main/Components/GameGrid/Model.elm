@@ -62,12 +62,15 @@ update ({ globalData } as env) evnt data basedata =
 
         Tick dt ->
             let
+                newMaxScore =
+                    max env.commonData.score globalData.userData.currentMaxScore
+
                 newEnv =
-                    { env | globalData = { globalData | userData = { maxScore = max env.commonData.score globalData.userData.maxScore } } }
+                    { env | globalData = { globalData | userData = { lastMaxScore = globalData.userData.lastMaxScore, currentMaxScore = newMaxScore } } }
             in
             if env.commonData.state == Playing then
                 animate dt newEnv data
-                    |> (\( d, m, e ) -> ( ( d, () ), m ++ [ Parent <| SOMMsg SOMSaveGlobalData ], ( e, False ) ))
+                    |> (\( d, m, e ) -> ( ( d, () ), m ++ [], ( e, False ) ))
 
             else
                 ( ( data, basedata ), [ Parent <| SOMMsg SOMSaveGlobalData ], ( newEnv, False ) )

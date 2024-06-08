@@ -16,7 +16,9 @@ import Json.Encode as Encode
 {-| User defined data
 -}
 type alias UserData =
-    { maxScore : Int }
+    { lastMaxScore : Int
+    , currentMaxScore : Int
+    }
 
 
 {-| Encoder for the UserData.
@@ -25,7 +27,7 @@ encodeUserData : UserData -> String
 encodeUserData storage =
     Encode.encode 0
         (Encode.object
-            [ ( "maxScore", Encode.int storage.maxScore )
+            [ ( "maxScore", Encode.int storage.currentMaxScore )
             ]
         )
 
@@ -35,7 +37,7 @@ encodeUserData storage =
 decodeUserData : String -> UserData
 decodeUserData ls =
     let
-        maxScore =
+        lastMaxScore =
             Result.withDefault 0 (decodeString (at [ "maxScore" ] Decode.int) ls)
     in
-    UserData maxScore
+    UserData lastMaxScore lastMaxScore
