@@ -6,6 +6,7 @@ module Scenes.Main.Components.GameGrid.Model exposing (component)
 
 -}
 
+import Browser.Events exposing (Visibility(..))
 import Canvas
 import Canvas.Settings exposing (fill)
 import Color
@@ -40,43 +41,47 @@ init env initMsg =
 
 update : ComponentUpdate SceneCommonData Data UserData SceneMsg ComponentTarget ComponentMsg BaseData
 update ({ globalData } as env) evnt data basedata =
-    case evnt of
-        KeyDown 37 ->
-            --Left
-            ( ( startMove <| changeDir Left data, basedata ), [], ( env, False ) )
+    if globalData.windowVisibility == Visible then
+        case evnt of
+            KeyDown 37 ->
+                --Left
+                ( ( startMove <| changeDir Left data, basedata ), [], ( env, False ) )
 
-        KeyDown 39 ->
-            --Right
-            ( ( startMove <| changeDir Right data, basedata ), [], ( env, False ) )
+            KeyDown 39 ->
+                --Right
+                ( ( startMove <| changeDir Right data, basedata ), [], ( env, False ) )
 
-        KeyDown 38 ->
-            --Up
-            ( ( startRotate True data, basedata ), [], ( env, False ) )
+            KeyDown 38 ->
+                --Up
+                ( ( startRotate True data, basedata ), [], ( env, False ) )
 
-        KeyDown 40 ->
-            --Down
-            ( ( startAccelerate True data, basedata ), [], ( env, False ) )
+            KeyDown 40 ->
+                --Down
+                ( ( startAccelerate True data, basedata ), [], ( env, False ) )
 
-        KeyUp _ ->
-            ( ( cancelState data, basedata ), [], ( env, False ) )
+            KeyUp _ ->
+                ( ( cancelState data, basedata ), [], ( env, False ) )
 
-        Tick dt ->
-            let
-                newMaxScore =
-                    max env.commonData.score globalData.userData.currentMaxScore
+            Tick dt ->
+                let
+                    newMaxScore =
+                        max env.commonData.score globalData.userData.currentMaxScore
 
-                newEnv =
-                    { env | globalData = { globalData | userData = { lastMaxScore = globalData.userData.lastMaxScore, currentMaxScore = newMaxScore } } }
-            in
-            if env.commonData.state == Playing then
-                animate dt newEnv data
-                    |> (\( d, m, e ) -> ( ( d, () ), m ++ [], ( e, False ) ))
+                    newEnv =
+                        { env | globalData = { globalData | userData = { lastMaxScore = globalData.userData.lastMaxScore, currentMaxScore = newMaxScore } } }
+                in
+                if env.commonData.state == Playing && dt <= 100 then
+                    animate dt newEnv data
+                        |> (\( d, m, e ) -> ( ( d, () ), m ++ [ Parent <| SOMMsg SOMSaveGlobalData ], ( e, False ) ))
 
-            else
-                ( ( data, basedata ), [ Parent <| SOMMsg SOMSaveGlobalData ], ( newEnv, False ) )
+                else
+                    ( ( data, basedata ), [ Parent <| SOMMsg SOMSaveGlobalData ], ( newEnv, False ) )
 
-        _ ->
-            ( ( data, basedata ), [], ( env, False ) )
+            _ ->
+                ( ( data, basedata ), [], ( env, False ) )
+
+    else
+        ( ( cancelState data, basedata ), [], ( env, False ) )
 
 
 updaterec : ComponentUpdateRec SceneCommonData Data UserData SceneMsg ComponentTarget ComponentMsg BaseData

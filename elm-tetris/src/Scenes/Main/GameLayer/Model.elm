@@ -13,7 +13,7 @@ import Lib.Base exposing (SceneMsg)
 import Lib.Tetris.Base exposing (Direction(..), TetrisEvent(..))
 import Lib.UserData exposing (UserData)
 import Messenger.Base exposing (UserEvent(..))
-import Messenger.Component.Component exposing (AbstractComponent, updateComponents, updateComponentsWithTarget, viewComponents)
+import Messenger.Component.Component exposing (AbstractComponent, updateComponents, viewComponents)
 import Messenger.GeneralModel exposing (Matcher, Msg(..), MsgBase(..))
 import Messenger.Layer.Layer exposing (ConcreteLayer, Handler, LayerInit, LayerStorage, LayerUpdate, LayerUpdateRec, LayerView, genLayer, handleComponentMsgs)
 import Scenes.Main.Components.Button.Init as ButtonInit
