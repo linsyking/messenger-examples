@@ -61,9 +61,9 @@ update env evnt data basedata =
                 intModify =
                     max 100 <| floor <| toFloat env.commonData.score / 2
             in
-            if modBy (data.interval - intModify) data.timer <= 10 then
+            if data.timer >= (data.interval - intModify) then
                 -- Generate a new bullet
-                ( ( { data | timer = 15 }, newEnemy ), [ Parent <| OtherMsg <| NewBulletMsg (CreateInitData -1 ( x - 60, y + 5 ) Color.red) ], ( env, False ) )
+                ( ( { data | timer = 0 }, newEnemy ), [ Parent <| OtherMsg <| NewBulletMsg (CreateInitData -1 ( x - 60, y + 5 ) Color.red) ], ( env, False ) )
 
             else
                 ( ( { data | timer = data.timer + dt }, newEnemy ), [], ( env, False ) )

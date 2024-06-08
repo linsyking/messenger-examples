@@ -57,13 +57,13 @@ update env evnt data basedata =
     if basedata.alive then
         case evnt of
             Tick dt ->
-                if modBy data.interval data.timer <= 10 then
+                if data.timer >= data.interval then
                     let
                         ( x, y ) =
                             basedata.position
                     in
                     -- Generate a new bullet
-                    ( ( { data | timer = 15 }, moveShip basedata dt ), [ Parent <| OtherMsg <| NewBulletMsg (CreateInitData 1 ( x + 170, y + 20 ) Color.blue) ], ( env, False ) )
+                    ( ( { data | timer = 0 }, moveShip basedata dt ), [ Parent <| OtherMsg <| NewBulletMsg (CreateInitData 1 ( x + 170, y + 20 ) Color.blue) ], ( env, False ) )
 
                 else
                     ( ( { data | timer = data.timer + dt }, moveShip basedata dt ), [], ( env, False ) )
