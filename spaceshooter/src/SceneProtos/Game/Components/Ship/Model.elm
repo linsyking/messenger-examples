@@ -17,6 +17,7 @@ import Messenger.Render.Sprite exposing (renderSprite)
 import SceneProtos.Game.Components.Bullet.Init exposing (CreateInitData)
 import SceneProtos.Game.Components.ComponentBase exposing (BaseData, ComponentMsg(..), ComponentTarget(..), emptyBaseData)
 import SceneProtos.Game.SceneBase exposing (SceneCommonData)
+import Set
 
 
 type alias Data =
@@ -86,7 +87,7 @@ update env evnt data basedata =
                     ( ( data, basedata ), [], ( env, False ) )
 
             KeyUp key ->
-                if key == arrowDown || key == arrowUp then
+                if (key == arrowDown || key == arrowUp) && Set.isEmpty env.globalData.pressedKeys then
                     ( ( data, { basedata | velocity = 0 } ), [], ( env, False ) )
 
                 else
