@@ -1,4 +1,5 @@
 .messenger/
+.vscode
 elm-stuff/
 build/
 *.html
