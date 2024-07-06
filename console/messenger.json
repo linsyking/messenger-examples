@@ -1,9 +1,19 @@
 {
-    "version": "0.3.0",
+    "version": "1.1.0",
     "template_repo": "https://github.com/linsyking/messenger-templates",
     "scenes": {
-        "Home": [
-            "Main"
-        ]
-    }
+        "Home": {
+            "components": {
+                "Components": []
+            },
+            "layers": [
+                "Main"
+            ]
+        }
+    },
+    "sceneprotos": {},
+    "portable_components": [
+        "Console",
+        "Typer"
+    ]
 }

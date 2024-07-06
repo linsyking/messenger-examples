@@ -20,7 +20,7 @@ import Messenger.Scene.Scene exposing (SceneOutputMsg(..))
 import PortableComponents.Typer.History as History
 import Scenes.Home.Components.ComponentBase exposing (BaseData, ComponentMsg(..), ComponentTarget)
 import Scenes.Home.Components.Console as Console
-import Scenes.Home.LayerBase exposing (..)
+import Scenes.Home.SceneBase exposing (..)
 
 
 type alias Data =

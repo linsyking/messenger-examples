@@ -9,7 +9,7 @@ import Messenger.Component.PortableComponent exposing (PortableComponentStorage,
 import PortableComponents.Console.Base as ConsoleBase
 import PortableComponents.Console.Model as Console
 import Scenes.Home.Components.ComponentBase exposing (BaseData, ComponentMsg(..), ComponentTarget)
-import Scenes.Home.LayerBase exposing (SceneCommonData)
+import Scenes.Home.SceneBase exposing (SceneCommonData)
 
 
 component : Int -> PortableComponentStorage SceneCommonData UserData ComponentTarget ComponentMsg BaseData SceneMsg

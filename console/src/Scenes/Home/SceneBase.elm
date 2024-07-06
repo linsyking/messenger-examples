@@ -1,4 +1,4 @@
-module Scenes.Home.LayerBase exposing
+module Scenes.Home.SceneBase exposing
     ( LayerTarget
     , SceneCommonData
     , LayerMsg(..)
