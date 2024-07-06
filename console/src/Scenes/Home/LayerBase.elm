@@ -1,29 +1,39 @@
 module Scenes.Home.LayerBase exposing
-    ( CommonData
-    , LayerInitData(..), nullCommonData
+    ( LayerTarget
+    , SceneCommonData
+    , LayerMsg(..)
     )
 
-{-| This is the doc for this module
+{-|
 
-@docs CommonData
-@docs initCommonData
+
+# LayerBase
+
+Basic data for the layers.
+
+@docs LayerTarget
+@docs SceneCommonData
+@docs LayerMsg
 
 -}
 
 
-{-| CommonData
-Edit your own CommonData here.
+{-| Layer target type
 -}
-type alias CommonData =
+type alias LayerTarget =
+    String
+
+
+{-| Common data
+-}
+type alias SceneCommonData =
     {}
 
 
-{-| Init CommonData
+{-| Gerneral meassge for layers.
+
+Add layer specific messages here.
+
 -}
-nullCommonData : CommonData
-nullCommonData =
-    {}
-
-
-type LayerInitData
-    = NullLayerInitData
+type LayerMsg
+    = NullLayerMsg
