@@ -24,7 +24,7 @@ type alias Data =
 
 
 init : ComponentInit SceneCommonData UserData ComponentMsg Data BaseData
-init env initMsg =
+init _ initMsg =
     case initMsg of
         BulletInitMsg msg ->
             ( { color = msg.color }
@@ -66,20 +66,16 @@ updaterec env msg data basedata =
 
 
 view : ComponentView SceneCommonData UserData Data BaseData
-view env data basedata =
-    let
-        gd =
-            env.globalData
-    in
+view { globalData } data basedata =
     ( Canvas.shapes [ fill data.color ]
-        [ roundRect (posToReal gd basedata.position) (lengthToReal gd 20) (lengthToReal gd 10) [ 10, 10, 10, 10 ]
+        [ roundRect (posToReal globalData.internalData basedata.position) (lengthToReal globalData.internalData 20) (lengthToReal globalData.internalData 10) [ 10, 10, 10, 10 ]
         ]
     , 0
     )
 
 
 matcher : ComponentMatcher Data BaseData ComponentTarget
-matcher data basedata tar =
+matcher _ basedata tar =
     tar == Type basedata.ty || tar == Id basedata.id
 
 

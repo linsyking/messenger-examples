@@ -36,7 +36,7 @@ moveShip d dt =
 
 
 init : ComponentInit SceneCommonData UserData ComponentMsg Data BaseData
-init env initMsg =
+init _ initMsg =
     case initMsg of
         ShipInitMsg msg ->
             ( { interval = msg.bulletInterval, timer = 15 }
@@ -111,12 +111,12 @@ updaterec env msg data basedata =
 
 
 view : ComponentView SceneCommonData UserData Data BaseData
-view env data basedata =
-    ( renderSprite env.globalData [] basedata.position basedata.collisionBox "ship", 0 )
+view { globalData } _ basedata =
+    ( renderSprite globalData.internalData [] basedata.position basedata.collisionBox "ship", 0 )
 
 
 matcher : ComponentMatcher Data BaseData ComponentTarget
-matcher data basedata tar =
+matcher _ basedata tar =
     tar == Type basedata.ty || tar == Id basedata.id
 
 

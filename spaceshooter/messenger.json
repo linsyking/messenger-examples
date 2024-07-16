@@ -1,14 +1,23 @@
 {
-    "version": "1.0.0",
+    "version": "1.1.0",
     "template_repo": "https://github.com/linsyking/messenger-templates",
     "scenes": {
+        "Level2": [],
         "Level1": []
     },
     "sceneprotos": {
         "Game": {
             "raw": false,
+            "components": {
+                "Components": [
+                    "Enemy",
+                    "Bullet",
+                    "Ship"
+                ]
+            },
             "layers": [
-                "Main"
+                "Main",
+                "FrontLayer"
             ]
         }
     }

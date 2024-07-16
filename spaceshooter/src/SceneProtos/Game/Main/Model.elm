@@ -81,7 +81,7 @@ type alias Data =
 
 
 init : LayerInit SceneCommonData UserData (LayerMsg SceneMsg) Data
-init env initMsg =
+init _ initMsg =
     case initMsg of
         MainInitData data ->
             Data data.components
@@ -131,12 +131,12 @@ handleComponentMsg env compmsg data =
 
 
 updateBasic : BasicUpdater Data SceneCommonData UserData LayerTarget (LayerMsg SceneMsg) SceneMsg
-updateBasic env evt data =
+updateBasic env _ data =
     ( { data | components = addEnemy env <| removeOutOfBound <| removeDead data.components }, [], ( env, False ) )
 
 
 collisionDistributor : Distributor Data SceneCommonData UserData LayerTarget (LayerMsg SceneMsg) SceneMsg (List ( ComponentTarget, ComponentMsg ))
-collisionDistributor env evt data =
+collisionDistributor env _ data =
     ( data, ( [], judgeCollision data.components ), env )
 
 
@@ -166,7 +166,7 @@ update env evt data =
 
 
 updaterec : LayerUpdateRec SceneCommonData UserData LayerTarget (LayerMsg SceneMsg) SceneMsg Data
-updaterec env msg data =
+updaterec env _ data =
     ( data, [], env )
 
 
@@ -184,7 +184,7 @@ view env data =
 
 
 matcher : Matcher Data LayerTarget
-matcher data tar =
+matcher _ tar =
     tar == "Main"
 
 

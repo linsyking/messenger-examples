@@ -27,7 +27,7 @@ init env msg =
 
 
 initData : Env () UserData -> Maybe SceneMsg -> InitData SceneMsg
-initData env msg =
+initData _ _ =
     { objects =
         [ Ship.component (ShipInitMsg <| ShipInit.InitData 0 ( 100, 500 ) 200)
         , Enemy.component (EnemyInitMsg <| EnemyInit.InitData 1 (-1 / 10) ( 1920, 800 ) 120 30 200)

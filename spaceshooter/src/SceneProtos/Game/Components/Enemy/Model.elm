@@ -27,7 +27,7 @@ type alias Data =
 
 
 init : ComponentInit SceneCommonData UserData ComponentMsg Data BaseData
-init env initMsg =
+init _ initMsg =
     case initMsg of
         EnemyInitMsg msg ->
             ( { interval = msg.bulletInterval, sinf = msg.sinF, sina = msg.sinA, timer = 15 }
@@ -87,12 +87,12 @@ updaterec env msg data basedata =
 
 
 view : ComponentView SceneCommonData UserData Data BaseData
-view env data basedata =
-    ( renderSprite env.globalData [] basedata.position basedata.collisionBox "enemy", 0 )
+view { globalData } _ basedata =
+    ( renderSprite globalData.internalData [] basedata.position basedata.collisionBox "enemy", 0 )
 
 
 matcher : ComponentMatcher Data BaseData ComponentTarget
-matcher data basedata tar =
+matcher _ basedata tar =
     tar == Type basedata.ty || tar == Id basedata.id
 
 

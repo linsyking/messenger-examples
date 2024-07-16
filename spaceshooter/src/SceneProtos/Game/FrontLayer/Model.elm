@@ -29,7 +29,7 @@ type alias Data =
 
 
 init : LayerInit SceneCommonData UserData (LayerMsg SceneMsg) Data
-init env initMsg =
+init _ initMsg =
     case initMsg of
         FrontInitData lv ->
             Data lv
@@ -44,7 +44,7 @@ update env evt data =
         let
             nextLvmsg =
                 if env.commonData.score >= 80 && data.level == "Level1" then
-                    [ Parent <| SOMMsg <| SOMChangeScene Nothing "Level2" Nothing ]
+                    [ Parent <| SOMMsg <| SOMChangeScene Nothing "Level2" ]
 
                 else
                     []
@@ -54,44 +54,44 @@ update env evt data =
     else
         case evt of
             MouseDown 0 _ ->
-                ( data, [ Parent <| SOMMsg <| SOMChangeScene Nothing data.level Nothing ], ( env, True ) )
+                ( data, [ Parent <| SOMMsg <| SOMChangeScene Nothing data.level ], ( env, True ) )
 
             KeyDown 32 ->
                 -- space
-                ( data, [ Parent <| SOMMsg <| SOMChangeScene Nothing data.level Nothing ], ( env, True ) )
+                ( data, [ Parent <| SOMMsg <| SOMChangeScene Nothing data.level ], ( env, True ) )
 
             _ ->
                 ( data, [], ( env, False ) )
 
 
 updaterec : LayerUpdateRec SceneCommonData UserData LayerTarget (LayerMsg SceneMsg) SceneMsg Data
-updaterec env msg data =
+updaterec env _ data =
     ( data, [], env )
 
 
 view : LayerView SceneCommonData UserData Data
-view env data =
+view { commonData, globalData } data =
     let
         gameOverVE =
-            if env.commonData.gameOver then
+            if commonData.gameOver then
                 [ filter "blur(5px)" ]
 
             else
                 []
 
         gameOverMask =
-            if env.commonData.gameOver then
+            if commonData.gameOver then
                 Canvas.group []
-                    [ Canvas.shapes [ alpha 0.2, fill white ] [ rect env.globalData ( 0, 0 ) ( 1920, 1080 ) ]
-                    , renderTextWithColorCenter env.globalData 120 "Game Over" "Arial" red ( 960, 540 )
+                    [ Canvas.shapes [ alpha 0.2, fill white ] [ rect globalData.internalData ( 0, 0 ) ( 1920, 1080 ) ]
+                    , renderTextWithColorCenter globalData.internalData 120 "Game Over" "Arial" red ( 960, 540 )
                     ]
 
             else
                 Canvas.empty
     in
     [ Canvas.group gameOverVE
-        [ renderText env.globalData 40 ("Score: " ++ fromInt env.commonData.score) "Arial" ( 1730, 80 )
-        , renderText env.globalData 40 data.level "Arial" ( 1750, 30 )
+        [ renderText globalData.internalData 40 ("Score: " ++ fromInt commonData.score) "Arial" ( 1730, 80 )
+        , renderText globalData.internalData 40 data.level "Arial" ( 1750, 30 )
         ]
     , gameOverMask
     ]
@@ -99,7 +99,7 @@ view env data =
 
 
 matcher : Matcher Data LayerTarget
-matcher data tar =
+matcher _ tar =
     tar == "FrontLayer"
 
 
